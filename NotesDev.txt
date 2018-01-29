@@ -1,0 +1,10 @@
+Commencez tous vos fichiers python par :
+#!/usr/bin/python3
+#-*- coding: utf-8 -*-
+
+Pour tester un script juste dans lui même 
+
+if __name__=='__main__':
+	code
+
+ce on rentre dans ce if seulement si on lance le script lui même
