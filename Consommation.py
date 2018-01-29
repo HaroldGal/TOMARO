@@ -3,9 +3,10 @@
 
 class Appareil:
 
-	def __init__(self, _nom, consommation_moyenne):
+	def __init__(self, _id, _nom, consommation_moyenne):
 		self.nom = _nom
 		self.conso = consommation_moyenne
+		self.id = _id
 
 	def consomme(self):
 		return conso
