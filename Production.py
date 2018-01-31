@@ -3,12 +3,22 @@
 
 class MoyenProduction:
 
-	def __init__(self, en):
-		self.id = -1
-		self.energie=0
+	def __init__(self, _nom, position):
+		self.nom = _nom
+		self.energieProduite=0
+		self.position = position
+		self.allume = True
 
 	def energieProduite(self):
 		return energie
+
+	def eteindre():
+		self.allume = False
+
+	def allumer():
+		self.allume = True
+
+
 
 class Eolienne(MoyenProduction):
 	
@@ -18,7 +28,7 @@ class Eolienne(MoyenProduction):
 	def production(self):
 		self.energie= self.energie+1
 
-class Panneau(MoyenProduction):
+class PanneauPhotovoltaique(MoyenProduction):
 	
 	def __init(self, identite):
 		self.id = i
