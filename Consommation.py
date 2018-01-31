@@ -7,9 +7,19 @@ class Appareil:
 		self.nom = _nom
 		self.conso = consommation_moyenne
 		self.id = _id
+		self.allume = True
 
 	def consomme(self):
 		return conso
+
+
+	def eteindre():
+		self.allume = False
+
+	def allumer():
+		self.allume = True
+
+
 
 if __name__=='__main__':
 	print("tourne")

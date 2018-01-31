@@ -5,11 +5,11 @@ class MoyenProduction:
 
 	def __init__(self, _nom, position):
 		self.nom = _nom
-		self.energieProduite=0
+		self.energie=0
 		self.position = position
 		self.allume = True
 
-	def energieProduite(self):
+	def energie(self):
 		return energie
 
 	def eteindre():
