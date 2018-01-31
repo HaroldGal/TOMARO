@@ -1,12 +1,11 @@
 #!/usr/bin/python2.7
 #-*- coding: utf-8 -*-
 
-class MoyenProduction:
+class Production:
 
-	def __init__(self, _nom, position):
+	def __init__(self, _nom):
 		self.nom = _nom
-		self.energieProduite=0
-		self.position = position
+		self.energie=50
 		self.allume = True
 
 	def energieProduite(self):
@@ -20,7 +19,7 @@ class MoyenProduction:
 
 
 
-class Eolienne(MoyenProduction):
+class Eolienne(Production):
 	
 	def __init(self, identite):
 		self.id = i
@@ -28,7 +27,7 @@ class Eolienne(MoyenProduction):
 	def production(self):
 		self.energie= self.energie+1
 
-class PanneauPhotovoltaique(MoyenProduction):
+class PanneauPhotovoltaique(Production):
 	
 	def __init(self, identite):
 		self.id = i
