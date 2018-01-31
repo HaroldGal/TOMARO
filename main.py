@@ -14,10 +14,9 @@ import random
 import time
 from pygame.locals import *
 
-<<<<<<< HEAD
+
 longueur_fenetre=1200
 hauteur_fenetre=800
-=======
 def creation_appareil(nom_file):
 	liste_appareil = []
 	fichier = open(nom_file,"r")
@@ -29,7 +28,6 @@ def creation_appareil(nom_file):
 
 hauteur_fenetre=1200
 longueur_fenetre=800
->>>>>>> ed1dffc68370ca251469151bbbad2edfe60ca672
 
 #Initialisation de Pygame et de la fenetre
 pygame.init()
