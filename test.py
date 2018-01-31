@@ -131,6 +131,7 @@ def main():
 	#Boucle infinie
 	continuer=True
 	while continuer:
+		
 		#time.sleep(1)
 		nb_appareil=len(liste_appareil)
 
