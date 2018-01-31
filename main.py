@@ -11,6 +11,15 @@ import random
 import time
 from pygame.locals import *
 
+def creation_appareil(nom_file):
+	liste_appareil = []
+	fichier = open(nom_file,"r")
+	for ligne in fichier:
+		dataApp = ligne.split(" ")
+		liste_appareil.append(Appareil(dataApp[0], dataApp[1], dataApp[2:end]))
+
+	fichier.close()
+
 hauteur_fenetre=1200
 longueur_fenetre=800
 
