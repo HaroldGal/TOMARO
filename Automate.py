@@ -16,15 +16,26 @@ class Automate:
 		conso = self.consommation_globale(liste_appareil)
 		prod = self.production_globale(liste_production)
 		self.tic_total+=1
+
+		#On reset les traits
+		for index2,moyen_stockage in enumerate(liste_stockage):				
+			affichage.connexion_stockage(index2,longueur_fenetre,hauteur_fenetre,"Reset")
+
 		########## On produit plus que l'on consomme ##########
 		if conso < prod:
 			surplus = prod - conso
 
 			for index1,moyen_stockage in enumerate(liste_stockage):
-
-				#Si on stock on affiche le trait correspondant
-				affichage.connexion_stockage(index1,longueur_fenetre,hauteur_fenetre,"Green")
 				surplus = moyen_stockage.stocker(surplus)
+
+				#On reset les traits
+				for index2,moyen_stockage in enumerate(liste_stockage):
+					affichage.connexion_stockage(index2,longueur_fenetre,hauteur_fenetre,"Reset")			
+
+				#Si le stockage est pas plein (pour pas freeze dessus)
+				if moyen_stockage.stockage!=moyen_stockage.capacite:
+					#Si on stock on affiche le trait correspondant
+					affichage.connexion_stockage(index1,longueur_fenetre,hauteur_fenetre,"Green")					
 
 				if surplus == 0:
 					break			
@@ -35,9 +46,16 @@ class Automate:
 		elif conso > prod:
 			manque = conso - prod
 			for index1,moyen_stockage in enumerate(liste_stockage):
-				#Si on stock on affiche le trait correspondant
-				affichage.connexion_stockage(index1,longueur_fenetre,hauteur_fenetre,"Green")
 				manque = moyen_stockage.destocker(manque)
+
+				#On reset les traits
+				for index2,moyen_stockage in enumerate(liste_stockage):
+					affichage.connexion_stockage(index2,longueur_fenetre,hauteur_fenetre,"Reset")
+
+				if moyen_stockage.stockage!=0:
+					#Si on stock on affiche le trait correspondant
+					affichage.connexion_stockage(index1,longueur_fenetre,hauteur_fenetre,"Green")
+				
 
 				if manque == 0:
 					break
@@ -45,9 +63,11 @@ class Automate:
 				self.energie_totale_manquante += manque # il faudra acheter tant denergie a EDF
 				self.tic_energie_manquante+=1
 				print "Manque d'énergie",str(100-self.tic_energie_manquante*100/self.tic_total)+"%"+" du temps"
-				#print self.tic_energie_manquante,"/",self.tic_total
+				print self.tic_energie_manquante,"/",self.tic_total,"energie manquante:",self.energie_totale_manquante
 
 			return "manque"
+
+		
 				
 		return
 

@@ -114,5 +114,5 @@ while continuer:
 	affichage.stockage(liste_stockage,longueur_fenetre,hauteur_fenetre)
 	affichage.prod_stockage_conso_total(liste_production,liste_stockage,liste_consommation,automate,longueur_fenetre,hauteur_fenetre,etat_production)
 
-
+	
 	pygame.display.flip()

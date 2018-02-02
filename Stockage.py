@@ -26,7 +26,9 @@ class Stockage:
 			self.stockage = self.stockage - v
 			return 0
 		else :
-			return v-self.stockage
+			stockage_restant =v-self.stockage
+			self.stockage=0
+			return stockage_restant
 
 
 if __name__=='__main__':
