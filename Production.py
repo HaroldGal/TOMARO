@@ -1,15 +1,21 @@
 #!/usr/bin/python2.7
 #-*- coding: utf-8 -*-
 
+import requests
+from pprint import pprint
+import math
+
+
+
 class Production:
 
 	def __init__(self, _nom):
 		self.nom = _nom
-		self.energie=50
+		self.puissance=50
 		self.allume = True
 
-	def energie(self):
-		return energie
+	def puissance(self):
+		return self.puissance
 
 	def eteindre():
 		self.allume = False
@@ -23,9 +29,16 @@ class Eolienne(Production):
 	
 	def __init__(self, identite):
 		self.id = identite
+		self.diametre=10
+		self.rendement=0.4
 
 	def production(self):
-		self.energie= self.energie+1
+		r = requests.get("http://api.openweathermap.org/data/2.5/weather?q=Paris,fr&lang=fr&type=accurate&appid=ef60c8bbf95eacceaa3001970e3937ed")
+		data = r.json()
+
+		self.puissance= 0.5*math.pi*(self.diametre/2)**2*data["wind"]["speed"]**3*1.2*self.rendement
+		print(self.puissance)
+		return self.puissance
 
 class PanneauPhotovoltaique(Production):
 	
@@ -50,12 +63,13 @@ class PanneauPhotovoltaique(Production):
 
 	def production(self,temps):
 		self.set_radiation(temps)
-		self.energie=float(self.rendement)*float(self.radiation)*float(self.surface)
-		return(self.energie)
+		self.puissance=float(self.rendement)*float(self.radiation)*float(self.surface)/86400
+		print(self.puissance)
+		return(self.puissance)
 
 if __name__=='__main__':
-	p=Eolienne(1)
-	for i in range(5):
-		p.production()
-
-	print(p.energie)
+	p=PanneauPhotovoltaique(1)
+	res = 0
+	for i in range(86400):
+		res = res + p.production(i)
+		print(res)
