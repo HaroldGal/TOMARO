@@ -192,10 +192,12 @@ class Affichage:
 	def temps(self,vitesse_temps,nb_seconde):
 		#Taille du texte
 		font=pygame.font.Font(None, 30)
+		image_temps=pygame.image.load("carre_temps.png").convert()
 		texte_tic = font.render("Vitesse: 1 TIC = "+str(vitesse_temps)+" s",1,(0,0,0))
 		texte_heure = font.render("Heure : "+str(decoupe(nb_seconde)[0])+"h"+str(decoupe(nb_seconde)[1])+"min"+str(decoupe(nb_seconde)[2])+"s",1,(0,0,0))
-		self.fenetre.blit(texte_tic,(30,40))
-		self.fenetre.blit(texte_heure,(30,10))
+		self.fenetre.blit(image_temps,(30,20))
+		self.fenetre.blit(texte_tic,(centrer_texte_x(image_temps,30,texte_tic),75))
+		self.fenetre.blit(texte_heure,(centrer_texte_x(image_temps,30,texte_heure),40))
 
 if __name__=='__main__':
 	print("Compilation OK")

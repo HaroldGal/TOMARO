@@ -61,7 +61,7 @@ liste_production.append(Prod5)
 Prod6=Production("Prod6")
 liste_production.append(Prod6)
 
-#Initialisaiton de la liste des appareils 7 MAX !!!
+#Initialisaiton de la liste des appareils 6 MAX !!!
 liste_consommation=[]
 Appareil1=Appareil("Appareil1",50)
 liste_consommation.append(Appareil1)
@@ -105,7 +105,7 @@ while continuer:
 	time.sleep(vitesse_temps)
 
 	nb_seconde+=1
-	nb_seconde=nb_seconde%(24*60*60)
+	nb_seconde=nb_seconde%(24*60)
 
 	#On parcours la liste de tous les événements reçus
 	for event in pygame.event.get():   
