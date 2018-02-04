@@ -78,22 +78,22 @@ liste_consommation.append(Appareil6)
 
 #Initialisation de la liste des stockages 6 MAX !!!
 liste_stockage=[]
-Stockage1=Stockage("Stockage1",1000,0.9,20)
+Stockage1=Stockage("PowerWall",3500,0.9,20)
 liste_stockage.append(Stockage1)
-Stockage2=Stockage("Stockage2",1000,0.9,20)
+Stockage2=Stockage("PowerWall",3500,0.9,20)
 liste_stockage.append(Stockage2)
-Stockage3=Stockage("Stockage3",1000,0.9,20)
+Stockage3=Stockage("PowerWall",3500,0.9,20)
 liste_stockage.append(Stockage3)
-Stockage4=Stockage("Stockage4",1000,0.9,20)
+Stockage4=Stockage("PowerWall",3500,0.9,20)
 liste_stockage.append(Stockage4)
-Stockage5=Stockage("Stockage5",1000,0.9,20)
+Stockage5=Stockage("PowerWall",3500,0.9,20)
 liste_stockage.append(Stockage5)
-Stockage6=Stockage("Stockage6",1000,0.9,20)
+Stockage6=Stockage("PowerWall",3500,0.9,20)
 liste_stockage.append(Stockage6)
 
 #Controle de la vitesse
 vitesse_temps=0
-nb_seconde=0
+nb_seconde=0 #4h=14400;7h=25200;10h=36000;12h=43200;15h=54000;20h=72000;22h=79200
 
 #Boucle infinie
 continuer=True
@@ -105,7 +105,7 @@ while continuer:
 	time.sleep(vitesse_temps)
 
 	nb_seconde+=1
-	nb_seconde=nb_seconde%(24*60)
+	nb_seconde=nb_seconde%(24*60*60)
 
 	#On parcours la liste de tous les événements reçus
 	for event in pygame.event.get():   
@@ -131,6 +131,8 @@ while continuer:
 			elif event.key == K_LEFT:
 				vitesse_temps+=0.1
 				
+	if nb_seconde==24*60*60:
+		break
 	#FONCTION DE MODIFICATION DE LA PRODUCTION EN FONCTION DU TEMPS ICI
 
 	#FONCTION DE MODIFICATION DE LA CONSOMMATION EN FONCTION DU TEMPS ICI
@@ -149,3 +151,6 @@ while continuer:
 
 	
 	pygame.display.flip()
+
+
+print "Manque d'énergie "+str(automate.tic_energie_manquante*100/automate.tic_total)+"%"+" du temps"

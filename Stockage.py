@@ -14,7 +14,7 @@ class Stockage:
 	#On stock le max sans depasser la capacite
 	def stocker(self, v):
 		if self.capacite > self.stockage + v:
-			self.stockage = self.stockage +v
+			self.stockage = self.stockage +int(round(v*self.rendement))
 			return 0  #Il ne reste rien a stocker
 		else :
 			self.stockage = self.capacite
@@ -23,7 +23,7 @@ class Stockage:
 	#on destocke le plus possible et on indique si on a assez pour tout
 	def destocker(self, v):
 		if self.stockage > v :
-			self.stockage = self.stockage - v
+			self.stockage = self.stockage - int(round(v*self.rendement))
 			return 0
 		else :
 			stockage_restant =v-self.stockage
