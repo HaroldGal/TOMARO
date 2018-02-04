@@ -3,10 +3,11 @@
 
 class Appareil:
 
-	def __init__(self,_nom, consommation_moyenne):
+	def __init__(self,_nom, consommation_moyenne,_tableaubinaire):
 		self.nom = _nom
 		self.conso = consommation_moyenne
-		self.allume = True
+		self.allume = False
+		self.tableaubinaire=_tableaubinaire
 
 	def consomme(self):
 		return conso

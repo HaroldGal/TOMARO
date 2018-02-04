@@ -19,9 +19,11 @@ def creation_appareil(nom_file):
 	liste_appareil = []
 	fichier = open(nom_file,"r")
 	for ligne in fichier:
-		dataApp = ligne.split(" ")
-		liste_appareil.append(Appareil(dataApp[0], dataApp[1], dataApp[2:end]))
+		dataApp = ligne.split(":")
+		print (dataApp[0])
+		liste_appareil.append(Appareil(dataApp[0], float(dataApp[1]), dataApp[2]))
 
+	return liste_appareil
 	fichier.close()
 
 #FONCTION POUR LES TEST A ENLEVER QUI MODIFIE LA PRODUCTION EN AJOUTANT +-[-5,5] chaque tour à chaque appareil
@@ -35,7 +37,13 @@ def modif_prod(liste_production):
 		elif production.energie>100:
 			production.energie=100
 
+def modif_conso(liste_appareil,nb_seconde):
 
+	for appareil in liste_appareil:
+		if appareil.tableaubinaire[nb_seconde]=="1":
+			appareil.allume=True
+		else :
+			appareil.allume=False
 hauteur_fenetre=800
 longueur_fenetre=1200
 
@@ -61,8 +69,9 @@ liste_production.append(Prod5)
 Prod6=Production("Prod6")
 liste_production.append(Prod6)
 
-#Initialisaiton de la liste des appareils 6 MAX !!!
-liste_consommation=[]
+#Initialisaiton de la liste des appareils 7 MAX !!!
+liste_consommation=creation_appareil("testconso.txt")
+"""
 Appareil1=Appareil("Appareil1",50)
 liste_consommation.append(Appareil1)
 Appareil2=Appareil("Appareil2",50)
@@ -75,7 +84,7 @@ Appareil5=Appareil("Appareil5",50)
 liste_consommation.append(Appareil5)
 Appareil6=Appareil("Appareil6",50)
 liste_consommation.append(Appareil6)
-
+"""
 #Initialisation de la liste des stockages 6 MAX !!!
 liste_stockage=[]
 Stockage1=Stockage("PowerWall",3500,0.9,20)
@@ -92,8 +101,8 @@ Stockage6=Stockage("PowerWall",3500,0.9,20)
 liste_stockage.append(Stockage6)
 
 #Controle de la vitesse
-vitesse_temps=0
-nb_seconde=0 #4h=14400;7h=25200;10h=36000;12h=43200;15h=54000;20h=72000;22h=79200
+vitesse_temps=1
+nb_seconde=0
 
 #Boucle infinie
 continuer=True
@@ -104,7 +113,7 @@ while continuer:
 	#Permet de gérer le temps car sinon ca va trop trop vite
 	time.sleep(vitesse_temps)
 
-	nb_seconde+=1
+	nb_seconde+=3600
 	nb_seconde=nb_seconde%(24*60*60)
 
 	#On parcours la liste de tous les événements reçus
@@ -131,12 +140,10 @@ while continuer:
 			elif event.key == K_LEFT:
 				vitesse_temps+=0.1
 				
-	if nb_seconde==24*60*60:
-		break
 	#FONCTION DE MODIFICATION DE LA PRODUCTION EN FONCTION DU TEMPS ICI
-
+	modif_conso(liste_consommation,nb_seconde)
 	#FONCTION DE MODIFICATION DE LA CONSOMMATION EN FONCTION DU TEMPS ICI
-
+   
 	modif_prod(liste_production) #POUR TEST A RETIRE QUAND FONCTION DE MODIF DE PRODUCTION FAITE
 
 	#FONCTION DE GESTION DU STOCKAGE
@@ -151,6 +158,3 @@ while continuer:
 
 	
 	pygame.display.flip()
-
-
-print "Manque d'énergie "+str(automate.tic_energie_manquante*100/automate.tic_total)+"%"+" du temps"
