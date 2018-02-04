@@ -33,7 +33,7 @@ class Affichage:
 		#Taille du texte
 		font=pygame.font.Font(None, 30)
 		#Chargement de l'image
-		image_production = pygame.image.load("carre_production.png").convert()
+		image_production = pygame.image.load("Img/carre_production.png").convert()
 
 		#On parcourt tous les modes de productions pour les afficher
 		for index,production in enumerate(liste_production):
@@ -59,7 +59,7 @@ class Affichage:
 		#Taille du texte
 		font=pygame.font.Font(None, 25)
 		#Chargement de l'image
-		image_consommation = pygame.image.load("carre_appareil.png").convert()
+		image_consommation = pygame.image.load("Img/carre_appareil.png").convert()
 
 		#On parcourt tous les modes de consommations pour les afficher
 		for index,consommation in enumerate(liste_consommation):
@@ -88,7 +88,7 @@ class Affichage:
 		#Taille du texte
 		font=pygame.font.Font(None, 30)
 		#Chargement de l'image
-		image_stockage = pygame.image.load("carre_stockage.png").convert()
+		image_stockage = pygame.image.load("Img/carre_stockage.png").convert()
 
 		#On parcourt tous les modes de stockages pour les afficher
 		for index,stockage in enumerate(liste_stockage):
@@ -108,7 +108,7 @@ class Affichage:
 
 	#Methode permettant d'afficher la fleche correspondante au stockage qu'on charge
 	def connexion_stockage(self,index,longueur_fenetre,hauteur_fenetre,couleur):
-		image_stockage = pygame.image.load("carre_stockage.png").convert()
+		image_stockage = pygame.image.load("Img/carre_stockage.png").convert()
 		if couleur=="Reset":
 			if index < 3:
 				pygame.draw.line(self.fenetre,(60,60,100),(longueur_fenetre-250,hauteur_fenetre/2+125*index+image_stockage.get_size()[1]/2),(longueur_fenetre-375+image_stockage.get_size()[0]/2,hauteur_fenetre/2-125+image_stockage.get_size()[1]),2)
@@ -128,9 +128,9 @@ class Affichage:
 		#Taille du texte
 		font=pygame.font.Font(None, 30)
 		#Chargement des images
-		image_production = pygame.image.load("carre_production.png").convert()
-		image_stockage = pygame.image.load("carre_stockage.png").convert()
-		image_consommation = pygame.image.load("carre_appareil.png").convert()
+		image_production = pygame.image.load("Img/carre_production.png").convert()
+		image_stockage = pygame.image.load("Img/carre_stockage.png").convert()
+		image_consommation = pygame.image.load("Img/carre_appareil.png").convert()
 
 		#Texte pour la production global on affiche sa valeur en watt puis son pourcentage en fonction de l'énergie nécessaire
 
@@ -155,7 +155,7 @@ class Affichage:
 		pygame.draw.polygon(self.fenetre,(60,60,100), ((longueur_fenetre-376,hauteur_fenetre/2-100), (longueur_fenetre-376, hauteur_fenetre/2-50), (longueur_fenetre/2+150,hauteur_fenetre/2-50), (longueur_fenetre/2+150, hauteur_fenetre/2-25), (longueur_fenetre/2+100, hauteur_fenetre/2-75), (longueur_fenetre/2+150, hauteur_fenetre/2-125), (longueur_fenetre/2+150,hauteur_fenetre/2-100)))
 
 		#Affichage de l'achiminement de l'énergie
-		image_acheminement = pygame.image.load("carre_acheminement.png").convert()
+		image_acheminement = pygame.image.load("Img/carre_acheminement.png").convert()
 		texte_acheminement = font.render("Acheminement",1,(0,0,0))
 		if automate.production_globale(liste_production)<automate.consommation_globale(liste_consommation) and automate.stockage_global(liste_stockage)[0]!=0:
 			texte_acheminement_etat = font.render("Sous-production",1,(0,0,0))
@@ -192,7 +192,7 @@ class Affichage:
 	def temps(self,vitesse_temps,nb_seconde):
 		#Taille du texte
 		font=pygame.font.Font(None, 30)
-		image_temps=pygame.image.load("carre_temps.png").convert()
+		image_temps=pygame.image.load("Img/carre_temps.png").convert()
 		texte_tic = font.render("Vitesse: 1 TIC = "+str(vitesse_temps)+" s",1,(0,0,0))
 		texte_heure = font.render("Heure : "+str(decoupe(nb_seconde)[0])+"h"+str(decoupe(nb_seconde)[1])+"min"+str(decoupe(nb_seconde)[2])+"s",1,(0,0,0))
 		self.fenetre.blit(image_temps,(30,20))
