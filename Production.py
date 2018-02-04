@@ -53,7 +53,7 @@ class PanneauPhotovoltaique(Production):
 		
 
 	def set_radiation(self,temps):
-		file = open("radiation.txt", "r")
+		file = open("Data/radiation.txt", "r")
 		file.readline()
 		for line in file:
 			(time,G,Gd,Gc,DNI,DNIc,A,Ad,Ac)=line.split()
