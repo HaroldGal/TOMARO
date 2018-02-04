@@ -92,7 +92,7 @@ Stockage6=Stockage("Stockage6",1000,0.9,20)
 liste_stockage.append(Stockage6)
 
 #Controle de la vitesse
-vitesse_temps=1
+vitesse_temps=0
 nb_seconde=0
 
 #Boucle infinie
@@ -145,7 +145,7 @@ while continuer:
 	affichage.consommation(liste_consommation,longueur_fenetre,hauteur_fenetre,automate)
 	affichage.stockage(liste_stockage,longueur_fenetre,hauteur_fenetre)
 	affichage.prod_stockage_conso_total(liste_production,liste_stockage,liste_consommation,automate,longueur_fenetre,hauteur_fenetre)
-	affichage.temps(vitesse_temps)
+	affichage.temps(vitesse_temps,nb_seconde)
 
 	
 	pygame.display.flip()

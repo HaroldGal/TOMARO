@@ -11,6 +11,14 @@ from pygame.locals import *
 def centrer_texte_x(image,pos_x_image,texte):
 	return pos_x_image+image.get_size()[0]/2-texte.get_size()[0]/2
 
+#Transforme les secondes en heures
+def decoupe(seconde):
+    heure = seconde /3600
+    seconde %= 3600
+    minute = seconde/60
+    seconde%=60
+    return (heure,minute,seconde)
+
 #Classe permettant de gérer l'affichage dans une fenetre
 class Affichage:
 	
@@ -181,11 +189,13 @@ class Affichage:
 			if appareil.allume==True:
 				pygame.draw.line(self.fenetre,(240,140,40),(longueur_fenetre/2,hauteur_fenetre/2-125),(longueur_fenetre-(index+1)*150+50,120),2)
 
-	def temps(self,vitesse_temps):
+	def temps(self,vitesse_temps,nb_seconde):
 		#Taille du texte
 		font=pygame.font.Font(None, 30)
-		texte = font.render("1 TIC = "+str(vitesse_temps)+" s",1,(0,0,0))
-		self.fenetre.blit(texte,(30,30))
+		texte_tic = font.render("Vitesse: 1 TIC = "+str(vitesse_temps)+" s",1,(0,0,0))
+		texte_heure = font.render("Heure : "+str(decoupe(nb_seconde)[0])+"h"+str(decoupe(nb_seconde)[1])+"min"+str(decoupe(nb_seconde)[2])+"s",1,(0,0,0))
+		self.fenetre.blit(texte_tic,(30,40))
+		self.fenetre.blit(texte_heure,(30,10))
 
 if __name__=='__main__':
 	print("Compilation OK")
