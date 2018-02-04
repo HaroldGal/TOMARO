@@ -181,13 +181,10 @@ class Affichage:
 			if appareil.allume==True:
 				pygame.draw.line(self.fenetre,(240,140,40),(longueur_fenetre/2,hauteur_fenetre/2-125),(longueur_fenetre-(index+1)*150+50,120),2)
 
-	def temps(self,vitesse_temps,reset):
+	def temps(self,vitesse_temps):
 		#Taille du texte
 		font=pygame.font.Font(None, 30)
-		if reset==True:
-			texte = font.render("1 TIC = "+str(vitesse_temps)+" s",1,(60,60,100))
-		else:
-			texte = font.render("1 TIC = "+str(vitesse_temps)+" s",1,(0,0,0))
+		texte = font.render("1 TIC = "+str(vitesse_temps)+" s",1,(0,0,0))
 		self.fenetre.blit(texte,(30,30))
 
 if __name__=='__main__':
