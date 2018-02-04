@@ -51,7 +51,7 @@ class Affichage:
 				self.fenetre.blit(image_production,(300,hauteur_fenetre/2+125*(index-3)))
 				self.fenetre.blit(texte_production,(centrer_texte_x(image_production,300,texte_production),hauteur_fenetre/2+125*(index-3)+50))
 				self.fenetre.blit(texte_nom,(centrer_texte_x(image_production,300,texte_nom),hauteur_fenetre/2+125*(index-3)+20))
-				pygame.draw.line(self.fenetre,Color("Red"),(300,hauteur_fenetre/2+125*(index-3)+image_production.get_size()[1]/2),(175+image_production.get_size()[0]/2,hauteur_fenetre/2-125+image_production.get_size()[1]),2)
+				pygame.draw.line(self.fenetre,Color("Red"),(298,hauteur_fenetre/2+125*(index-3)+image_production.get_size()[1]/2),(175+image_production.get_size()[0]/2,hauteur_fenetre/2-125+image_production.get_size()[1]),2)
 
 
 	#Méthode permettant d'afficher les appareils
@@ -64,7 +64,7 @@ class Affichage:
 		#On parcourt tous les modes de consommations pour les afficher
 		for index,consommation in enumerate(liste_consommation):
 			#Initialisation du texte à écrire
-			if automate.consommation_globale(liste_consommation)!=0:			
+			if automate.consommation_globale(liste_consommation)!=0 and consommation.allume==True:			
 				texte_consommation=font.render(str(consommation.conso)+"W - "+str(consommation.conso*100/automate.consommation_globale(liste_consommation))+"%",1,(0,0,0))
 			else:
 				texte_consommation=font.render(str(consommation.conso)+"W - 0%",1,(0,0,0))
@@ -183,11 +183,11 @@ class Affichage:
 		#Affichage des traits de connexion entre acheminements et appareils
 		for index,appareil in enumerate(liste_consommation):
 			#Reset des traits
-			pygame.draw.line(self.fenetre,(60,60,100),(longueur_fenetre/2,hauteur_fenetre/2-125),(longueur_fenetre-(index+1)*150+50,120),2)
+			#pygame.draw.line(self.fenetre,(60,60,100),(longueur_fenetre/2,hauteur_fenetre/2-125),(longueur_fenetre-(index+1)*150+50,120),2)
 
 			#On dessine la connexion si l'appareil est allumé
 			if appareil.allume==True:
-				pygame.draw.line(self.fenetre,(240,140,40),(longueur_fenetre/2,hauteur_fenetre/2-125),(longueur_fenetre-(index+1)*150+50,120),2)
+				pygame.draw.line(self.fenetre,(240,140,40),(longueur_fenetre/2,hauteur_fenetre/2-126),(longueur_fenetre-(index+1)*150+50,120),2)
 
 	def temps(self,vitesse_temps,nb_seconde):
 		#Taille du texte

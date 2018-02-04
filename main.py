@@ -20,8 +20,8 @@ def creation_appareil(nom_file):
 	fichier = open(nom_file,"r")
 	for ligne in fichier:
 		dataApp = ligne.split(":")
-		print (dataApp[0])
-		liste_appareil.append(Appareil(dataApp[0], float(dataApp[1]), dataApp[2]))
+		#print (dataApp[0])
+		liste_appareil.append(Appareil(dataApp[0], int(float(dataApp[1])*1000), dataApp[2]))
 
 	return liste_appareil
 	fichier.close()
@@ -105,17 +105,9 @@ vitesse_temps=1
 nb_seconde=0
 
 #Boucle infinie
+pause=False
 continuer=True
 while continuer:
-	#Refresh la fenetre
-	affichage.fenetre.fill((60,60,100))
-
-	#Permet de gérer le temps car sinon ca va trop trop vite
-	time.sleep(vitesse_temps)
-
-	nb_seconde+=3600
-	nb_seconde=nb_seconde%(24*60*60)
-
 	#On parcours la liste de tous les événements reçus
 	for event in pygame.event.get():   
 
@@ -123,14 +115,12 @@ while continuer:
 		if event.type == QUIT:    
 			continuer=False
 
-		#TEST POUR VOIR QUAND UN APPAREIL SETEINT, A ENLEVER
 		elif event.type == KEYDOWN:
-			if event.key == K_SPACE:
-				for index,appareil in enumerate(liste_consommation):
-					if appareil.allume==True:
-						appareil.allume=False
-					else:
-						appareil.allume=True
+			if event.key == K_SPACE: #Permet de faire pause
+				if pause==True:
+					pause=False
+				else:
+					pause=True
 			elif event.key == K_RIGHT:	
 				if vitesse_temps >= 0.1:			
 					vitesse_temps-=0.1		
@@ -139,22 +129,35 @@ while continuer:
 
 			elif event.key == K_LEFT:
 				vitesse_temps+=0.1
-				
-	#FONCTION DE MODIFICATION DE LA PRODUCTION EN FONCTION DU TEMPS ICI
-	modif_conso(liste_consommation,nb_seconde)
-	#FONCTION DE MODIFICATION DE LA CONSOMMATION EN FONCTION DU TEMPS ICI
-   
-	modif_prod(liste_production) #POUR TEST A RETIRE QUAND FONCTION DE MODIF DE PRODUCTION FAITE
 
-	#FONCTION DE GESTION DU STOCKAGE
-	automate.gestion_du_stockage(liste_production, liste_stockage, liste_consommation,affichage,longueur_fenetre,hauteur_fenetre)
+	if pause==False:
+		#Refresh la fenetre
+		affichage.fenetre.fill((60,60,100))
 
-	#GESTION DE L'AFFICHAGE	
-	affichage.production(liste_production,longueur_fenetre,hauteur_fenetre,automate)
-	affichage.consommation(liste_consommation,longueur_fenetre,hauteur_fenetre,automate)
-	affichage.stockage(liste_stockage,longueur_fenetre,hauteur_fenetre)
-	affichage.prod_stockage_conso_total(liste_production,liste_stockage,liste_consommation,automate,longueur_fenetre,hauteur_fenetre)
-	affichage.temps(vitesse_temps,nb_seconde)
+		#Permet de gérer le temps car sinon ca va trop trop vite
+		time.sleep(vitesse_temps)
 
-	
-	pygame.display.flip()
+		nb_seconde+=60
+		nb_seconde=nb_seconde%(24*60*60)
+					
+		#FONCTION DE MODIFICATION DE LA PRODUCTION EN FONCTION DU TEMPS ICI
+		modif_conso(liste_consommation,nb_seconde)
+		#FONCTION DE MODIFICATION DE LA CONSOMMATION EN FONCTION DU TEMPS ICI
+	   
+		modif_prod(liste_production) #POUR TEST A RETIRE QUAND FONCTION DE MODIF DE PRODUCTION FAITE
+
+		#FONCTION DE GESTION DU STOCKAGE
+		automate.gestion_du_stockage(liste_production, liste_stockage, liste_consommation,affichage,longueur_fenetre,hauteur_fenetre)
+
+		#GESTION DE L'AFFICHAGE	
+		affichage.production(liste_production,longueur_fenetre,hauteur_fenetre,automate)
+		affichage.consommation(liste_consommation,longueur_fenetre,hauteur_fenetre,automate)
+		affichage.stockage(liste_stockage,longueur_fenetre,hauteur_fenetre)
+		affichage.prod_stockage_conso_total(liste_production,liste_stockage,liste_consommation,automate,longueur_fenetre,hauteur_fenetre)
+		affichage.temps(vitesse_temps,nb_seconde)
+
+		
+		pygame.display.flip()
+
+#Permet d'avoir le résultat à la fin
+print "Manque d'énergie "+str(automate.tic_energie_manquante*100/automate.tic_total)+"%"+" du temps"

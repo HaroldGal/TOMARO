@@ -11,7 +11,7 @@ class Production:
 
 	def __init__(self, _nom):
 		self.nom = _nom
-		self.energie=50
+		self.energie=20
 		self.allume = True
 
 
