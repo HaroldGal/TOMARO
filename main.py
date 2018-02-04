@@ -35,6 +35,7 @@ def modif_prod(liste_production):
 		elif production.energie>100:
 			production.energie=100
 
+
 hauteur_fenetre=800
 longueur_fenetre=1200
 
@@ -100,6 +101,7 @@ while continuer:
 
 	#Permet de gérer le temps car sinon ca va trop trop vite
 	time.sleep(vitesse_temps)
+
 
 	#On parcours la liste de tous les événements reçus
 	for event in pygame.event.get():   

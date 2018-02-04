@@ -14,8 +14,10 @@ class Production:
 		self.energie=50
 		self.allume = True
 
+
 	def energie(self):
 		return self.energie
+
 
 	def eteindre():
 		self.allume = False

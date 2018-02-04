@@ -147,10 +147,10 @@ def main():
 			  	for i in range(0,nb_appareil):
 			  		#Si la souris est sur l'appareil on met l'appareil en allumé ou éteint
 			  		if event.pos[0]<liste_appareil[i][1][0]+100 and event.pos[0]>liste_appareil[i][1][0] and event.pos[1]>liste_appareil[i][1][1] and event.pos[1]>liste_appareil[i][1][1]-100:
-						if liste_appareil[i][3]	== True:
-							liste_appareil[i][3]=False
-						else:
-							liste_appareil[i][3]=True
+					    if liste_appareil[i][3]==True:
+						    liste_appareil[i][3]=False
+					    else:
+						    liste_appareil[i][3]=True
 
 
 		#On reset la fenetre
