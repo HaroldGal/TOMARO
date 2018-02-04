@@ -189,15 +189,19 @@ class Affichage:
 			if appareil.allume==True:
 				pygame.draw.line(self.fenetre,(240,140,40),(longueur_fenetre/2,hauteur_fenetre/2-126),(longueur_fenetre-(index+1)*150+50,120),2)
 
-	def temps(self,vitesse_temps,nb_seconde):
+	def temps(self,vitesse_temps,nb_seconde):		
+		image_temps=pygame.image.load("Img/carre_temps.png").convert()
+		self.fenetre.blit(image_temps,(30,20))
 		#Taille du texte
 		font=pygame.font.Font(None, 25)
-		image_temps=pygame.image.load("Img/carre_temps.png").convert()
-		texte_tic = font.render("Vitesse: 1 TIC = "+str(vitesse_temps)+" s",1,(0,0,0))
-		texte_heure = font.render("Heure : "+str(decoupe(nb_seconde)[0])+"h"+str(decoupe(nb_seconde)[1])+"min"+str(decoupe(nb_seconde)[2])+"s",1,(0,0,0))
-		self.fenetre.blit(image_temps,(30,20))
-		self.fenetre.blit(texte_tic,(centrer_texte_x(image_temps,30,texte_tic),75))
+		texte_heure = font.render("Heure : "+str(decoupe(nb_seconde)[0])+"h"+str(decoupe(nb_seconde)[1])+"min",1,(0,0,0))#+str(decoupe(nb_seconde)[2])+"s",1,(0,0,0))
 		self.fenetre.blit(texte_heure,(centrer_texte_x(image_temps,30,texte_heure),40))
+
+		font=pygame.font.Font(None, 20)		
+		texte_tic = font.render("<- Ralentir | -> Accelerer ",1,(0,0,0))#1 TIC = "+str(vitesse_temps)+" s",1,(0,0,0))		
+		self.fenetre.blit(texte_tic,(centrer_texte_x(image_temps,30,texte_tic),75))
+		texte_pause=font.render("Espace: Pause",1,(0,0,0))
+		self.fenetre.blit(texte_pause,(centrer_texte_x(image_temps,30,texte_pause),90))
 
 if __name__=='__main__':
 	print("Compilation OK")
