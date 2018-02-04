@@ -90,13 +90,16 @@ liste_stockage.append(Stockage5)
 Stockage6=Stockage("Stockage6",1000,0.9,20)
 liste_stockage.append(Stockage6)
 
+#Controle de la vitesse
+vitesse_temps=0
+affichage.temps(vitesse_temps,False)
 
 #Boucle infinie
 continuer=True
 while continuer:
 
 	#Permet de gérer le temps car sinon ca va trop trop vite
-	#time.sleep(0.5)
+	time.sleep(vitesse_temps)
 
 	#On parcours la liste de tous les événements reçus
 	for event in pygame.event.get():   
@@ -105,14 +108,45 @@ while continuer:
 		if event.type == QUIT:    
 			continuer=False
 
+		#TEST POUR VOIR QUAND UN APPAREIL SETEINT, A ENLEVER
+		elif event.type == KEYDOWN:
+			if event.key == K_SPACE:
+				for index,appareil in enumerate(liste_consommation):
+					if appareil.allume==True:
+						appareil.allume=False
+					else:
+						appareil.allume=True
+			elif event.key == K_UP:
+				if vitesse_temps>0.05:
+					affichage.temps(vitesse_temps,True)
+					vitesse_temps-=0.05
+				elif vitesse_temps==0.05:
+						vitesse_temps=0				
+				
+				elif vitesse_temps==0:
+					print "Vitesse max atteinte"
 
-	modif_prod(liste_production)
-	#etat_production récupère si on est en "surplus" ou "manque" en fonction de cette valeur l'affichage affichera une fleche dans un sens ou un autre
-	etat_production=automate.gestion_du_stockage(liste_production, liste_stockage, liste_consommation,affichage,longueur_fenetre,hauteur_fenetre)
+				if vitesse_temps < 0.05:
+					vitesse_temps=0
+
+				affichage.temps(vitesse_temps,False)
+
+			elif event.key == K_DOWN:
+				affichage.temps(vitesse_temps,True)
+				vitesse_temps+=0.05
+				affichage.temps(vitesse_temps,False)
+
+	#FONCTION DE MODIFICATION DE LA PRODUCTION EN FONCTION DU TEMPS ICI
+
+	#FONCTION DE MODIFICATION DE LA CONSOMMATION EN FONCTION DU TEMPS ICI
+
+	modif_prod(liste_production) #POUR TEST A RETIRE QUAND FONCTION DE MODIF DE PRODUCTION FAITE
+
+	#GESTION DE L'AFFICHAGE	
 	affichage.production(liste_production,longueur_fenetre,hauteur_fenetre,automate)
 	affichage.consommation(liste_consommation,longueur_fenetre,hauteur_fenetre,automate)
 	affichage.stockage(liste_stockage,longueur_fenetre,hauteur_fenetre)
-	affichage.prod_stockage_conso_total(liste_production,liste_stockage,liste_consommation,automate,longueur_fenetre,hauteur_fenetre,etat_production)
+	affichage.prod_stockage_conso_total(liste_production,liste_stockage,liste_consommation,automate,longueur_fenetre,hauteur_fenetre)
 
 	
 	pygame.display.flip()

@@ -49,14 +49,17 @@ class Affichage:
 	#Méthode permettant d'afficher les appareils
 	def consommation(self,liste_consommation,longueur_fenetre,hauteur_fenetre,automate):
 		#Taille du texte
-		font=pygame.font.Font(None, 30)
+		font=pygame.font.Font(None, 25)
 		#Chargement de l'image
 		image_consommation = pygame.image.load("carre_appareil.png").convert()
 
 		#On parcourt tous les modes de consommations pour les afficher
 		for index,consommation in enumerate(liste_consommation):
 			#Initialisation du texte à écrire
-			texte_consommation=font.render(str(consommation.conso)+"W - "+str(consommation.conso*100/automate.consommation_globale(liste_consommation))+"%",1,(0,0,0))
+			if automate.consommation_globale(liste_consommation)!=0:			
+				texte_consommation=font.render(str(consommation.conso)+"W - "+str(consommation.conso*100/automate.consommation_globale(liste_consommation))+"%",1,(0,0,0))
+			else:
+				texte_consommation=font.render(str(consommation.conso)+"W - 0%",1,(0,0,0))
 			texte_nom=font.render(consommation.nom,1,(0,0,0))
 
 			if consommation.allume==True:
@@ -111,7 +114,7 @@ class Affichage:
 
 
 
-	def prod_stockage_conso_total(self,liste_production,liste_stockage,liste_consommation,automate,longueur_fenetre,hauteur_fenetre,etat_production):
+	def prod_stockage_conso_total(self,liste_production,liste_stockage,liste_consommation,automate,longueur_fenetre,hauteur_fenetre):
 
 		#Taille du texte
 		font=pygame.font.Font(None, 30)
@@ -121,7 +124,11 @@ class Affichage:
 		image_consommation = pygame.image.load("carre_appareil.png").convert()
 
 		#Texte pour la production global on affiche sa valeur en watt puis son pourcentage en fonction de l'énergie nécessaire
-		texte_production_valeur_globale=font.render(str(automate.production_globale(liste_production))+"W - "+str(automate.production_globale(liste_production)*100/automate.consommation_globale(liste_consommation))+"%",1,(0,0,0))
+		if automate.consommation_globale(liste_consommation)!=0:
+			texte_production_valeur_globale=font.render(str(automate.production_globale(liste_production))+"W - "+str(automate.production_globale(liste_production)*100/automate.consommation_globale(liste_consommation))+"%",1,(0,0,0))
+		else:
+			texte_production_valeur_globale=font.render(str(automate.production_globale(liste_production))+"W",1,(0,0,0))
+
 		texte_production_globale=font.render("Production globale",1,(0,0,0))
 		self.fenetre.blit(image_production,(175,hauteur_fenetre/2-125))
 		self.fenetre.blit(texte_production_valeur_globale,(centrer_texte_x(image_production,175,texte_production_valeur_globale),hauteur_fenetre/2-75))
@@ -133,10 +140,53 @@ class Affichage:
 		self.fenetre.blit(texte_stockage_valeur_globale,(centrer_texte_x(image_stockage,longueur_fenetre-375,texte_stockage_valeur_globale),hauteur_fenetre/2-75))
 		self.fenetre.blit(texte_stockage_global,(centrer_texte_x(image_stockage,longueur_fenetre-375,texte_stockage_global),hauteur_fenetre/2-105))
 
-		#Si la production globale est plus grande que la consommation alors on fait un lien entre la production globale et le stockage global
+		#Reset des fleches
+		pygame.draw.polygon(self.fenetre,(60,60,100), ((375+325,hauteur_fenetre/2-100), (375+325, hauteur_fenetre/2-50), (longueur_fenetre/2-150+325,hauteur_fenetre/2-50), (longueur_fenetre/2-150+325, hauteur_fenetre/2-25), (longueur_fenetre/2-100+325, hauteur_fenetre/2-75), (longueur_fenetre/2-150+325, hauteur_fenetre/2-125), (longueur_fenetre/2-150+325,hauteur_fenetre/2-100)))
+		pygame.draw.polygon(self.fenetre,(60,60,100), ((longueur_fenetre-376,hauteur_fenetre/2-100), (longueur_fenetre-376, hauteur_fenetre/2-50), (longueur_fenetre/2+150,hauteur_fenetre/2-50), (longueur_fenetre/2+150, hauteur_fenetre/2-25), (longueur_fenetre/2+100, hauteur_fenetre/2-75), (longueur_fenetre/2+150, hauteur_fenetre/2-125), (longueur_fenetre/2+150,hauteur_fenetre/2-100)))
+
+		#Affichage de l'achiminement de l'énergie
+		image_acheminement = pygame.image.load("carre_acheminement.png").convert()
+		texte_acheminement = font.render("Acheminement",1,(0,0,0))
+		if automate.production_globale(liste_production)<automate.consommation_globale(liste_consommation) and automate.stockage_global(liste_stockage)[0]!=0:
+			texte_acheminement_etat = font.render("Sous-production",1,(0,0,0))
+			pygame.draw.polygon(self.fenetre,Color("Green"), ((longueur_fenetre-376,hauteur_fenetre/2-100), (longueur_fenetre-376, hauteur_fenetre/2-50), (longueur_fenetre/2+150,hauteur_fenetre/2-50), (longueur_fenetre/2+150, hauteur_fenetre/2-25), (longueur_fenetre/2+100, hauteur_fenetre/2-75), (longueur_fenetre/2+150, hauteur_fenetre/2-125), (longueur_fenetre/2+150,hauteur_fenetre/2-100)))
+
+		elif automate.production_globale(liste_production)>automate.consommation_globale(liste_consommation) and automate.stockage_global(liste_stockage)[0]!=automate.stockage_global(liste_stockage)[1]:
+			texte_acheminement_etat = font.render("Sur-production",1,(0,0,0))
+			pygame.draw.polygon(self.fenetre,Color("Green"), ((375+325,hauteur_fenetre/2-100), (375+325, hauteur_fenetre/2-50), (longueur_fenetre/2-150+325,hauteur_fenetre/2-50), (longueur_fenetre/2-150+325, hauteur_fenetre/2-25), (longueur_fenetre/2-100+325, hauteur_fenetre/2-75), (longueur_fenetre/2-150+325, hauteur_fenetre/2-125), (longueur_fenetre/2-150+325,hauteur_fenetre/2-100)))
+
+		elif automate.production_globale(liste_production)==automate.consommation_globale(liste_consommation):
+			texte_acheminement_etat = font.render("Equilibre",1,(0,0,0))
+
+		elif automate.production_globale(liste_production)<automate.consommation_globale(liste_consommation) and automate.stockage_global(liste_stockage)[0]==0:
+			texte_acheminement_etat = font.render("Achat",1,(0,0,0))
+
+		elif automate.production_globale(liste_production)>automate.consommation_globale(liste_consommation) and automate.stockage_global(liste_stockage)[0]==automate.stockage_global(liste_stockage)[1]:
+			texte_acheminement_etat = font.render("Revente",1,(0,0,0))
+
+		self.fenetre.blit(image_acheminement,(longueur_fenetre/2-100,hauteur_fenetre/2-125))
+		self.fenetre.blit(texte_acheminement_etat,(centrer_texte_x(image_acheminement,longueur_fenetre/2-100,texte_acheminement_etat),hauteur_fenetre/2-75))
+		self.fenetre.blit(texte_acheminement,(centrer_texte_x(image_acheminement,longueur_fenetre/2-100,texte_acheminement),hauteur_fenetre/2-105))
 		
+		pygame.draw.polygon(self.fenetre,Color("Red"), ((375,hauteur_fenetre/2-100), (375, hauteur_fenetre/2-50), (longueur_fenetre/2-150,hauteur_fenetre/2-50), (longueur_fenetre/2-150, hauteur_fenetre/2-25), (longueur_fenetre/2-100, hauteur_fenetre/2-75), (longueur_fenetre/2-150, hauteur_fenetre/2-125), (longueur_fenetre/2-150,hauteur_fenetre/2-100)))
+		
+		#Affichage des traits de connexion entre acheminements et appareils
+		for index,appareil in enumerate(liste_consommation):
+			#Reset des traits
+			pygame.draw.line(self.fenetre,(60,60,100),(longueur_fenetre/2,hauteur_fenetre/2-125),(longueur_fenetre-(index+1)*150+50,120),2)
 
+			#On dessine la connexion si l'appareil est allumé
+			if appareil.allume==True:
+				pygame.draw.line(self.fenetre,(240,140,40),(longueur_fenetre/2,hauteur_fenetre/2-125),(longueur_fenetre-(index+1)*150+50,120),2)
 
+	def temps(self,vitesse_temps,reset):
+		#Taille du texte
+		font=pygame.font.Font(None, 30)
+		if reset==True:
+			texte = font.render("1 TIC = "+str(vitesse_temps)+" s",1,(60,60,100))
+		else:
+			texte = font.render("1 TIC = "+str(vitesse_temps)+" s",1,(0,0,0))
+		self.fenetre.blit(texte,(30,30))
 
 if __name__=='__main__':
 	print("Compilation OK")

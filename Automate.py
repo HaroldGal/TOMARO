@@ -74,7 +74,8 @@ class Automate:
 	def consommation_globale(self,liste_appareil):
 		consommation_globale=0
 		for appareil in liste_appareil:
-			consommation_globale += appareil.conso
+			if appareil.allume==True:
+				consommation_globale += appareil.conso
 
 		return consommation_globale
 
