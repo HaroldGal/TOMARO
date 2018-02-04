@@ -62,8 +62,8 @@ class Automate:
 			if manque !=0 :
 				self.energie_totale_manquante += manque # il faudra acheter tant denergie a EDF
 				self.tic_energie_manquante+=1
-				print "Manque d'énergie",str(100-self.tic_energie_manquante*100/self.tic_total)+"%"+" du temps"
-				print self.tic_energie_manquante,"/",self.tic_total,"energie manquante:",self.energie_totale_manquante
+				print ("Manque d'énergie"+str(100-self.tic_energie_manquante*100/self.tic_total)+"%"+" du temps")
+				print (self.tic_energie_manquante,"/",self.tic_total,"energie manquante:",self.energie_totale_manquante)
 
 			return "manque"
 

@@ -13,7 +13,7 @@ class Production:
 		self.nom = _nom
 		self.puissance=50
 		self.allume = True
-
+		self.energie=1
 	def puissance(self):
 		return self.puissance
 
