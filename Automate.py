@@ -54,16 +54,15 @@ class Automate:
 
 				if moyen_stockage.stockage!=0:
 					#Si on stock on affiche le trait correspondant
-					affichage.connexion_stockage(index1,longueur_fenetre,hauteur_fenetre,"Green")
-				
+					affichage.connexion_stockage(index1,longueur_fenetre,hauteur_fenetre,"Green")				
 
 				if manque == 0:
 					break
+
 			if manque !=0 :
 				self.energie_totale_manquante += manque # il faudra acheter tant denergie a EDF
 				self.tic_energie_manquante+=1
-				print "Manque d'énergie"+str(100-self.tic_energie_manquante*100/self.tic_total)+"%"+" du temps"
-				print self.tic_energie_manquante,"/",self.tic_total,"energie manquante:",self.energie_totale_manquante
+				#print "Manque d'énergie "+str(self.tic_energie_manquante*100/self.tic_total)+"%"+" du temps"
 
 			return "manque"
 
