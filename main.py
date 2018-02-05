@@ -4,7 +4,7 @@
 #import Consommation
 #import Production
 #import Stockage
-from Affichage import Affichage
+from Affichage import *
 from Production import *
 from Consommation import *
 from Stockage import *
@@ -56,6 +56,7 @@ automate=Automate()
 
 # tableau consommation globale pour la courbe de charge
 consommation_globale_courbe = []
+tableau_temps_min=[]
 #Initialisation de la liste des appareils 6 MODE DE PRODUCTION MAX !!!
 liste_production=[]
 Prod1=Production("Prod1")
@@ -145,6 +146,7 @@ while continuer:
 		#FONCTION DE MODIFICATION DE LA PRODUCTION EN FONCTION DU TEMPS ICI
 		modif_conso(liste_consommation,nb_seconde)
 		consommation_globale_courbe.append(automate.consommation_globale(liste_consommation))
+		tableau_temps_min.append(decoupe(nb_seconde)[0])
 		#FONCTION DE MODIFICATION DE LA CONSOMMATION EN FONCTION DU TEMPS ICI
 	   
 		modif_prod(liste_production) #POUR TEST A RETIRE QUAND FONCTION DE MODIF DE PRODUCTION FAITE
@@ -164,6 +166,7 @@ while continuer:
 
 #Permet d'avoir le résultat à la fin
 print "Manque d'énergie "+str(automate.tic_energie_manquante*100/automate.tic_total)+"%"+" du temps"
-plt.plot([i/60.0 for i in range(0,len(consommation_globale_courbe))],consommation_globale_courbe)
-plt.ylabel('Consommation globale du site')
+plt.plot(tableau_temps_min,consommation_globale_courbe)
+plt.ylabel('Consommation globale du site en W')
+plt.xlabel('Temps en heure')
 plt.savefig('Results/courbe_de_charge.png')

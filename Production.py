@@ -30,7 +30,7 @@ class Production:
 class Eolienne(Production):
 	
 	def __init__(self, identite):
-		self.id = identite
+		self.id = identite #EO pour éolienne
 		self.diametre=10
 		self.rendement=0.4
 
@@ -45,8 +45,7 @@ class Eolienne(Production):
 class PanneauPhotovoltaique(Production):
 	
 	def __init__(self, identite):
-		self.id = identite
-		self.nom="PanneauPhotovoltaique"
+		self.id = identite #PPV panneau photovoltaique 
 		self.surface = 20.0 # En mètre carré
 		self.rendement = 0.14
 		self.radiation=0
