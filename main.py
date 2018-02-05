@@ -13,7 +13,7 @@ import pygame
 import random
 import time
 from pygame.locals import *
-
+import matplotlib.pyplot as plt
 
 def creation_appareil(nom_file):
 	liste_appareil = []
@@ -54,6 +54,8 @@ affichage=Affichage(longueur_fenetre,hauteur_fenetre)
 #Initialisation de l'automate
 automate=Automate()
 
+# tableau consommation globale pour la courbe de charge
+consommation_globale_courbe = []
 #Initialisation de la liste des appareils 6 MODE DE PRODUCTION MAX !!!
 liste_production=[]
 Prod1=Production("Prod1")
@@ -142,13 +144,14 @@ while continuer:
 					
 		#FONCTION DE MODIFICATION DE LA PRODUCTION EN FONCTION DU TEMPS ICI
 		modif_conso(liste_consommation,nb_seconde)
+		consommation_globale_courbe.append(automate.consommation_globale(liste_consommation))
 		#FONCTION DE MODIFICATION DE LA CONSOMMATION EN FONCTION DU TEMPS ICI
 	   
 		modif_prod(liste_production) #POUR TEST A RETIRE QUAND FONCTION DE MODIF DE PRODUCTION FAITE
 
 		#FONCTION DE GESTION DU STOCKAGE
 		automate.gestion_du_stockage(liste_production, liste_stockage, liste_consommation,affichage,longueur_fenetre,hauteur_fenetre)
-
+		
 		#GESTION DE L'AFFICHAGE	
 		affichage.production(liste_production,longueur_fenetre,hauteur_fenetre,automate)
 		affichage.consommation(liste_consommation,longueur_fenetre,hauteur_fenetre,automate)
@@ -161,3 +164,6 @@ while continuer:
 
 #Permet d'avoir le résultat à la fin
 print "Manque d'énergie "+str(automate.tic_energie_manquante*100/automate.tic_total)+"%"+" du temps"
+plt.plot([i/60.0 for i in range(0,len(consommation_globale_courbe))],consommation_globale_courbe)
+plt.ylabel('Consommation globale du site')
+plt.savefig('Results/courbe_de_charge.png')

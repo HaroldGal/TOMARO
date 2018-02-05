@@ -19,7 +19,7 @@ Notre modélisation est séparé en 3 parties distinctes
 ### Modules
 
 * [Pygame](https://www.pygame.org/download.shtml) - Interface graphique
-* [Request](https://www.pygame.org/download.shtml) - Données de consommation en temps réel
+* [Request](http://docs.python-requests.org/en/master/) - Données de consommation en temps réel
 
 ## Auteurs
 
