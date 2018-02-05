@@ -81,7 +81,7 @@ class Automate:
 	def production_globale(self,liste_production):
 		production_globale=0
 		for production in liste_production:
-			production_globale += production.energie
+			production_globale += production.puissance
 
 		return production_globale
 

@@ -38,7 +38,7 @@ class Affichage:
 		#On parcourt tous les modes de productions pour les afficher
 		for index,production in enumerate(liste_production):
 			#Initialisation du texte à écrire
-			texte_production=font.render(str(production.energie)+"W - "+str(round(production.energie*100/automate.production_globale(liste_production),2))+"%",1,(0,0,0))
+			texte_production=font.render(str(production.puissance)+"W - "+str(round(production.puissance*100/(automate.production_globale(liste_production)+1),2))+"%",1,(0,0,0))
 			texte_nom=font.render(production.nom,1,(0,0,0))
 
 			#Affichage en fonction de l'index

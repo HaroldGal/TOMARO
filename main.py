@@ -27,15 +27,10 @@ def creation_appareil(nom_file):
 	fichier.close()
 
 #FONCTION POUR LES TEST A ENLEVER QUI MODIFIE LA PRODUCTION EN AJOUTANT +-[-5,5] chaque tour à chaque appareil
-def modif_prod(liste_production):
+def modif_prod(liste_production,nb_seconde):
 
 	for production in liste_production:
-		nb_alea=random.randint(-5,5)
-		production.energie+=nb_alea
-		if production.energie < 0:
-			production.energie=0
-		elif production.energie>100:
-			production.energie=100
+		production.production(nb_seconde)
 
 def modif_conso(liste_appareil,nb_seconde):
 
@@ -59,17 +54,17 @@ consommation_globale_courbe = []
 tableau_temps_min=[]
 #Initialisation de la liste des appareils 6 MODE DE PRODUCTION MAX !!!
 liste_production=[]
-Prod1=Production("Prod1")
+Prod1=PanneauPhotovoltaique("Prod1")
 liste_production.append(Prod1)
-Prod2=Production("Prod2")
+Prod2=PanneauPhotovoltaique("Prod2")
 liste_production.append(Prod2)
-Prod3=Production("Prod3")
+Prod3=PanneauPhotovoltaique("Prod3")
 liste_production.append(Prod3)
-Prod4=Production("Prod4")
+Prod4=Eolienne("Prod4")
 liste_production.append(Prod4)
-Prod5=Production("Prod5")
+Prod5=Eolienne("Prod5")
 liste_production.append(Prod5)
-Prod6=Production("Prod6")
+Prod6=Eolienne("Prod6")
 liste_production.append(Prod6)
 
 #Initialisaiton de la liste des appareils 7 MAX !!!
@@ -140,7 +135,6 @@ while continuer:
 		#Permet de gérer le temps car sinon ca va trop trop vite
 		time.sleep(vitesse_temps)
 
-		nb_seconde+=60
 		nb_seconde=nb_seconde%(24*60*60)
 					
 		#FONCTION DE MODIFICATION DE LA PRODUCTION EN FONCTION DU TEMPS ICI
@@ -149,7 +143,7 @@ while continuer:
 		tableau_temps_min.append(decoupe(nb_seconde)[0])
 		#FONCTION DE MODIFICATION DE LA CONSOMMATION EN FONCTION DU TEMPS ICI
 	   
-		modif_prod(liste_production) #POUR TEST A RETIRE QUAND FONCTION DE MODIF DE PRODUCTION FAITE
+		modif_prod(liste_production,nb_seconde) #POUR TEST A RETIRE QUAND FONCTION DE MODIF DE PRODUCTION FAITE
 
 		#FONCTION DE GESTION DU STOCKAGE
 		automate.gestion_du_stockage(liste_production, liste_stockage, liste_consommation,affichage,longueur_fenetre,hauteur_fenetre)
@@ -160,7 +154,7 @@ while continuer:
 		affichage.stockage(liste_stockage,longueur_fenetre,hauteur_fenetre)
 		affichage.prod_stockage_conso_total(liste_production,liste_stockage,liste_consommation,automate,longueur_fenetre,hauteur_fenetre)
 		affichage.temps(vitesse_temps,nb_seconde)
-
+		nb_seconde+=60
 		
 		pygame.display.flip()
 
