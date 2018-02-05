@@ -54,17 +54,17 @@ consommation_globale_courbe = []
 tableau_temps_min=[]
 #Initialisation de la liste des appareils 6 MODE DE PRODUCTION MAX !!!
 liste_production=[]
-Prod1=PanneauPhotovoltaique("Prod1")
+Prod1=PanneauPhotovoltaique("Panneau 1")
 liste_production.append(Prod1)
-Prod2=PanneauPhotovoltaique("Prod2")
+Prod2=PanneauPhotovoltaique("Panneau 2")
 liste_production.append(Prod2)
-Prod3=PanneauPhotovoltaique("Prod3")
+Prod3=PanneauPhotovoltaique("Panneau 3")
 liste_production.append(Prod3)
-Prod4=Eolienne("Prod4")
+Prod4=Eolienne("Eolienne 1")
 liste_production.append(Prod4)
-Prod5=Eolienne("Prod5")
+Prod5=Eolienne("Eolienne 2")
 liste_production.append(Prod5)
-Prod6=Eolienne("Prod6")
+Prod6=Eolienne("Eolienne 3")
 liste_production.append(Prod6)
 
 #Initialisaiton de la liste des appareils 7 MAX !!!

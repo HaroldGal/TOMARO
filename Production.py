@@ -45,7 +45,7 @@ class Eolienne(Production):
 	def production(self,temps):
 		for (horaire,vitesse_vent) in self.liste_prod:
 			if temps==horaire:
-				self.puissance = 0.5*math.pi*(self.diametre/2.0)**2*vitesse_vent**3*1.2*self.rendement/60.0 # DIVISER PAR 60 POUR AVOIR EN MINUTE
+				self.puissance = round(0.5*math.pi*(self.diametre/2.0)**2*vitesse_vent**3*1.2*self.rendement/60.0,2) # DIVISER PAR 60 POUR AVOIR EN MINUTE
 				break
 		return self.puissance
 
@@ -78,7 +78,7 @@ class PanneauPhotovoltaique(Production):
 	def production(self,temps):
 		for (horaire,production) in self.liste_prod:
 			if temps==horaire:
-				self.puissance = production/60.0 # DIVISER PAR 60 POUR AVOIR EN MINUTE
+				self.puissance = round(production/60.0,2) # DIVISER PAR 60 POUR AVOIR EN MINUTE
 				break
 		return self.puissance
 
