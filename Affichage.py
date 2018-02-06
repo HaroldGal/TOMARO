@@ -38,7 +38,7 @@ class Affichage:
 		#On parcourt tous les modes de productions pour les afficher
 		for index,production in enumerate(liste_production):
 			#Initialisation du texte à écrire
-			texte_production=font.render(str(production.puissance)+"W - "+str(round(production.puissance*100/(automate.production_globale(liste_production)+1),2))+"%",1,(0,0,0))
+			texte_production=font.render(str(production.puissance)+"W.h - "+str(int(round(production.puissance*100/(automate.production_globale(liste_production)+1),2)))+"%",1,(0,0,0))
 			texte_nom=font.render(production.nom,1,(0,0,0))
 
 			#Affichage en fonction de l'index
@@ -65,9 +65,9 @@ class Affichage:
 		for index,consommation in enumerate(liste_consommation):
 			#Initialisation du texte à écrire
 			if automate.consommation_globale(liste_consommation)!=0 and consommation.allume==True:			
-				texte_consommation=font.render(str(consommation.conso)+"W - "+str(consommation.conso*100/automate.consommation_globale(liste_consommation))+"%",1,(0,0,0))
+				texte_consommation=font.render(str(consommation.conso)+"W.h - "+str(consommation.conso*100/automate.consommation_globale(liste_consommation))+"%",1,(0,0,0))
 			else:
-				texte_consommation=font.render(str(consommation.conso)+"W - 0%",1,(0,0,0))
+				texte_consommation=font.render(str(consommation.conso)+"W.h - 0%",1,(0,0,0))
 
 			texte_nom=font.render(consommation.nom,1,(0,0,0))
 
@@ -135,9 +135,9 @@ class Affichage:
 		#Texte pour la production global on affiche sa valeur en watt puis son pourcentage en fonction de l'énergie nécessaire
 
 		if automate.consommation_globale(liste_consommation)!=0:
-			texte_production_valeur_globale=font.render(str(automate.production_globale(liste_production))+"W - "+str(automate.production_globale(liste_production)*100/automate.consommation_globale(liste_consommation))+"%",1,(0,0,0))
+			texte_production_valeur_globale=font.render(str(automate.production_globale(liste_production))+"W.h - "+str(int(round(automate.production_globale(liste_production)*100/automate.consommation_globale(liste_consommation))))+"%",1,(0,0,0))
 		else:
-			texte_production_valeur_globale=font.render(str(automate.production_globale(liste_production))+"W",1,(0,0,0))
+			texte_production_valeur_globale=font.render(str(automate.production_globale(liste_production))+"W.h",1,(0,0,0))
 
 		texte_production_globale=font.render("Production globale",1,(0,0,0))
 		self.fenetre.blit(image_production,(175,hauteur_fenetre/2-125))

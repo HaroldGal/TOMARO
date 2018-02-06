@@ -100,7 +100,7 @@ liste_stockage.append(Stockage6)
 
 #Controle de la vitesse
 vitesse_temps=1
-nb_seconde=0
+nb_seconde=36000
 
 #Boucle infinie
 pause=False

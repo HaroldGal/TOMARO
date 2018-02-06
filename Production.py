@@ -33,7 +33,7 @@ class Eolienne(Production):
 		Production.__init__(self,identite)
 		self.id = "EO" #EO pour éolienne
 		self.diametre=10.0
-		self.rendement=0.4
+		self.rendement=0.5
 		self.liste_prod=[]
 		file = open("Data/vent_juillet.txt", "r")
 		for line in file:
@@ -45,7 +45,7 @@ class Eolienne(Production):
 	def production(self,temps):
 		for (horaire,vitesse_vent) in self.liste_prod:
 			if temps==horaire:
-				self.puissance = round(0.5*math.pi*(self.diametre/2.0)**2*vitesse_vent**3*1.2*self.rendement/60.0,2) # DIVISER PAR 60 POUR AVOIR EN MINUTE
+				self.puissance = int(round(0.5*math.pi*(self.diametre/2.0)**2*vitesse_vent**3*1.2*self.rendement/60.0)) # DIVISER PAR 60 POUR AVOIR EN MINUTE
 				break
 		return self.puissance
 
@@ -78,7 +78,7 @@ class PanneauPhotovoltaique(Production):
 	def production(self,temps):
 		for (horaire,production) in self.liste_prod:
 			if temps==horaire:
-				self.puissance = round(production/60.0,2) # DIVISER PAR 60 POUR AVOIR EN MINUTE
+				self.puissance = int(round(production/60.0)) # DIVISER PAR 60 POUR AVOIR EN MINUTE
 				break
 		return self.puissance
 
