@@ -58,14 +58,14 @@ Prod1=PanneauPhotovoltaique("Panneau 1")
 liste_production.append(Prod1)
 Prod2=PanneauPhotovoltaique("Panneau 2")
 liste_production.append(Prod2)
-Prod3=PanneauPhotovoltaique("Panneau 3")
-liste_production.append(Prod3)
+#Prod3=PanneauPhotovoltaique("Panneau 3")
+#liste_production.append(Prod3)
 Prod4=Eolienne("Eolienne 1")
 liste_production.append(Prod4)
-Prod5=Eolienne("Eolienne 2")
-liste_production.append(Prod5)
-Prod6=Eolienne("Eolienne 3")
-liste_production.append(Prod6)
+# Prod5=Eolienne("Eolienne 2")
+# liste_production.append(Prod5)
+#Prod6=Eolienne("Eolienne 3")
+#liste_production.append(Prod6)
 
 #Initialisaiton de la liste des appareils 7 MAX !!!
 liste_consommation=creation_appareil("testconso.txt")
@@ -140,7 +140,6 @@ while continuer:
 		#FONCTION DE MODIFICATION DE LA PRODUCTION EN FONCTION DU TEMPS ICI
 		modif_conso(liste_consommation,nb_seconde)
 		consommation_globale_courbe.append(automate.consommation_globale(liste_consommation))
-		tableau_temps_min.append(decoupe(nb_seconde)[0])
 		#FONCTION DE MODIFICATION DE LA CONSOMMATION EN FONCTION DU TEMPS ICI
 	   
 		modif_prod(liste_production,nb_seconde) #POUR TEST A RETIRE QUAND FONCTION DE MODIF DE PRODUCTION FAITE
@@ -160,7 +159,7 @@ while continuer:
 
 #Permet d'avoir le résultat à la fin
 print "Manque d'énergie "+str(automate.tic_energie_manquante*100/automate.tic_total)+"%"+" du temps"
-plt.plot(tableau_temps_min,consommation_globale_courbe)
+plt.plot([i for i in range(0,len(consommation_globale_courbe))],consommation_globale_courbe)
 plt.ylabel('Consommation globale du site en W')
 plt.xlabel('Temps en heure')
 plt.savefig('Results/courbe_de_charge.png')
