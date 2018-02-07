@@ -10,6 +10,8 @@ class Automate:
 		self.tic_total=0
 		#Permet de savoir combien de fois on a manqué d'énergie
 		self.tic_energie_manquante=0
+		#Permet de savoir combien de fois on a manqué d'énergie
+		self.tic_energie_revendu=0
 		return
 
 	def gestion_du_stockage(self,liste_production, liste_stockage, liste_appareil,affichage,longueur_fenetre,hauteur_fenetre):
@@ -38,9 +40,7 @@ class Automate:
 					affichage.connexion_stockage(index1,longueur_fenetre,hauteur_fenetre,"Green")					
 
 				if surplus == 0:
-					break			
-
-			return "surplus"
+					break
 		
 		########## On produit moins que l'on consomme ##########
 		elif conso > prod:
@@ -62,11 +62,6 @@ class Automate:
 			if manque !=0 :
 				self.energie_totale_manquante += manque # il faudra acheter tant denergie a EDF
 				self.tic_energie_manquante+=1
-				#print "Manque d'énergie "+str(self.tic_energie_manquante*100/self.tic_total)+"%"+" du temps"
-
-			return "manque"
-
-		
 				
 		return
 

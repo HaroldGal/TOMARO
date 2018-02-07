@@ -38,7 +38,7 @@ class Affichage:
 		#On parcourt tous les modes de productions pour les afficher
 		for index,production in enumerate(liste_production):
 			#Initialisation du texte à écrire
-			texte_production=font.render(str(production.puissance)+"W.h - "+str(int(round(production.puissance*100/(automate.production_globale(liste_production)+1),2)))+"%",1,(0,0,0))
+			texte_production=font.render(str(production.puissance)+"W.h - "+str(int(round(production.puissance*100/(automate.production_globale(liste_production)),2)))+"%",1,(0,0,0))
 			texte_nom=font.render(production.nom,1,(0,0,0))
 
 			#Affichage en fonction de l'index
@@ -173,6 +173,7 @@ class Affichage:
 
 		elif automate.production_globale(liste_production)>automate.consommation_globale(liste_consommation) and automate.stockage_global(liste_stockage)[0]==automate.stockage_global(liste_stockage)[1]:
 			texte_acheminement_etat = font.render("Revente",1,(0,0,0))
+			automate.tic_energie_revendu=automate.tic_energie_revendu+1
 
 		self.fenetre.blit(image_acheminement,(longueur_fenetre/2-100,hauteur_fenetre/2-125))
 		self.fenetre.blit(texte_acheminement_etat,(centrer_texte_x(image_acheminement,longueur_fenetre/2-100,texte_acheminement_etat),hauteur_fenetre/2-75))

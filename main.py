@@ -89,17 +89,17 @@ Stockage1=Stockage("PowerWall",3500,0.9,20)
 liste_stockage.append(Stockage1)
 Stockage2=Stockage("PowerWall",3500,0.9,20)
 liste_stockage.append(Stockage2)
-Stockage3=Stockage("PowerWall",3500,0.9,20)
-liste_stockage.append(Stockage3)
-Stockage4=Stockage("PowerWall",3500,0.9,20)
-liste_stockage.append(Stockage4)
-Stockage5=Stockage("PowerWall",3500,0.9,20)
-liste_stockage.append(Stockage5)
-Stockage6=Stockage("PowerWall",3500,0.9,20)
-liste_stockage.append(Stockage6)
+# Stockage3=Stockage("PowerWall",3500,0.9,20)
+# liste_stockage.append(Stockage3)
+# Stockage4=Stockage("PowerWall",3500,0.9,20)
+# liste_stockage.append(Stockage4)
+# Stockage5=Stockage("PowerWall",3500,0.9,20)
+# liste_stockage.append(Stockage5)
+# Stockage6=Stockage("PowerWall",3500,0.9,20)
+# liste_stockage.append(Stockage6)
 
 #Controle de la vitesse
-vitesse_temps=1
+vitesse_temps=0
 nb_seconde=36000
 
 #Boucle infinie
@@ -157,9 +157,12 @@ while continuer:
 		
 		pygame.display.flip()
 
+pygame.quit()
 #Permet d'avoir le résultat à la fin
-print "Manque d'énergie "+str(automate.tic_energie_manquante*100/automate.tic_total)+"%"+" du temps"
-plt.plot([i for i in range(0,len(consommation_globale_courbe))],consommation_globale_courbe)
+print "Achat d'énergie "+str(automate.tic_energie_manquante*100/automate.tic_total)+"%"+" du temps"
+print "Revente d'énergie "+str(automate.tic_energie_revendu*100/automate.tic_total)+"%"+" du temps"
+plt.plot([10+decoupe(i*60)[0] for i in range(0,len(consommation_globale_courbe))],consommation_globale_courbe)
 plt.ylabel('Consommation globale du site en W')
 plt.xlabel('Temps en heure')
+plt.show()
 plt.savefig('Results/courbe_de_charge.png')
