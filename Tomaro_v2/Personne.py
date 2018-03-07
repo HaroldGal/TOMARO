@@ -44,3 +44,11 @@ class Personne:
 		# Initialisaiton de climatisation et chauffage d'appoint
 		self.climatisation = False
 		self.chauffage = False
+
+	def afficher(self):
+		print "\n",self.tv.nom,"jours travaillés:",self.tv_h_jt,"jours non travaillés:",self.tv_h_jnt
+		print "\n",self.pc.nom,"jours travaillés:",self.pc_h_jt,"jours non travaillés:",self.pc_h_jnt
+		print "\n",self.pai.nom,"jours travaillés:",self.pai_h_jt,"jours non travaillés:",self.pai_h_jnt
+		print "\n",self.electro.nom,"jours travaillés:",self.electro_h_jt,"jours non travaillés:",self.electro_h_jnt
+		print "\nMachine à laver:",self.machine_a_laver,"Lave-vaisselle:",self.lave_vaisselle,"Seche-linge:",self.seche_linge
+		print "\nClimatisation:",self.climatisation,"Chauffage:",self.chauffage
