@@ -25,3 +25,12 @@ class Electro(Appareil):
 
 		#Nombre de fois que l'appareil a été allumé (utile pour les chevauchements d'allumage)
 		self.nb_allumage = 0
+
+class Frigo(Appareil):
+
+	def __init__(self, nom , consommation_watt_heure):
+
+		Appareil.__init__(self, nom, consommation_watt_heure)
+
+		#Temperature interne du frigo en °C
+		self.temperature = 0
