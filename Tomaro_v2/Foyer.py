@@ -3,57 +3,124 @@
 
 LienSondage = "Data/SondageHabitudes.csv"
 import csv
-from random import sample
+from random import sample, seed
 from Personne import Personne
 
 
 class Foyer:
 
-	Individus = []
+	liste_personne = []
 
 	def __init__(self, _nombreIndividu):
-		self.nombreIndividu = _nombreIndividu
+		self.nombre_individu = _nombreIndividu
 		self.ajouterIndividus()
 
-	def ChoixPopulation(self, lien):
-		with open(lien, 'rb') as FichierCsv:
+	def ChoixPopulation(self):
+		with open(LienSondage, 'rb') as FichierCsv:
 			lignes = csv.reader(FichierCsv, delimiter=',')
-			choix = [ x+1 for x in sample(range(283),self.nombreIndividu)] # taille de la population on decale de 1 pouur header du csv
+			choix = sample(range(1,284),self.nombre_individu) # taille de la population on decale de 1 pouur header du csv
 			PopulationFoyer = []
 			for i, line in enumerate(lignes):
 				if i in choix :
 					PopulationFoyer.append(line[1:-1])
-					print i
 
 		return PopulationFoyer
 
 	def ajouterIndividus(self):
-		PopulationDisponible = self.ChoixPopulation(LienSondage)
+		PopulationDisponible = self.ChoixPopulation()
 		# print(PopulationDisponible)
 		for ligne in PopulationDisponible:
-			nouvelIndividu = Personne()
+			nouvel_individu = Personne()
 
+			# Television jours travaillés
 			for index, var in enumerate(ligne[0:7]):
 				if int(var)!=0:
-					if index==0:
-						nouvelIndividu.tv_h_jt[0]=int(var)
+					if index==6:
+						nouvel_individu.tv_h_jt[0]=int(var)
 					else:
-						nouvelIndividu.tv_h_jt[360+(index-1)*180]=int(var)
-			print nouvelIndividu.tv_h_jt
+						nouvel_individu.tv_h_jt[360 + (index)*180]=int(var)
 
-			print "VÉRIFIER QUE LES VALEURS SONT BON!!!!!!!!!!!!!!!!!!"
-			print "VÉRIFIER QUE LES VALEURS SONT BON!!!!!!!!!!!!!!!!!!"
-			print "VÉRIFIER QUE LES VALEURS SONT BON!!!!!!!!!!!!!!!!!!"
-			print "VÉRIFIER QUE LES VALEURS SONT BON!!!!!!!!!!!!!!!!!!"
-
-			# nouvelIndividu.tv_h_jt=
-			# nouvelIndividu.tv_h_jnt=
-			# nouvelIndividu.pc_h_jt=
+			# Ordinateurs jours travaillés
+			for index, var in enumerate(ligne[7:14]):
+				if int(var)!=0:
+					if index==6:
+						nouvel_individu.pc_h_jt[0]=int(var)
+					else:
+						nouvel_individu.pc_h_jt[360 + (index)*180]=int(var)
 
 
-			# Individus.append(Personne())	
+			for index, var in enumerate(ligne[14:21]):
+				if int(var)!=0:
+					if index==6:
+						nouvel_individu.pai_h_jt[0]=int(var)
+					else:
+						nouvel_individu.pai_h_jt[360 + (index)*180]=int(var)
+
+			for index, var in enumerate(ligne[21:28]):
+				if int(var)!=0:
+					if index==6:
+						nouvel_individu.electro_h_jt[0]=int(var)
+					else:
+						nouvel_individu.electro_h_jt[360 + (index)*180]=int(var)
+
+			for index, var in enumerate(ligne[28:35]):
+				if int(var)!=0:
+					if index==6:
+						nouvel_individu.electro_h_jt[0]=nouvel_individu.electro_h_jt[0] + int(var)
+					else:
+						nouvel_individu.electro_h_jt[360 + (index)*180]=nouvel_individu.electro_h_jt[360 + (index)*180] + int(var)
+
+			for index, var in enumerate(ligne[35:42]):
+				if int(var)!=0:
+					if index==6:
+						nouvel_individu.tv_h_jnt[0]=int(var)
+					else:
+						nouvel_individu.tv_h_jnt[360 + (index)*180]=int(var)
+
+			# Ordinateurs jours travaillés
+			for index, var in enumerate(ligne[42:49]):
+				if int(var)!=0:
+					if index==6:
+						nouvel_individu.pc_h_jnt[0]=int(var)
+					else:
+						nouvel_individu.pc_h_jnt[360 + (index)*180]=int(var)
+
+
+			for index, var in enumerate(ligne[49:56]):
+				if int(var)!=0:
+					if index==6:
+						nouvel_individu.pai_h_jnt[0]=int(var)
+					else:
+						nouvel_individu.pai_h_jnt[360 + (index)*180]=int(var)
+
+			for index, var in enumerate(ligne[56:63]):
+				if int(var)!=0:
+					if index==6:
+						nouvel_individu.electro_h_jnt[0]=int(var)
+					else:
+						nouvel_individu.electro_h_jnt[360 + (index)*180]=int(var)
+
+			for index, var in enumerate(ligne[63:70]):
+				if int(var)!=0:
+					if index==6:
+						nouvel_individu.electro_h_jnt[0]=nouvel_individu.electro_h_jt[0] + int(var)
+					else:
+						nouvel_individu.electro_h_jnt[360 + (index)*180]=nouvel_individu.electro_h_jt[360 + (index)*180] + int(var)
+
+			nouvel_individu.machine_a_laver = int(ligne[70])
+			nouvel_individu.lave_vaisselle = int(ligne[71])
+			nouvel_individu.seche_linge = int(ligne[72])
+
+			if(ligne[73]=="Oui"):
+				nouvel_individu.climatisation = True
+
+			if(ligne[74]=="Oui"):
+				nouvel_individu.chauffage = True
+
+			self.liste_personne.append(nouvel_individu)	
 
 
 if __name__=='__main__':
+	seed(3)
 	a = Foyer(5)
 	#a.CsvParse()
