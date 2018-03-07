@@ -30,7 +30,7 @@ class Personne:
 		self.eteignage_pai_h = -1 # heure d'eteignage recalculer à chaque nouvelle plage
 
 		# Initialisation des Appareils électroménagé
-		self.electro = Appareil("ELECTRO",1000+randrange(-250,250)) #+ ou - 25%
+		self.electro = Electro("ELECTRO",1000+randrange(-250,250)) #+ ou - 25%
 		self.electro_h_jt = dict() # dictionnaire de l'utilisation des Appareils électroménagés par une personne lors des jours travaillés [plage:nb_fois_utilisé]
 		self.electro_h_jnt = dict() # dictionnaire de l'utilisation des Appareils électroménagés par une personne lors des jours non travaillés [plage:nb_fois_utilisé]
 		self.liste_allumage_h = [] # horaire d'allumage des Appareils recalculer à chaque nouvelle plage

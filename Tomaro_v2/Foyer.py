@@ -9,15 +9,14 @@ from Personne import *
 
 class Foyer:
 
-	liste_personne = []
-	climatisation = False
-	chauffage = False
-	machine_a_laver = 0
-	lave_vaisselle = 0
-	seche_linge = 0
-
 	def __init__(self, nombre_individu):
 
+		self.liste_personne = []
+		self.climatisation = False
+		self.chauffage = False
+		self.machine_a_laver = 0
+		self.lave_vaisselle = 0
+		self.seche_linge = 0
 		self.nombre_individu = nombre_individu
 		self.ajouter_individu()
 
