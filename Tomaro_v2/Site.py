@@ -140,14 +140,20 @@ class Site:
 
 		for foyer in liste_foyer:
 				for personne in foyer.liste_personne:
-					if(personne.allumage_tv_h == minute) personne.tv.allume = True
-					elif(personne.eteignage_tv_h == minute) personne.tv.allume = False
+					if(personne.allumage_tv_h == minute):
+						personne.tv.allume = True
+					elif(personne.eteignage_tv_h == minute):
+						personne.tv.allume = False
 
-					if(personne.allumage_pc_h == minute) personne.pc.allume = True
-					elif(personne.eteignage_pc_h == minute) personne.pc.allume = False
+					if(personne.allumage_pc_h == minute):
+						personne.pc.allume = True
+					elif(personne.eteignage_pc_h == minute):
+						personne.pc.allume = False
 
-					if(personne.allumage_pai_h == minute) personne.pai.allume = True
-					elif(personne.eteignage_pai_h == minute) personne.pai.allume = False
+					if(personne.allumage_pai_h == minute):
+						personne.pai.allume = True
+					elif(personne.eteignage_pai_h == minute):
+						personne.pai.allume = False
 
 					for minute_allumage in personne.liste_allumage_h:
 						if(minute_allumage == minute):

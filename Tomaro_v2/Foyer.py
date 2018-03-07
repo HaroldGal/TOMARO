@@ -4,7 +4,7 @@
 LienSondage = "Data/SondageHabitudes.csv"
 import csv
 from random import sample, seed
-from Personne import Personne
+from Personne import *
 
 
 class Foyer:
@@ -16,9 +16,9 @@ class Foyer:
 	lave_vaisselle = 0
 	seche_linge = 0
 
-	def __init__(self, _nombre_individu):
+	def __init__(self, nombre_individu):
 
-		self.nombre_individu = _nombre_individu
+		self.nombre_individu = nombre_individu
 		self.ajouter_individu()
 
 
@@ -94,9 +94,15 @@ class Foyer:
 			for index, var in enumerate(ligne[28:35]):
 				if int(var)!=0:
 					if index==6:
-						nouvel_individu.electro_h_jt[0]=nouvel_individu.electro_h_jt[0] + int(var)
+						if 0 in nouvel_individu.electro_h_jt :
+							nouvel_individu.electro_h_jt[0]=nouvel_individu.electro_h_jt[0] + int(var)
+						else:
+							nouvel_individu.electro_h_jt[0]=int(var)
 					else:
-						nouvel_individu.electro_h_jt[360 + (index)*180]=nouvel_individu.electro_h_jt[360 + (index)*180] + int(var)
+						if 360 + (index)*180 in nouvel_individu.electro_h_jt :
+							nouvel_individu.electro_h_jt[360 + (index)*180]=nouvel_individu.electro_h_jt[360 + (index)*180] + int(var)
+						else:
+							nouvel_individu.electro_h_jt[360 + (index)*180]=int(var)
 
 			# Television jours non travaillés
 			for index, var in enumerate(ligne[35:42]):
@@ -134,9 +140,15 @@ class Foyer:
 			for index, var in enumerate(ligne[63:70]):
 				if int(var)!=0:
 					if index==6:
-						nouvel_individu.electro_h_jnt[0]=nouvel_individu.electro_h_jt[0] + int(var)
+						if 0 in nouvel_individu.electro_h_jnt :
+							nouvel_individu.electro_h_jnt[0]=nouvel_individu.electro_h_jnt[0] + int(var)
+						else:
+							nouvel_individu.electro_h_jnt[0]=int(var)
 					else:
-						nouvel_individu.electro_h_jnt[360 + (index)*180]=nouvel_individu.electro_h_jt[360 + (index)*180] + int(var)
+						if 360 + (index)*180 in nouvel_individu.electro_h_jnt :
+							nouvel_individu.electro_h_jnt[360 + (index)*180]=nouvel_individu.electro_h_jnt[360 + (index)*180] + int(var)
+						else:
+							nouvel_individu.electro_h_jnt[360 + (index)*180]=int(var)
 
 			nouvel_individu.machine_a_laver = int(ligne[70])
 			nouvel_individu.lave_vaisselle = int(ligne[71])

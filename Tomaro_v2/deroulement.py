@@ -5,7 +5,7 @@ from Site import *
 import time
 
 #Création du site
-#site_alpha = Site("Campus",1000)
+site_alpha = Site("Campus",1000)
 
 
 #Variable de temps
@@ -21,9 +21,9 @@ while(continu):
 	#time.sleep(1)
 
 	if(minute_journee in plage):
-		site.actualisation_des_plages_h(minute_journee,jour_semaine)
+		site_alpha.actualisation_des_plages_h(minute_journee,jour_semaine)
 
-	site.actualisation_des_foyers(minute_journee)
+	site_alpha.actualisation_des_foyers(minute_journee)
 
 	#---------- Gestion du temps ----------#
 	minute_journee = minute_journee + 1
@@ -37,5 +37,5 @@ while(continu):
 		annee = annee + 1
 		semaine = 0
 
-
+	print minute_journee,"min",jour_semaine,"jour",semaine,"semaine"
 
