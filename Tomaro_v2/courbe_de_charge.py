@@ -13,6 +13,7 @@ fig = pylab.figure(figsize=[6, 4], # Inches
                    dpi=100,        # 100 dots per inch, so the resulting buffer is 400x400 pixels
                    )
 ax = fig.gca()
+matplotlib.pyplot.title("Courbe de charge")
 matplotlib.pyplot.ion()
 
 
@@ -45,8 +46,8 @@ def courbe_maj(val,temps):
 		
 	else :
 		ax.cla()
-		data.pop(1)
-		axe_temps.pop(1)
+		data.pop(0)
+		axe_temps.pop(0)
 		data.append(val)
 	if temps%180 == 0:
 		axe_temps.append(str(temps/60)+"h")

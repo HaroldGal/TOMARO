@@ -97,11 +97,12 @@ while(continu):
 	site_alpha.actualisation_des_foyers(minute_journee,is_nuit)
 
 	print "\033c"	
-	print "Nb_habitant =",site_alpha.nb_personne
-	print decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min -",str_jour_semaine[jour_semaine],"",jour_mois,"/",mois,"/",annee
-	print "Consommation globale =",site_alpha.consommation_globale_minute/1000,"kW.h"
+	print "Nombre de foyer sur le site:",site_alpha.nb_foyer
+	print "\nNombre d'habitant sur le site:",site_alpha.nb_personne
+	print "\n",decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min -",str_jour_semaine[jour_semaine],"",jour_mois,"/",mois,"/",annee
+	print "\nConsommation globale:",site_alpha.consommation_globale_minute,"W.h"
 
 	#Affichage du graphique mise à jour toutes les 20 min
 	if minute_journee%20 ==0:
-		courbe_maj(site_alpha.consommation_globale_minute, minute_journee)
+		courbe_maj(site_alpha.consommation_globale_minute/1000, minute_journee)
 
