@@ -1,6 +1,7 @@
 #!/usr/bin/python2.7
 #-*- coding: utf-8 -*-
 
+from courbe_de_charge import courbe_maj
 from Site import *
 import time
 import sys
@@ -48,9 +49,16 @@ while(continu):
 		annee = annee + 1
 		semaine = 0
 
-	print "\033c"
-	print "Nb_habitant =",site_alpha.nb_personne
-	print decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min",jour_semaine,"jour",semaine,"semaine"
-	print "consommation globale =",site_alpha.consommation_globale_minute,"W.h"
+	# print "\033c"
+	# print "Nb_habitant =",site_alpha.nb_personne
+	# print decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min",jour_semaine,"jour",semaine,"semaine"
+	# print "consommation globale =",site_alpha.consommation_globale_minute,"W.h"
 
+	if minute_journee%20 ==0 :
+		# #print "\033c"
+		# print "Nb_habitant =",site_alpha.nb_personne
+		# print decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min",jour_semaine,"jour",semaine,"semaine"
+		# print "consommation globale =",site_alpha.consommation_globale_minute,"W.h"
+		courbe_maj(site_alpha.consommation_globale_minute, minute_journee)
+		#courbe_maj(site_alpha.consommation_globale_minute, str(minute_journee) )
 
