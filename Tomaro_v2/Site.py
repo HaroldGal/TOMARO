@@ -57,6 +57,47 @@ class Site:
 
 		return nb_personne
 
+	#Calcule de la consommation maximale moyenne sur une journée
+	def consommation_moyenne_site(self):
+
+		consommation_foyer_semaine = 0
+		consommation_moyenne_jour = 0
+		for foyer in self.liste_foyer:
+				consommation_jt = 0
+				consommation_jnt = 0
+				for personne in foyer.liste_personne:
+					for plage,tps_allumage in personne.tv_h_jt.items():
+						consommation_jt += personne.tv.consommation_minute*tps_allumage
+					for plage,tps_allumage in personne.pc_h_jnt.items():
+						consommation_jnt += personne.pc.consommation_minute*tps_allumage
+
+					for plage,tps_allumage in personne.pc_h_jt.items():
+						consommation_jt += personne.pc.consommation_minute*tps_allumage
+					for plage,tps_allumage in personne.pc_h_jnt.items():
+						consommation_jnt += personne.pc.consommation_minute*tps_allumage
+
+					for plage,tps_allumage in personne.pai_h_jt.items():
+						consommation_jt += personne.pai.consommation_minute*tps_allumage
+					for plage,tps_allumage in personne.pai_h_jnt.items():
+						consommation_jnt += personne.pai.consommation_minute*tps_allumage	
+
+					for plage,nb_allumage in personne.electro_h_jt.items():
+						consommation_jt += personne.electro.consommation_minute*5*nb_allumage
+					for plage,nb_allumage in personne.electro_h_jnt.items():
+						consommation_jnt += personne.electro.consommation_minute*5*nb_allumage
+
+				#Pour les lampes
+				consommation_jt += consommation_jt*0.1
+				consommation_jnt += consommation_jnt*0.1
+
+				consommation_foyer_semaine = consommation_jt*5 + consommation_jnt*2
+				consommation_foyer_semaine += foyer.machine_a_laver*1000 + foyer.lave_vaisselle*1000 + foyer.seche_linge*1500
+				#AJOUTER CHAUFFAGE CLIMATISATION FRIGO
+
+				consommation_moyenne_jour += consommation_foyer_semaine / 7
+
+		return consommation_moyenne_jour
+
 	#Modifie les heures d'allumage et d'éteignage des appareils
 	def actualisation_des_plages_h(self,minute,jour):		
 
@@ -139,12 +180,15 @@ class Site:
 						personne.liste_eteignage_h = [temps+5 for temps in personne.liste_allumage_h]
 						
 	#Allume ou éteint les appareils en fonction de l'heure de la journée
-	def actualisation_des_foyers(self,minute):
+	def actualisation_des_foyers(self,minute,nuit):
 
 		self.consommation_globale_minute = 0
 
 		for foyer in self.liste_foyer:
 				for personne in foyer.liste_personne:
+
+					#On considere tous les appareils éteints
+					personne.lampe.allume = False
 
 					#--------------- On regarde si on doit allumer ou éteindre les appareils ---------------#
 					if(personne.allumage_tv_h == minute):
@@ -175,10 +219,20 @@ class Site:
 
 					#--------------- Calcule de la consommation globale ---------------#
 					if(personne.tv.allume == True):
+						if(nuit == True):
+							personne.lampe.allume = True
 						self.consommation_globale = self.consommation_globale_minute + personne.tv.consommation_minute
 					if(personne.pc.allume == True):
+						if(nuit == True):
+							personne.lampe.allume = True
 						self.consommation_globale_minute = self.consommation_globale_minute + personne.pc.consommation_minute
 					if(personne.pai.allume == True):
+						if(nuit == True):
+							personne.lampe.allume = True
 						self.consommation_globale_minute = self.consommation_globale_minute + personne.pai.consommation_minute
 					if(personne.electro.allume == True):
+						if(nuit == True):
+							personne.lampe.allume = True
 						self.consommation_globale_minute = self.consommation_globale + personne.electro.consommation_minute*personne.electro.nb_allumage
+					if(personne.lampe.allume == True):
+						self.consommation_globale_minute = self.consommation_globale_minute + personne.lampe.consommation_minute	

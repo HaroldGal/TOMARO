@@ -36,6 +36,9 @@ class Personne:
 		self.liste_allumage_h = [] # horaire d'allumage des Appareils recalculer à chaque nouvelle plage
 		self.liste_eteignage_h = [] # horaire d'eteignage des Appareils recalculer à chaque nouvelle plage
 		
+		#Initialisation de la lampe de la personne
+		self.lampe = Appareil("LAMPE",60+randrange(-6,6)) #+ ou - 10%
+
 		# Initialisation du nombre de machine dans la semaine
 		self.machine_a_laver = -1
 		self.lave_vaisselle = -1
