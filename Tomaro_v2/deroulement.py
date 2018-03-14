@@ -3,6 +3,7 @@
 
 from Site import *
 import time
+import sys
 
 #Transforme les secondes en heures
 def decoupe(minute):
@@ -11,7 +12,7 @@ def decoupe(minute):
     return (heure,minute)
 
 #Création du site
-site_alpha = Site("Campus",10000)
+site_alpha = Site("Campus",int(sys.argv[1]))
 print "nb_habitant=",site_alpha.nb_personne
 
 #Variable de temps
