@@ -1,6 +1,7 @@
 #!/usr/bin/python2.7
 #-*- coding: utf-8 -*-
 
+from courbe_de_charge import courbe_maj
 from Site import *
 import calendar
 import time
@@ -65,7 +66,7 @@ consommation_total = 0
 continu = True
 while(continu):
 
-	time.sleep(0.5)
+	#time.sleep(0.5)
 
 	#---------- Gestion du temps ----------#	
 	
@@ -100,4 +101,7 @@ while(continu):
 	print decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min -",str_jour_semaine[jour_semaine],"",jour_mois,"/",mois,"/",annee
 	print "Consommation globale =",site_alpha.consommation_globale_minute/1000,"kW.h"
 
+	#Affichage du graphique mise à jour toutes les 20 min
+	if minute_journee%20 ==0:
+		courbe_maj(site_alpha.consommation_globale_minute, minute_journee)
 
