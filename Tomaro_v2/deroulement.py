@@ -102,7 +102,13 @@ while(continu):
 	print "\n",decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min -",str_jour_semaine[jour_semaine],"",jour_mois,"/",mois,"/",annee
 	print "\nConsommation globale:",site_alpha.consommation_globale_minute,"W.h"
 
-	#Affichage du graphique mise à jour toutes les 20 min
-	if minute_journee%20 ==0:
-		courbe_maj(site_alpha.consommation_globale_minute/1000, minute_journee)
+	# Affichage du graphique mise à jour toutes les 20 min
+	# if minute_journee%20 ==0:
+	# 	courbe_maj(site_alpha.consommation_globale_minute/1000, minute_journee)
+	if minute_journee%60 ==0:
+		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00" 
+		#meteo[temps] = (temperature, rad_globale, rad_directe, rad_diffuse, rad_infrarouge, vitesse_vent)
+		print "\nMeteo à cette heure ci\nTemperature:",str(site_alpha.meteo[cle][0]),"°C - Vent:",str(site_alpha.meteo[cle][5]),"m/s"
+		print "Radiation:\nGlobale:",str(site_alpha.meteo[cle][1]),"Directe:",str(site_alpha.meteo[cle][2]),"Diffuse:",str(site_alpha.meteo[cle][3]),"Infrarouge",str(site_alpha.meteo[cle][4])
+		time.sleep(2)
 

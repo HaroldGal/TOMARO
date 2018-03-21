@@ -4,6 +4,8 @@
 from Foyer import *
 from random import randrange,sample
 
+lien_data_meteo = "Data/meteo.csv"
+
 class Site:
 
 	def __init__(self, nom, nb_foyer):
@@ -23,7 +25,13 @@ class Site:
 
 		#Nombre d'habitant du site
 		self.nb_personne = self.compteur_personne()
-		
+
+		#Les donnees meteo du site pendant une année
+		self.meteo = self.init_meteo()
+		#dictionnaire de la forme
+		#meteo[temps] = (temperature, rad_globale, rad_directe, rad_diffuse, rad_infrarouge, vitesse_vent)
+		#temps sous la forme "dd/mm hh:mm:ss"
+
 	#Fonction permettant de renvoyer la liste avec tous les foyers du site
 	def init_liste_foyer(self, nb_foyer):
 
@@ -35,6 +43,19 @@ class Site:
 			liste_foyer.append(Foyer(randrange(1,4)))
 
 		return liste_foyer
+
+	def init_meteo(self):
+		print "Creation de la base de donnee meteo"
+		meteo = dict()
+		with open(lien_data_meteo, 'rb') as FichierCsv:
+			lignes = csv.reader(FichierCsv, delimiter=',')
+			next(lignes,None)
+			for line in lignes:
+				meteo[line[0][0:5] + line[0][10:]] = (line[1], line[2], line[3], line[4], line[5], line[6])
+
+		print "Donnees meteo complete"
+		return meteo
+		
 
 	#Fonction permettant de renvoyer la liste avec tous les productions du site
 	def init_liste_production(self):
