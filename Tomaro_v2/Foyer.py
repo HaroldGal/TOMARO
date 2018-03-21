@@ -12,13 +12,26 @@ class Foyer:
 	def __init__(self, nombre_individu):
 
 		self.liste_personne = []
+
 		self.climatisation = False
 		self.chauffage = False
-		self.machine_a_laver = 0
-		self.lave_vaisselle = 0
-		self.seche_linge = 0
+
+		self.nb_machine_a_laver = 0
+		self.machine_a_laver = Appareil("Machine_a_laver",470+randrange(-47,47))
+		self.heure_jour_on_off_machine_a_laver = dict() #Dictionnaire permettant de stocker l'heure d'allumage de la machine
+
+		self.nb_lave_vaisselle = 0
+		self.lave_vaisselle = Appareil("Lave_vaisselle",500+randrange(-50,50))
+		self.heure_jour_on_off_lave_vaisselle = dict() #Dictionnaire permettant de stocker l'heure d'allumage de la machine
+
+		self.nb_seche_linge = 0
+		self.seche_linge = Appareil("Seche_linge",1700+randrange(-170,170))
+		self.heure_jour_on_off_seche_linge = dict() #Dictionnaire permettant de stocker l'heure d'allumage de la machine
+
+
 		self.nombre_individu = nombre_individu
 		self.ajouter_individu()
+		self.habitude_foyer()
 
 
 	def habitude_foyer(self):
@@ -26,17 +39,17 @@ class Foyer:
 		cpt_chauffage = 0
 
 		for individu in self.liste_personne:
-			self.machine_a_laver = individu.machine_a_laver if (self.machine_a_laver<individu.machine_a_laver) else self.machine_a_laver
-			self.lave_vaisselle = individu.lave_vaisselle if (self.lave_vaisselle<individu.lave_vaisselle) else self.lave_vaisselle
-			self.seche_linge = individu.seche_linge if (self.seche_linge<individu.seche_linge) else self.seche_linge
+			self.nb_machine_a_laver = individu.machine_a_laver if (self.nb_machine_a_laver<individu.machine_a_laver) else self.nb_machine_a_laver
+			self.nb_lave_vaisselle = individu.lave_vaisselle if (self.nb_lave_vaisselle<individu.lave_vaisselle) else self.nb_lave_vaisselle
+			self.nb_seche_linge = individu.seche_linge if (self.nb_seche_linge<individu.seche_linge) else self.nb_seche_linge
 			if(individu.climatisation):
 				cpt_climatisation+=1
 			if(individu.chauffage):
 				cpt_chauffage+=1
 
-		if(float(cpt_climatisation)/float(nombre_individu) > 0.5):	
+		if(float(cpt_climatisation)/float(self.nombre_individu) > 0.5):	
 			climatisation = True
-		if(float(cpt_chauffage)/float(nombre_individu) > 0.5):
+		if(float(cpt_chauffage)/float(self.nombre_individu) > 0.5):
 			chauffage = True
 
 
