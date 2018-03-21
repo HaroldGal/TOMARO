@@ -52,6 +52,7 @@ mois = now.tm_mon
 jour_mois = now.tm_mday
 jour_semaine = now.tm_wday #Lundi 0 .... Dimanche 6
 minute_journee = plage_proche(now.tm_hour*60+now.tm_min,plage) #Commence une minute avant un plage existante
+site_alpha.actualisation_heure_jour_machine_foyer() #Calcul des horaires pour les différentes machines
 
 # ---------- AJOUTER LATITUDE ET LONGITUDE DE LA VILLE OU VOUS ETES ---------- #
 coords = {'longitude' : 2.3522, 'latitude' : 48.8566 }
@@ -90,17 +91,22 @@ while(continu):
 		mois = 1
 		annee += 1
 
-	#Déroulement de la journée
+	##Modification des temps de consommations et déroulement de la journée
 	if(minute_journee in plage):
 		site_alpha.actualisation_des_plages_h(minute_journee,jour_semaine)
 
-	site_alpha.actualisation_des_foyers(minute_journee,is_nuit)
+	#Si on est le lundi à minuit on calcul aléatoirement les jours d'allumage des machines des foyers
+	if(jour_semaine == 0 and minute_journee == 0):
+		site_alpha.actualisation_heure_jour_machine_foyer()
+
+	site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit)
 
 	print "\033c"	
 	print "Nombre de foyer sur le site:",site_alpha.nb_foyer
 	print "\nNombre d'habitant sur le site:",site_alpha.nb_personne
 	print "\n",decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min -",str_jour_semaine[jour_semaine],"",jour_mois,"/",mois,"/",annee
 	print "\nConsommation globale:",site_alpha.consommation_globale_minute,"W.h"
+	print "\nConsommation moyenne par jour du site:",round(site_alpha.consommation_moyenne_jour/1000),"kW.h"
 
 	# Affichage du graphique mise à jour toutes les 20 min
 	# if minute_journee%20 ==0:

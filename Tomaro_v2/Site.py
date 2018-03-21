@@ -14,6 +14,7 @@ class Site:
 		self.nb_foyer = nb_foyer
 		self.consommation_globale_minute = 0	
 
+
 		#Initialisation de la liste des foyers
 		self.liste_foyer = self.init_liste_foyer(nb_foyer)
 
@@ -32,6 +33,9 @@ class Site:
 		#meteo[temps] = (temperature, rad_globale, rad_directe, rad_diffuse, rad_infrarouge, vitesse_vent)
 		#temps sous la forme "dd/mm hh:mm:ss"
 
+		#Consommation moyenne du site par jour
+		self.consommation_moyenne_jour = self.consommation_moyenne_site()
+		
 	#Fonction permettant de renvoyer la liste avec tous les foyers du site
 	def init_liste_foyer(self, nb_foyer):
 
@@ -112,7 +116,7 @@ class Site:
 				consommation_jnt += consommation_jnt*0.1
 
 				consommation_foyer_semaine = consommation_jt*5 + consommation_jnt*2
-				consommation_foyer_semaine += foyer.machine_a_laver*1000 + foyer.lave_vaisselle*1000 + foyer.seche_linge*1500
+				consommation_foyer_semaine += foyer.nb_machine_a_laver*1000 + foyer.nb_lave_vaisselle*1000 + foyer.nb_seche_linge*1500
 				#AJOUTER CHAUFFAGE CLIMATISATION FRIGO
 
 				consommation_moyenne_jour += consommation_foyer_semaine / 7
@@ -201,11 +205,38 @@ class Site:
 						personne.liste_eteignage_h = [temps+5 for temps in personne.liste_allumage_h]
 						
 	#Allume ou éteint les appareils en fonction de l'heure de la journée
-	def actualisation_des_foyers(self,minute,nuit):
+	def actualisation_des_foyers(self,minute,jour_semaine,nuit):
 
 		self.consommation_globale_minute = 0
 
 		for foyer in self.liste_foyer:
+
+
+				for minute_on_off,jour_allumage in foyer.heure_jour_on_off_machine_a_laver.items():
+						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.machine_a_laver.allume == False):
+							foyer.machine_a_laver.allume = True
+						if(jour_allumage == jour_semaine and minute_on_off[1] == minute and foyer.machine_a_laver.allume == True):
+							foyer.machine_a_laver.allume = True
+
+				for minute_on_off,jour_allumage in foyer.heure_jour_on_off_lave_vaisselle.items():
+						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.lave_vaisselle.allume == False):
+							foyer.lave_vaisselle.allume = True
+						if(jour_allumage == jour_semaine and minute_on_off[1] == minute and foyer.lave_vaisselle.allume == True):
+							foyer.lave_vaisselle.allume = False
+
+				for minute_on_off,jour_allumage in foyer.heure_jour_on_off_seche_linge.items():
+						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.seche_linge.allume == False):
+							foyer.seche_linge.allume = True
+						if(jour_allumage == jour_semaine and minute_on_off[1] == minute and foyer.seche_linge.allume == True):
+							foyer.seche_linge.allume = False
+
+				if(foyer.machine_a_laver.allume == True):
+					self.consommation_globale_minute += foyer.machine_a_laver.consommation_minute
+				if(foyer.lave_vaisselle.allume == True):
+					self.consommation_globale_minute += foyer.lave_vaisselle.consommation_minute
+				if(foyer.seche_linge.allume == True):
+					self.consommation_globale_minute += foyer.seche_linge.consommation_minute
+
 				for personne in foyer.liste_personne:
 
 					#On considere tous les appareils éteints
@@ -242,18 +273,93 @@ class Site:
 					if(personne.tv.allume == True):
 						if(nuit == True):
 							personne.lampe.allume = True
-						self.consommation_globale = self.consommation_globale_minute + personne.tv.consommation_minute
+						self.consommation_globale_minute += personne.tv.consommation_minute
 					if(personne.pc.allume == True):
 						if(nuit == True):
 							personne.lampe.allume = True
-						self.consommation_globale_minute = self.consommation_globale_minute + personne.pc.consommation_minute
+						self.consommation_globale_minute += personne.pc.consommation_minute
 					if(personne.pai.allume == True):
 						if(nuit == True):
 							personne.lampe.allume = True
-						self.consommation_globale_minute = self.consommation_globale_minute + personne.pai.consommation_minute
+						self.consommation_globale_minute += personne.pai.consommation_minute
 					if(personne.electro.allume == True):
 						if(nuit == True):
 							personne.lampe.allume = True
-						self.consommation_globale_minute = self.consommation_globale + personne.electro.consommation_minute*personne.electro.nb_allumage
+						self.consommation_globale_minute += personne.electro.consommation_minute*personne.electro.nb_allumage
 					if(personne.lampe.allume == True):
-						self.consommation_globale_minute = self.consommation_globale_minute + personne.lampe.consommation_minute	
+						self.consommation_globale_minute += personne.lampe.consommation_minute
+
+
+
+
+
+	#Permet de modifier l'heure et jour d'allumage et éteignage des machines à laver, seche linge, lave vaisselle du foyer
+	def actualisation_heure_jour_machine_foyer(self):
+
+		for foyer in self.liste_foyer:
+			
+			i = 0
+			while(i < foyer.nb_machine_a_laver):
+				ok_allumage = True
+				jour_tmp = randrange(0,7)
+				minute_allumage_tmp = randrange(0,1260) #Heure d'allumage de minuit à 21h
+				minute_eteignage_tmp = minute_allumage_tmp+randrange(30,180) #Heure éteignage entre 30min et 3h
+
+				if(i == 0):
+					foyer.heure_jour_on_off_machine_a_laver[(minute_allumage_tmp,minute_eteignage_tmp)] = jour_tmp
+					i+=1
+
+				else:
+
+					for minute_on_off,jour_allumage in foyer.heure_jour_on_off_machine_a_laver.items():
+						if(jour_allumage == jour_tmp):
+							if(minute_allumage_tmp > minute_on_off[0] and minute_eteignage_tmp < minute_on_off[1]):
+								ok_allumage = False
+
+					if(ok_allumage == True):
+						foyer.heure_jour_on_off_machine_a_laver[(minute_allumage_tmp,minute_eteignage_tmp)] = jour_tmp
+						i+=1
+
+			i = 0
+			while(i < foyer.nb_lave_vaisselle):
+				ok_allumage = True
+				jour_tmp = randrange(0,7)
+				minute_allumage_tmp = randrange(0,1260) #Heure d'allumage de minuit à 21h
+				minute_eteignage_tmp = minute_allumage_tmp+randrange(30,180) #Heure éteignage entre 30min et 3h
+
+				if(i == 0):
+					foyer.heure_jour_on_off_lave_vaisselle[(minute_allumage_tmp,minute_eteignage_tmp)] = jour_tmp
+					i+=1
+
+				else:
+
+					for minute_on_off,jour_allumage in foyer.heure_jour_on_off_lave_vaisselle.items():
+						if(jour_allumage == jour_tmp):
+							if(minute_allumage_tmp > minute_on_off[0] and minute_eteignage_tmp < minute_on_off[1]):
+								ok_allumage = False
+
+					if(ok_allumage == True):
+						foyer.heure_jour_on_off_lave_vaisselle[(minute_allumage_tmp,minute_eteignage_tmp)] = jour_tmp
+						i+=1
+
+			i = 0
+			while(i < foyer.nb_seche_linge):
+				ok_allumage = True
+				jour_tmp = randrange(0,7)
+				minute_allumage_tmp = randrange(0,1260) #Heure d'allumage de minuit à 21h
+				minute_eteignage_tmp = minute_allumage_tmp+randrange(30,180) #Heure éteignage entre 30min et 3h
+
+				if(i == 0):
+					foyer.heure_jour_on_off_seche_linge[(minute_allumage_tmp,minute_eteignage_tmp)] = jour_tmp
+					i+=1
+
+				else:
+
+					for minute_on_off,jour_allumage in foyer.heure_jour_on_off_seche_linge.items():
+						if(jour_allumage == jour_tmp):
+							if(minute_allumage_tmp > minute_on_off[0] and minute_eteignage_tmp < minute_on_off[1]):
+								ok_allumage = False
+
+					if(ok_allumage == True):
+						foyer.heure_jour_on_off_seche_linge[(minute_allumage_tmp,minute_eteignage_tmp)] = jour_tmp
+						i+=1
