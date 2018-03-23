@@ -36,6 +36,13 @@ def plage_proche(minute,plage):
 			new_plage = p
 	return new_plage - 1
 
+if(len(sys.argv) != 3):
+	print "python deroulement.py nb_foyer affichage_courbe(True ou False)"
+	sys.exit()
+
+if(sys.argv[2] != "True" or sys.argv[2] != "False"):
+	print "Deuxieme argument inconnu (True ou False)"
+
 #Création du site
 site_alpha = Site("Campus",int(sys.argv[1]))
 #Calcule de la consommation moyenne par jour du site
@@ -116,6 +123,9 @@ while(continu):
 
 
 	# Affichage du graphique mise à jour toutes les 20 min
-	if minute_journee%20 ==0:
+	if minute_journee%20 == 0 and sys.argv[2] == "True":
 	 	courbe_maj(site_alpha.consommation_globale_minute/1000, minute_journee)
+
+	elif sys.argv[2] == "False":
+		time.sleep(0.5)
 
