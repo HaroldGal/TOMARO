@@ -2,7 +2,7 @@
 #-*- coding: utf-8 -*-
 
 from Foyer import *
-from random import randrange,sample
+from random import randrange,sample, randint
 
 lien_data_meteo = "Data/meteo.csv"
 
@@ -60,6 +60,28 @@ class Site:
 		print "Donnees meteo complete"
 		return meteo
 		
+	def random_meteo(self, cle):
+		jour = int(cle[0:2])
+		mois = int(cle[3:5])
+
+		jour = randint(jour-15,jour+15)
+		if mois == 2:
+			if jour<=0:
+				jour = jour+31
+				mois-=1
+			elif jour>28:
+				jour = jour%28
+				mois+=1
+		else:
+			if jour<=0:
+				jour = jour+30
+				mois-=1
+			elif jour>30:
+				jour = jour%30
+				mois+=1
+
+		print str("%02d" %jour) + '/' + str("%02d" %mois) + cle[5:]
+		return str("%02d" %jour) + '/' + str("%02d" %mois) + cle[5:]
 
 	#Fonction permettant de renvoyer la liste avec tous les productions du site
 	def init_liste_production(self):
