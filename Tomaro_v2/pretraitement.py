@@ -4,6 +4,7 @@
 from Site import *
 import calendar
 import time
+import math
 import sys
 from Sun import Sun
 
@@ -49,13 +50,15 @@ consommation_moyenne_jour_site = site_alpha.consommation_moyenne_site()
 plage = [0,360,540,720,900,1080,1260]
 str_jour_semaine = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"]
 
-#Initialisation de la date du jour
+#Initialisation de la date du jour 
+
+#-------ON COMMENCE LE 01/01/01 à 00h00
 now = time.time() 
-annee = 1#now.tm_year
-mois = 1#now.tm_mon
-jour_mois = 1#now.tm_mday
-jour_semaine = 0#now.tm_wday #Lundi 0 .... Dimanche 6
-minute_journee = 0#lage_proche(now.tm_hour*60+now.tm_min,plage) #Commence une minute avant un plage existante
+annee = 1 
+mois = 1
+jour_mois = 1
+jour_semaine = 0 #Lundi 0 .... Dimanche 6
+minute_journee = 590
 site_alpha.actualisation_heure_jour_machine_foyer() #Calcul des horaires pour les différentes machines
 
 # ---------- AJOUTER LATITUDE ET LONGITUDE DE LA VILLE OU VOUS ETES ---------- #
@@ -67,11 +70,24 @@ decalage_horaire = 1.0
 #consommation globale du site
 consommation_total = 0
 
+#Producion
+PV1 = PV(0.18,1,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
+EO1 = EO(13) #https://www.alma-solarshop.fr/panneau-bisol/733-panneau-bisol-bmo-280-noir.html
+
+#Ouverture du fichier
+file = open("Data/data_pretraitement.txt",'w')
+file.write("365 2\n\n")
+
 #Boucle infinie pour modéliser le temps
 #continu = True
 jour_annee=1
 conso_jour=0
 tab_consomation_jour=[]
+
+cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
+cle = site_alpha.random_meteo(cle)
+
+#---- ON SIMULE LES DONNES SUR UN AN POUR AVOIR LA CONSOMMATION MOYENNE "U" LA PRODUCTION SOLAIRE "X" ET EOLIENNE "Y" CHAQUE JOUR
 while (jour_annee<=365):
 	#time.sleep(0.5)
 
@@ -88,6 +104,11 @@ while (jour_annee<=365):
 		tab_consomation_jour.append(conso_jour)
 		conso_jour=0
 		jour_annee+=1
+
+		file.write(str(int(round(PV1.production_energie_jour)))+" "+str(int(round(EO1.production_energie_jour)))+"\n")
+
+		PV1.production_energie_jour = 0
+		EO1.production_energie_jour = 0 
 		print "\033c"
 		print str(jour_annee*100/365)+"%"
 
@@ -112,19 +133,29 @@ while (jour_annee<=365):
 
 	site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit)
 
-	if minute_journee%60 ==0:
-		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00" 
+	if minute_journee%60 ==0:		
+		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
+		cle = site_alpha.random_meteo(cle)
+		PV1.production_energie(float(site_alpha.meteo[cle][1]))
+		EO1.production_energie(float(site_alpha.meteo[cle][5]))
 
 	conso_jour+=site_alpha.consommation_globale_minute
 
-	
+
 	# print "Nombre de foyer sur le site:",site_alpha.nb_foyer
 	# print "\nNombre d'habitant sur le site:",site_alpha.nb_personne
-	# print "\n",decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min -",str_jour_semaine[jour_semaine],"",jour_mois,"/",mois,"/",annee
+	#print "\n",decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min -",str_jour_semaine[jour_semaine],"",jour_mois,"/",mois,"/",annee
 	# print "\nConsommation globale:",site_alpha.consommation_globale_minute,"W.h"
 	# print "\nConsommation moyenne par jour du site:",round(site_alpha.consommation_moyenne_jour/1000),"kW.h"
 	# #meteo[temps] = (temperature, rad_globale, rad_directe, rad_diffuse, rad_infrarouge, vitesse_vent)
 	# print "\nMeteo à cette heure ci\nTemperature:",str(site_alpha.meteo[cle][0]),"°C - Vent:",str(site_alpha.meteo[cle][5]),"m/s"
-	# print "Radiation:\nGlobale:",str(site_alpha.meteo[cle][1]),"Directe:",str(site_alpha.meteo[cle][2]),"Diffuse:",str(site_alpha.meteo[cle][3]),"Infrarouge",str(site_alpha.meteo[cle][4])
+	#print "Radiation:\nGlobale:",str(site_alpha.meteo[cle][1]),"Directe:",str(site_alpha.meteo[cle][2]),"Diffuse:",str(site_alpha.meteo[cle][3]),"Infrarouge",str(site_alpha.meteo[cle][4])
+	#print "Production du jour: PV =",PV1.production_energie_jour,"EO =",EO1.production_energie_jour
+
+file.write("\n")
+for conso in tab_consomation_jour:
+	file.write(str(int(round(conso)))+"\n")
 
 print time.time()-now,"secondes"
+print "Nombre de foyer sur le site:",site_alpha.nb_foyer
+print "\nNombre d'habitant sur le site:",site_alpha.nb_personne

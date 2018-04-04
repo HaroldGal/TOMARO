@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 
 from Foyer import *
+from Production import *
 from random import randrange,sample, randint
 
 lien_data_meteo = "Data/meteo.csv"
@@ -68,19 +69,23 @@ class Site:
 		if mois == 2:
 			if jour<=0:
 				jour = jour+31
-				mois-=1
+				mois-=1				
 			elif jour>28:
 				jour = jour%28
 				mois+=1
 		else:
 			if jour<=0:
-				jour = jour+30
+				jour = jour+28
 				mois-=1
 			elif jour>30:
-				jour = jour%30
+				jour = jour%28
 				mois+=1
+		if mois == 0:
+			mois = 12
+		if mois == 13:
+			mois = 1
 
-		print str("%02d" %jour) + '/' + str("%02d" %mois) + cle[5:]
+		#print str("%02d" %jour) + '/' + str("%02d" %mois) + cle[5:]
 		return str("%02d" %jour) + '/' + str("%02d" %mois) + cle[5:]
 
 	#Fonction permettant de renvoyer la liste avec tous les productions du site
