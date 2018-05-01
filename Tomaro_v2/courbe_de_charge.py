@@ -28,18 +28,19 @@ raw_data = renderer.tostring_rgb()
 import pygame
 from pygame.locals import *
 
-pygame.init()
 
-window = pygame.display.set_mode((600, 400), DOUBLEBUF)
-screen = pygame.display.get_surface()
-
-size = canvas.get_width_height()
-
-cmap = matplotlib.pyplot.get_cmap('jet_r')
-color = cmap(float(1)/256)
 
 def courbe_maj(val,temps):
 	# sleep(1)
+	pygame.init()
+
+	window = pygame.display.set_mode((600, 400), DOUBLEBUF)
+	screen = pygame.display.get_surface()
+
+	size = canvas.get_width_height()
+
+	cmap = matplotlib.pyplot.get_cmap('jet_r')
+	color = cmap(float(1)/256)
 	
 	if len(data)<72: # Il faut changer afin que = 24*60/pas_de_temps
 		data.append(val)

@@ -7,6 +7,9 @@ import calendar
 import time
 import sys
 from Sun import Sun
+import pygame
+from pygame.locals import *
+from Affichage import *
 
 #Transforme les secondes en heures
 def decoupe(minute):
@@ -43,6 +46,10 @@ if(len(sys.argv) != 3):
 if(sys.argv[2] != "True" or sys.argv[2] != "False"):
 	print "Deuxieme argument inconnu (True ou False)"
 
+#Affichage
+largeur_fenetre=1200
+longueur_fenetre=800
+
 #Création du site
 site_alpha = Site("Campus",int(sys.argv[1]))
 #Calcule de la consommation moyenne par jour du site
@@ -70,17 +77,25 @@ decalage_horaire = 1.0
 #consommation globale du site
 consommation_total = 0
 
+#Gestion de l'affichage
+pygame.init()
+#Ouverture de la fenêtre Pygame	
+fenetre = pygame.display.set_mode((largeur_fenetre,longueur_fenetre))
+etat_affichage="menu"
+
 #Boucle infinie pour modéliser le temps
 continu = True
+pause = False
+vitesse_sleep=0
 while(continu):
-
-	#time.sleep(0.5)
+	time.sleep(vitesse_sleep)
 
 	#---------- Gestion du temps ----------#	
 	
 	#Savoir s'il fait nuit ou pas
 	is_nuit = nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)
-	minute_journee = minute_journee + 1
+	if(pause!=True):
+		minute_journee = minute_journee + 1
 
 	if(minute_journee == 1440):
 		jour_semaine += 1
@@ -110,25 +125,87 @@ while(continu):
 
 	if minute_journee%60 ==0:
 		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00" 
-		print cle
+		#print cle
 		cle = site_alpha.random_meteo(cle)
-		time.sleep(2)
+		#time.sleep(2)
 
-	#print "\033c"	
-	print "Nombre de foyer sur le site:",site_alpha.nb_foyer
-	print "\nNombre d'habitant sur le site:",site_alpha.nb_personne
-	print "\n",decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min -",str_jour_semaine[jour_semaine],"",jour_mois,"/",mois,"/",annee
-	print "\nConsommation globale:",site_alpha.consommation_globale_minute,"W.h"
-	print "\nConsommation moyenne par jour du site:",round(site_alpha.consommation_moyenne_jour/1000),"kW.h"
-	#meteo[temps] = (temperature, rad_globale, rad_directe, rad_diffuse, rad_infrarouge, vitesse_vent)
-	print "\nMeteo à cette heure ci\nTemperature:",str(site_alpha.meteo[cle][0]),"°C - Vent:",str(site_alpha.meteo[cle][5]),"m/s"
-	print "Radiation:\nGlobale:",str(site_alpha.meteo[cle][1]),"Directe:",str(site_alpha.meteo[cle][2]),"Diffuse:",str(site_alpha.meteo[cle][3]),"Infrarouge",str(site_alpha.meteo[cle][4])
+	# print "\033c"	
+	# print "Nombre de foyer sur le site:",site_alpha.nb_foyer
+	# print "\nNombre d'habitant sur le site:",site_alpha.nb_personne
+	# print "\n",decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min -",str_jour_semaine[jour_semaine],"",jour_mois,"/",mois,"/",annee
+	# print "\nConsommation globale:",site_alpha.consommation_globale_minute,"W.h"
+	# print "\nConsommation moyenne par jour du site:",round(site_alpha.consommation_moyenne_jour/1000),"kW.h"
+	# #meteo[temps] = (temperature, rad_globale, rad_directe, rad_diffuse, rad_infrarouge, vitesse_vent)
+	# print "\nMeteo à cette heure ci\nTemperature:",str(site_alpha.meteo[cle][0]),"°C - Vent:",str(site_alpha.meteo[cle][5]),"m/s"
+	# print "Radiation:\nGlobale:",str(site_alpha.meteo[cle][1]),"Directe:",str(site_alpha.meteo[cle][2]),"Diffuse:",str(site_alpha.meteo[cle][3]),"Infrarouge",str(site_alpha.meteo[cle][4])
 
 
 	# Affichage du graphique mise à jour toutes les 20 min
 	if minute_journee%20 == 0 and sys.argv[2] == "True":
 	 	courbe_maj(site_alpha.consommation_globale_minute/1000, minute_journee)
 
-	elif sys.argv[2] == "False":
-		time.sleep(0.5)
+	# elif sys.argv[2] == "False":
+	# 	time.sleep(0.5)
+
+	#--------------------AFFICHAGE-------------------------#
+
+	#On parcours la liste de tous les événements reçus
+	for event in pygame.event.get():   
+
+		#Si un de ces événements est de type QUIT
+		if event.type == QUIT:    
+			continu=False;
+
+		#Si c'est le clic gauche de la souris
+		elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+			#Si on est dans le menu
+			if(etat_affichage=="menu"):
+				#Si on clique sur le bouton pause
+				if event.pos[0]>162 and event.pos[0]<180 and event.pos[1]>74 and event.pos[1]<100:
+					if pause==True:
+						pause=False
+					else:
+						pause=True
+
+				#Si on clique sur le bouton déccélérer
+				elif event.pos[0]>188 and event.pos[0]<235 and event.pos[1]>74 and event.pos[1]<100:
+					vitesse_sleep-=0.05
+					if vitesse_sleep<0:
+						vitesse_sleep=0
+
+				#Si on clique sur le bouton accélérer
+				elif event.pos[0]>105 and event.pos[0]<153 and event.pos[1]>74 and event.pos[1]<100:
+					vitesse_sleep+=0.05
+
+				#Si on clique sur les foyers
+				elif event.pos[0]>72 and event.pos[0]<343 and event.pos[1]>490 and event.pos[1]<630:
+					etat_affichage="liste_foyer"
+
+			#Si on est dans liste foyer
+			if(etat_affichage=="liste_foyer"):
+				if event.pos[0]>0 and event.pos[0]<600 and event.pos[1]>0 and event.pos[1]<400:
+					etat_affichage="menu"
+
+	
+
+	#Si on est dans l'état menu
+	if(etat_affichage=="menu"):
+		nom_site=site_alpha.nom
+		date=str(decoupe(minute_journee)[0])+"h"+str(decoupe(minute_journee)[1])+" - "+str(str_jour_semaine[jour_semaine])+" "+str(jour_mois)+"/"+str(mois)+"/"+str(annee)
+		degre=str(site_alpha.meteo[cle][0])
+		vent=str(site_alpha.meteo[cle][5])
+		localisation="Paris"
+		nb_foyer=str(site_alpha.nb_foyer)
+		nb_personne=str(site_alpha.nb_personne)
+		consommation_totale=str(site_alpha.consommation_globale_minute)
+		production_eo="100000"
+		production_pv="100000"
+		production_totale="200000"
+		stockage="53121/100000"	
+		menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage)
+
+	elif(etat_affichage=="liste_foyer"):
+		affichage_liste_foyer(fenetre)
+
+	pygame.display.flip()
 

@@ -91,13 +91,13 @@ class Site:
 	#Fonction permettant de renvoyer la liste avec tous les productions du site
 	def init_liste_production(self):
 		#lecture du fichier
-		print "Liste production pas encore codé"
+		#print "Liste production pas encore codé"
 		return []
 
 	#Fonction permettant de renvoyer la liste avec tous les stockages du site
 	def init_liste_stockage(self):
 		#lecture du fichier
-		print "Liste stockage pas encore codé"
+		#print "Liste stockage pas encore codé"
 		return []
 
 	#Renvoie le nombre d'habitant du site
