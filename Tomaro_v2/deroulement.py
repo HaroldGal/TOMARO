@@ -205,7 +205,7 @@ while(continu):
 		menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,is_nuit)
 
 	elif(etat_affichage=="liste_foyer"):
-		affichage_liste_foyer(fenetre)
+		affichage_liste_foyer(fenetre,site_alpha)
 
 	pygame.display.flip()
 
