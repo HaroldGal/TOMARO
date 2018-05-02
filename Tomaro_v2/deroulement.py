@@ -126,7 +126,7 @@ while(continu):
 	if minute_journee%60 ==0:
 		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00" 
 		#print cle
-		cle = site_alpha.random_meteo(cle)
+		site_alpha.random_meteo(cle)
 		#time.sleep(2)
 
 	# print "\033c"	
