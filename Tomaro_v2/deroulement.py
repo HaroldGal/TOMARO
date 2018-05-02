@@ -202,7 +202,7 @@ while(continu):
 		production_pv="100000"
 		production_totale="200000"
 		stockage="53121/100000"	
-		menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage)
+		menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,is_nuit)
 
 	elif(etat_affichage=="liste_foyer"):
 		affichage_liste_foyer(fenetre)
