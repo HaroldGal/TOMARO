@@ -5,7 +5,7 @@ LienSondage = "Data/SondageHabitudes.csv"
 import csv
 from random import sample, seed
 from Personne import *
-
+from math import sqrt
 
 class Foyer:
 
@@ -33,6 +33,9 @@ class Foyer:
 		self.nombre_individu = nombre_individu
 		self.ajouter_individu()
 		self.habitude_foyer()
+		self.surface_mur = sqrt(25*nombre_individu)*4*2.5
+		self.epaisseur_mur = 0.20
+		self.volume = 25*nombre_individu*2.5
 
 
 	def habitude_foyer(self):

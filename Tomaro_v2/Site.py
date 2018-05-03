@@ -4,6 +4,7 @@
 from Foyer import *
 from Production import *
 from random import randrange,sample, randint
+from math import sqrt
 
 lien_data_meteo = "Data/meteo.csv"
 
@@ -36,6 +37,8 @@ class Site:
 
 		#Consommation moyenne du site par jour
 		self.consommation_moyenne_jour = self.consommation_moyenne_site()
+		self.lamb = 0.6
+		self.capa = 1256.0
 		
 	#Fonction permettant de renvoyer la liste avec tous les foyers du site
 	def init_liste_foyer(self, nb_foyer):
@@ -244,7 +247,7 @@ class Site:
 						personne.liste_eteignage_h = [temps+5 for temps in personne.liste_allumage_h]
 						
 	#Allume ou éteint les appareils en fonction de l'heure de la journée
-	def actualisation_des_foyers(self,minute,jour_semaine,nuit):
+	def actualisation_des_foyers(self,minute,jour_semaine,nuit, cle):
 
 		self.consommation_globale_minute = 0
 
@@ -275,6 +278,9 @@ class Site:
 					self.consommation_globale_minute += foyer.lave_vaisselle.consommation_minute
 				if(foyer.seche_linge.allume == True):
 					self.consommation_globale_minute += foyer.seche_linge.consommation_minute
+
+
+				foyer.temperature = (60*((273+float(self.meteo[cle][0]))-(273+foyer.temperature))*self.lamb*foyer.surface_mur)/(foyer.epaisseur_mur*foyer.volume*self.capa) + foyer.temperature
 
 				for personne in foyer.liste_personne:
 

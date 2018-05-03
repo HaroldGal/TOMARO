@@ -62,7 +62,7 @@ str_jour_semaine = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dima
 #Initialisation de la date du jour
 now = time.localtime() 
 annee = now.tm_year
-mois = now.tm_mon
+mois = 8#now.tm_mon
 jour_mois = now.tm_mday
 jour_semaine = now.tm_wday #Lundi 0 .... Dimanche 6
 minute_journee = plage_proche(now.tm_hour*60+now.tm_min,plage) #Commence une minute avant un plage existante
@@ -122,13 +122,13 @@ while(continu):
 	if(jour_semaine == 0 and minute_journee == 0):
 		site_alpha.actualisation_heure_jour_machine_foyer()
 
-	site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit)
-
 	if minute_journee%60 ==0:
 		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00" 
 		#print cle
 		site_alpha.random_meteo(cle)
 		#time.sleep(2)
+
+	site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit, cle)
 
 	# print "\033c"	
 	# print "Nombre de foyer sur le site:",site_alpha.nb_foyer
@@ -212,4 +212,7 @@ while(continu):
 		affichage_liste_foyer(fenetre,site_alpha)
 
 	pygame.display.flip()
+
+	print "temperature exterieure : ", str(site_alpha.meteo[cle][0])
+	print "temperature interieure : ", str(site_alpha.liste_foyer[0].temperature)
 
