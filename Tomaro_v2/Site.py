@@ -37,7 +37,7 @@ class Site:
 
 		#Consommation moyenne du site par jour
 		self.consommation_moyenne_jour = self.consommation_moyenne_site()
-		self.lamb = 0.6
+		self.lamb = 0.05 # un materiaux est dit isolant si lambda < 0.065
 		self.capa = 1256.0
 		
 	#Fonction permettant de renvoyer la liste avec tous les foyers du site
