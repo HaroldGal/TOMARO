@@ -203,7 +203,7 @@ while(continu):
 		production_pv= str(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)
 		production_totale=str(float(production_pv)+float(production_eo))
 		stockage_val+=float(production_totale)-float(consommation_totale)
-
+		stockage_val=max(0,stockage_val)
 
 		stockage=str(stockage_val)
 		menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,is_nuit)
