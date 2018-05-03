@@ -20,7 +20,7 @@ class Site:
 		self.liste_foyer = self.init_liste_foyer(nb_foyer)
 
 		#Initialisaiton de la liste des productions
-		self.liste_production = self.init_liste_production()
+		self.eolienne, self.panneau = self.init_production()
 
 		#Initialisation de la liste des stockages
 		self.liste_stockage = self.init_liste_stockage()
@@ -94,14 +94,17 @@ class Site:
 			nouveau_var = []
 			for i in range(len(self.meteo[choix_random])):
 				nouveau_var.append(str(float(self.meteo[cle][i])+float(self.meteo[choix_random][i])-float(self.meteo[choix_random_h_1][i])))
-
+			for i in range(1, len(self.meteo[choix_random])):
+				nouveau_var[i] = str(abs(float(nouveau_var[i])))
 			self.meteo[cle] = tuple((nouveau_var))
 
 	#Fonction permettant de renvoyer la liste avec tous les productions du site
-	def init_liste_production(self):
+	def init_production(self):
 		#lecture du fichier
 		#print "Liste production pas encore codé"
-		return []
+		PV1 = PV(0.18,1000,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
+		EO1 = EO(13,100)
+		return EO1,PV1
 
 	#Fonction permettant de renvoyer la liste avec tous les stockages du site
 	def init_liste_stockage(self):

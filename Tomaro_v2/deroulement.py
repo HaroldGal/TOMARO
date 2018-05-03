@@ -87,6 +87,7 @@ etat_affichage="menu"
 continu = True
 pause = False
 vitesse_sleep=0
+stockage_val=0
 while(continu):
 	time.sleep(vitesse_sleep)
 
@@ -198,10 +199,13 @@ while(continu):
 		nb_foyer=str(site_alpha.nb_foyer)
 		nb_personne=str(site_alpha.nb_personne)
 		consommation_totale=str(site_alpha.consommation_globale_minute)
-		production_eo="100000"
-		production_pv="100000"
-		production_totale="200000"
-		stockage="53121/100000"	
+		production_eo= str(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)
+		production_pv= str(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)
+		production_totale=str(float(production_pv)+float(production_eo))
+		stockage_val+=float(production_totale)-float(consommation_totale)
+
+
+		stockage=str(stockage_val)
 		menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage)
 
 	elif(etat_affichage=="liste_foyer"):

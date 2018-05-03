@@ -72,7 +72,7 @@ consommation_total = 0
 
 #Producion
 PV1 = PV(0.18,1,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
-EO1 = EO(13) #https://www.alma-solarshop.fr/panneau-bisol/733-panneau-bisol-bmo-280-noir.html
+EO1 = EO(13,1) #https://www.alma-solarshop.fr/panneau-bisol/733-panneau-bisol-bmo-280-noir.html
 
 #Ouverture du fichier
 file = open("Data/data_pretraitement.txt",'w')
