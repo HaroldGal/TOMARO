@@ -62,7 +62,7 @@ str_jour_semaine = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dima
 #Initialisation de la date du jour
 now = time.localtime() 
 annee = now.tm_year
-mois = 8#now.tm_mon
+mois = now.tm_mon
 jour_mois = now.tm_mday
 jour_semaine = now.tm_wday #Lundi 0 .... Dimanche 6
 minute_journee = plage_proche(now.tm_hour*60+now.tm_min,plage) #Commence une minute avant un plage existante
@@ -83,11 +83,18 @@ pygame.init()
 fenetre = pygame.display.set_mode((largeur_fenetre,longueur_fenetre))
 etat_affichage="menu"
 
+#Stockage
+stockage_val=0
+stockage_max=10000
+
+#Index du foyer selectionne
+index_foyer=-1
+
 #Boucle infinie pour modéliser le temps
 continu = True
 pause = False
 vitesse_sleep=0
-stockage_val=0
+
 while(continu):
 	time.sleep(vitesse_sleep)
 
@@ -184,35 +191,75 @@ while(continu):
 
 			#Si on est dans liste foyer
 			if(etat_affichage=="liste_foyer"):
-				if event.pos[0]>0 and event.pos[0]<600 and event.pos[1]>0 and event.pos[1]<400:
+				if event.pos[0]>0 and event.pos[0]<90 and event.pos[1]>0 and event.pos[1]<90:					
 					etat_affichage="menu"
 
+				#Si on clique sur le bouton pause
+				elif event.pos[0]>1017 and event.pos[0]<1038 and event.pos[1]>71 and event.pos[1]<99:
+					if pause==True:
+						pause=False
+					else:
+						pause=True
+
+				#Si on clique sur le bouton déccélérer
+				elif event.pos[0]>1045 and event.pos[0]<1095 and event.pos[1]>71 and event.pos[1]<99:				
+					vitesse_sleep-=0.05
+					if vitesse_sleep<0:
+						vitesse_sleep=0
+
+				#Si on clique sur le bouton accélérer
+				elif event.pos[0]>962 and event.pos[0]<1011 and event.pos[1]>72 and event.pos[1]<98:
+					vitesse_sleep+=0.05
+
+				#SI ON CLIQUE SUR UN FOYER
+				elif event.pos[0]>112 and event.pos[0]<1050 and event.pos[1]>154 and event.pos[1]<600:
+					for i in range(0,10):
+						if i<5:
+							if event.pos[0]>122+i*210 and event.pos[0]<257+i*210 and event.pos[1]>156 and event.pos[1]<290:
+								etat_affichage="foyer"
+								index_foyer=i
+						else:
+							if event.pos[0]>122+(i%5)*210 and event.pos[0]<257+(i%5)*210 and event.pos[1]>407 and event.pos[1]<539:
+								etat_affichage="foyer"
+								index_foyer=i
+
+			#Si on est dans foyer
+			if(etat_affichage=="foyer"):
+				if event.pos[0]>0 and event.pos[0]<90 and event.pos[1]>0 and event.pos[1]<90:					
+					etat_affichage="liste_foyer"
+
 	
+	nom_site=site_alpha.nom
+	date=str(decoupe(minute_journee)[0])+"h"+str(decoupe(minute_journee)[1])+" - "+str(str_jour_semaine[jour_semaine])+" "+str(jour_mois)+"/"+str(mois)+"/"+str(annee)
+	degre=str(site_alpha.meteo[cle][0])
+	vent=str(site_alpha.meteo[cle][5])
+	localisation="Paris"
+	nb_foyer=str(site_alpha.nb_foyer)
+	nb_personne=str(site_alpha.nb_personne)
+	consommation_totale=str(site_alpha.consommation_globale_minute)
+	production_eo= str(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)
+	production_pv= str(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)
+	nb_eo=str(site_alpha.eolienne.nb)
+	surface_pv=str(site_alpha.panneau.surface)
+	production_totale=str(float(production_pv)+float(production_eo))
+	if pause!=True and stockage_val<stockage_max:
+		stockage_val+=float(production_totale)-float(consommation_totale)
+	stockage_val=int(round(min(stockage_max,max(0,stockage_val))))	
+	stockage=str(stockage_val)
+	stockage_pourcent=str(stockage_val*100/stockage_max)+"%"
 
 	#Si on est dans l'état menu
-	if(etat_affichage=="menu"):
-		nom_site=site_alpha.nom
-		date=str(decoupe(minute_journee)[0])+"h"+str(decoupe(minute_journee)[1])+" - "+str(str_jour_semaine[jour_semaine])+" "+str(jour_mois)+"/"+str(mois)+"/"+str(annee)
-		degre=str(site_alpha.meteo[cle][0])
-		vent=str(site_alpha.meteo[cle][5])
-		localisation="Paris"
-		nb_foyer=str(site_alpha.nb_foyer)
-		nb_personne=str(site_alpha.nb_personne)
-		consommation_totale=str(site_alpha.consommation_globale_minute)
-		production_eo= str(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)
-		production_pv= str(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)
-		production_totale=str(float(production_pv)+float(production_eo))
-		stockage_val+=float(production_totale)-float(consommation_totale)
-		stockage_val=max(0,stockage_val)
-
-		stockage=str(stockage_val)
-		menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,is_nuit)
+	if(etat_affichage=="menu"):		
+		menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv)
 
 	elif(etat_affichage=="liste_foyer"):
-		affichage_liste_foyer(fenetre,site_alpha)
+		affichage_liste_foyer(fenetre,site_alpha,date,is_nuit)
+
+	elif(etat_affichage=="foyer"):
+		affichage_foyer(fenetre,site_alpha,date,is_nuit,index_foyer)
 
 	pygame.display.flip()
 
-	print "temperature exterieure : ", str(site_alpha.meteo[cle][0])
-	print "temperature interieure : ", str(site_alpha.liste_foyer[0].temperature)
+	#print "temperature exterieure : ", str(site_alpha.meteo[cle][0])
+	#print "temperature interieure : ", str(site_alpha.liste_foyer[0].temperature)
 

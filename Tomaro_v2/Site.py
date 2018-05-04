@@ -90,7 +90,7 @@ class Site:
 
 		#print str("%02d" %jour) + '/' + str("%02d" %mois) + cle[5:]
 		#dd/mm hh:mm:ss"
-		print cle
+		#print cle
 		if(cle[6:8]!="00"):
 			choix_random = str("%02d" %jour) + '/' + str("%02d" %mois) + cle[5:]
 			choix_random_h_1 = str("%02d" %jour) + '/' + str("%02d" %mois) + ' ' + str("%02d" %(int(cle[6:8])-1)) + cle[8:]
@@ -106,7 +106,7 @@ class Site:
 		#lecture du fichier
 		#print "Liste production pas encore codé"
 		PV1 = PV(0.18,1000,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
-		EO1 = EO(13,100)
+		EO1 = EO(13,1000)
 		return EO1,PV1
 
 	#Fonction permettant de renvoyer la liste avec tous les stockages du site
