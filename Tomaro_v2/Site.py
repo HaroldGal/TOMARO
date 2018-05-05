@@ -281,6 +281,13 @@ class Site:
 
 
 				foyer.temperature = (60*((273+float(self.meteo[cle][0]))-(273+foyer.temperature))*self.lamb*foyer.surface_mur)/(foyer.epaisseur_mur*foyer.volume*self.capa) + foyer.temperature
+				if foyer.temperature<20.0 and foyer.chauffage==True:
+					temps_de_chauffe=((1.5*1.225*foyer.volume*1000*(20-foyer.temperature)/foyer.radiateur.consommation_heure))/60
+					augmentation_temp=(20-foyer.temperature)/temps_de_chauffe
+					foyer.temperature+=augmentation_temp
+					self.consommation_globale_minute+=foyer.radiateur.consommation_minute
+
+
 
 				for personne in foyer.liste_personne:
 

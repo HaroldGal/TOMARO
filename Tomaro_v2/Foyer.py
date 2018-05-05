@@ -15,7 +15,7 @@ class Foyer:
 		self.liste_personne = []
 
 		self.climatisation = False
-		self.chauffage = False
+		self.chauffage = True
 
 		self.nb_machine_a_laver = 0
 		self.machine_a_laver = Appareil("Machine_a_laver",470+randrange(-47,47))
@@ -28,7 +28,7 @@ class Foyer:
 		self.nb_seche_linge = 0
 		self.seche_linge = Appareil("Seche_linge",1700+randrange(-170,170))
 		self.heure_jour_on_off_seche_linge = dict() #Dictionnaire permettant de stocker l'heure d'allumage de la machine
-
+		self.radiateur=Appareil("Radiateur 1",1500)
 
 		self.nombre_individu = nombre_individu
 		self.ajouter_individu()
@@ -36,7 +36,7 @@ class Foyer:
 		self.surface_mur = sqrt(25*nombre_individu)*4*2.5
 		self.epaisseur_mur = 0.20
 		self.volume = 25*nombre_individu*2.5
-
+		self.coef_isolation=1.5
 
 	def habitude_foyer(self):
 		cpt_climatisation = 0

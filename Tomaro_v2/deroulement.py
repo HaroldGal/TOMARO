@@ -260,6 +260,6 @@ while(continu):
 
 	pygame.display.flip()
 
-	#print "temperature exterieure : ", str(site_alpha.meteo[cle][0])
-	#print "temperature interieure : ", str(site_alpha.liste_foyer[0].temperature)
+	print "temperature exterieure : ", str(site_alpha.meteo[cle][0])
+	print "temperature interieure : ", str(site_alpha.liste_foyer[0].temperature)
 
