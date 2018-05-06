@@ -69,10 +69,13 @@ class Foyer:
 		return PopulationFoyer
 
 	def ajouter_individu(self):
+		#Permet de ne pas avoir deux fois la meme image de personne dans le foyer
+		liste_image_personne_deja_presente=[]		
+
 		PopulationDisponible = self.choix_population()
 		# print(PopulationDisponible)
 		for ligne in PopulationDisponible:
-			nouvel_individu = Personne()
+			nouvel_individu = Personne(liste_image_personne_deja_presente)
 
 			# Television jours travaillés
 			for index, var in enumerate(ligne[0:7]):
@@ -176,8 +179,8 @@ class Foyer:
 			if(ligne[74]=="Oui"):
 				nouvel_individu.chauffage = True
 
-			self.liste_personne.append(nouvel_individu)	
-
+			self.liste_personne.append(nouvel_individu)
+			liste_image_personne_deja_presente.append(nouvel_individu.image)
 
 
 if __name__=='__main__':

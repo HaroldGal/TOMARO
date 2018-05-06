@@ -6,7 +6,12 @@ from random import randrange
 
 class Personne:
 
-	def __init__(self):
+	def __init__(self,liste_image_personne_deja_presente):
+		#Attribut un nom d'image aléatoire
+		nom_image="Image/Personnage/Perso_"+str(randrange(1,16))+".png"
+		while(nom_image in liste_image_personne_deja_presente): 
+			nom_image="Image/Personnage/Perso_"+str(randrange(1,16))+".png"
+		self.image=nom_image
 		
 		# Initialisation de la télé 
 		self.tv = Appareil("TV",100+randrange(-10,10)) #+ ou - 10%

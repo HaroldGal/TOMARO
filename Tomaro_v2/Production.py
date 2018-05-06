@@ -1,6 +1,8 @@
 #!/usr/bin/python2.7	
 #-*- coding: utf-8 -*-
 
+from random import randrange
+
 class Production:
 
 	def __init__(self):
@@ -19,7 +21,7 @@ class PV(Production):
 	def production_energie(self,radiation_global):
 
 		self.production_energie_jour += self.rendement*self.surface*self.Cp*radiation_global
-		return self.rendement*self.surface*self.Cp*radiation_global
+		return self.rendement*self.surface*self.Cp*radiation_global+randrange(0,3)*0.05*self.rendement*self.surface*self.Cp*radiation_global
 
 class EO(Production):
 
@@ -32,4 +34,4 @@ class EO(Production):
 	def production_energie(self,vitesse_vent):
 
 		self.production_energie_jour += self.nb*self.surface_pale*0.5*1.2*vitesse_vent
-		return self.nb*self.surface_pale*0.5*1.2*vitesse_vent
+		return self.nb*self.surface_pale*0.5*1.2*vitesse_vent+randrange(0,3)*0.05*self.nb*self.surface_pale*0.5*1.2*vitesse_vent

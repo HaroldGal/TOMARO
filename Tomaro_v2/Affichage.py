@@ -18,6 +18,7 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 	else:
 		background = pygame.image.load("Image/Background_menu_nuit.png").convert()
 	fenetre.blit(background,(0,0))
+
 	#Nom du site
 	font=pygame.font.Font(None, 60)	
 	nom_site=font.render(nom_site,1,(0,0,0)) #Mettre nom_site
@@ -112,15 +113,205 @@ def affichage_liste_foyer(fenetre,site,date,is_nuit):
 		elif(i==9):
 			fenetre.blit(nb_personne,(965,550))
 
-def affichage_foyer(fenetre,site_alpha,data,is_nuit,index_foyer):
+def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 	#S'il fait jour
 	if(is_nuit==False):
-		background = pygame.image.load("Image/Background_liste_foyer_jour.png").convert()
+		background = pygame.image.load("Image/Background_foyer_jour.png").convert()
 	else:
-		background = pygame.image.load("Image/Background_liste_foyer_nuit.png").convert()
+		background = pygame.image.load("Image/Background_foyer_jour.png").convert()
 	fenetre.blit(background,(0,0))
-	font=pygame.font.Font(None, 100)
-	index_foyer_str=font.render(str(index_foyer),1,(0,0,0)) #Mettre date
-	fenetre.blit(index_foyer_str,(600,400))
 
+	#Date
+	font=pygame.font.Font(None, 40)
+	date=font.render(date,1,(0,0,0)) #Mettre date
+	fenetre.blit(date,(1200-date.get_size()[0]-20,25))
+
+	#Temperature
+	font=pygame.font.Font(None, 40)
+	temperature_ext=font.render(degre,1,(0,0,0))
+	temperature_int=font.render(str(round(site.liste_foyer[index_foyer].temperature)),1,(0,0,0))
+	fenetre.blit(temperature_ext,(1085-temperature_ext.get_size()[0],179))
+	fenetre.blit(temperature_int,(595-temperature_int.get_size()[0],180))
+	if site.liste_foyer[index_foyer].radiateur.allume==True:
+		radiateur = pygame.image.load("Image/Radiateur.png").convert_alpha()
+		fenetre.blit(radiateur,(703,172))
+
+	for index,personne in enumerate(site.liste_foyer[index_foyer].liste_personne):	
+		#Personne 0
+		if index==0:
+			
+			#Si nuit et lampe allumé	
+			if personne.lampe.allume==True and is_nuit==True:
+				lampe=pygame.image.load("Image/Lampe_on.png").convert_alpha()
+				fenetre.blit(lampe,(374,283))
+
+			#Si nuit et lampe éteinte
+			elif personne.lampe.allume==False and is_nuit==True:
+				chambre=pygame.image.load("Image/Chambre_1_sombre.png").convert_alpha()
+				fenetre.blit(chambre,(322,282))
+				lampe=pygame.image.load("Image/Lampe_off.png").convert_alpha()
+				fenetre.blit(lampe,(374,283))
+
+			#Si c'est le jour lampe éteinte
+			elif personne.lampe.allume==False and is_nuit==False:
+				lampe=pygame.image.load("Image/Lampe_off.png").convert_alpha()
+				fenetre.blit(lampe,(374,283))
+
+			#TV
+			if personne.tv.allume==True:
+				tv=pygame.image.load("Image/Tv_on.png").convert_alpha()
+				fenetre.blit(tv,(432,297))
+			elif personne.tv.allume==False:
+				tv=pygame.image.load("Image/Tv_off.png").convert_alpha()
+				fenetre.blit(tv,(432,297))
+			#PC
+			if personne.pc.allume==True:
+				pc=pygame.image.load("Image/Pc_on.png").convert_alpha()
+				fenetre.blit(pc,(524,300))
+			elif personne.pc.allume==False:
+				pc=pygame.image.load("Image/Pc_off.png").convert_alpha()
+				fenetre.blit(pc,(524,300))
+
+			#Affichage Personnage
+			perso=pygame.image.load(personne.image).convert_alpha()
+			fenetre.blit(perso,(490,305))
+					
+
+		#Personne 1
+		if index==1:
+
+			#Si nuit et lampe allumé	
+			if personne.lampe.allume==True and is_nuit==True:
+				lampe=pygame.image.load("Image/Lampe_on.png").convert_alpha()
+				fenetre.blit(lampe,(780,283))
+
+			#Si nuit et lampe éteinte
+			elif personne.lampe.allume==False and is_nuit==True:
+				chambre=pygame.image.load("Image/Chambre_2_sombre.png").convert_alpha()
+				fenetre.blit(chambre,(604,282))
+				lampe=pygame.image.load("Image/Lampe_off.png").convert_alpha()
+				fenetre.blit(lampe,(780,283))
+
+			#Si c'est le jour lampe éteinte
+			elif personne.lampe.allume==False and is_nuit==False:
+				lampe=pygame.image.load("Image/Lampe_off.png").convert_alpha()
+				fenetre.blit(lampe,(780,283))
+
+			#TV
+			if personne.tv.allume==True:
+				tv=pygame.image.load("Image/Tv_on.png").convert_alpha()
+				fenetre.blit(tv,(710,297))
+			elif personne.tv.allume==False:
+				tv=pygame.image.load("Image/Tv_off.png").convert_alpha()
+				fenetre.blit(tv,(710,297))
+
+			#PC
+			if personne.pc.allume==True:
+				pc=pygame.image.load("Image/Pc_on.png").convert_alpha()
+				fenetre.blit(pc,(618,298))
+			elif personne.pc.allume==False:
+				pc=pygame.image.load("Image/Pc_off.png").convert_alpha()
+				fenetre.blit(pc,(618,298))
+
+			#Affichage Personnage
+			perso=pygame.image.load(personne.image).convert_alpha()
+			fenetre.blit(perso,(680,305))
+
+		#Personne 2
+		if index==2:
+
+			#Si nuit et lampe allumé	
+			if personne.lampe.allume==True and is_nuit==True:
+				lampe=pygame.image.load("Image/Lampe_on.png").convert_alpha()
+				fenetre.blit(lampe,(374,399))
+
+			#Si nuit et lampe éteinte
+			elif personne.lampe.allume==False and is_nuit==True:
+				chambre=pygame.image.load("Image/Chambre_3_sombre.png").convert_alpha()
+				fenetre.blit(chambre,(322,398))
+				lampe=pygame.image.load("Image/Lampe_off.png").convert_alpha()
+				fenetre.blit(lampe,(374,399))
+
+			#Si c'est le jour lampe éteinte
+			elif personne.lampe.allume==False and is_nuit==False:
+				lampe=pygame.image.load("Image/Lampe_off.png").convert_alpha()
+				fenetre.blit(lampe,(374,399))
+
+			#TV
+			if personne.tv.allume==True:
+				tv=pygame.image.load("Image/Tv_on.png").convert_alpha()
+				fenetre.blit(tv,(432,412))
+			elif personne.tv.allume==False:
+				tv=pygame.image.load("Image/Tv_off.png").convert_alpha()
+				fenetre.blit(tv,(432,412))
+
+			#PC
+			if personne.pc.allume==True:
+				pc=pygame.image.load("Image/Pc_on.png").convert_alpha()
+				fenetre.blit(pc,(524,410))
+			elif personne.pc.allume==False:
+				pc=pygame.image.load("Image/Pc_off.png").convert_alpha()
+				fenetre.blit(pc,(524,410))
+
+			#Affichage Personnage
+			perso=pygame.image.load(personne.image).convert_alpha()
+			fenetre.blit(perso,(490,415))
+
+		#Personne 3
+		if index==3:
+
+			#Si nuit et lampe allumé	
+			if personne.lampe.allume==True and is_nuit==True:
+				lampe=pygame.image.load("Image/Lampe_on.png").convert_alpha()
+				fenetre.blit(lampe,(780,399))
+
+			#Si nuit et lampe éteinte
+			elif personne.lampe.allume==False and is_nuit==True:
+				chambre=pygame.image.load("Image/Chambre_4_sombre.png").convert_alpha()
+				fenetre.blit(chambre,(604,398))
+				lampe=pygame.image.load("Image/Lampe_off.png").convert_alpha()
+				fenetre.blit(lampe,(780,399))
+
+			#Si c'est le jour lampe éteinte
+			elif personne.lampe.allume==False and is_nuit==False:
+				lampe=pygame.image.load("Image/Lampe_off.png").convert_alpha()
+				fenetre.blit(lampe,(780,399))
+
+			#TV
+			if personne.tv.allume==True:
+				tv=pygame.image.load("Image/Tv_on.png").convert_alpha()
+				fenetre.blit(tv,(710,412))
+			elif personne.tv.allume==False:
+				tv=pygame.image.load("Image/Tv_off.png").convert_alpha()
+				fenetre.blit(tv,(710,412))
+
+			#PC
+			if personne.pc.allume==True:
+				pc=pygame.image.load("Image/Pc_on.png").convert_alpha()
+				fenetre.blit(pc,(618,410))
+			elif personne.pc.allume==False:
+				pc=pygame.image.load("Image/Pc_off.png").convert_alpha()
+				fenetre.blit(pc,(618,410))
+
+			#Affichage Personnage
+			perso=pygame.image.load(personne.image).convert_alpha()
+			fenetre.blit(perso,(680,415))
+
+		if site.liste_foyer[index_foyer].nombre_individu==1:
+			chambre_vide=pygame.image.load("Image/Chambre_2_vide.png").convert_alpha()
+			fenetre.blit(chambre_vide,(604,282))
+			chambre_vide=pygame.image.load("Image/Chambre_3_vide.png").convert_alpha()
+			fenetre.blit(chambre_vide,(322,398))
+			chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
+			fenetre.blit(chambre_vide,(604,398))
+
+		elif site.liste_foyer[index_foyer].nombre_individu==2:
+			chambre_vide=pygame.image.load("Image/Chambre_3_vide.png").convert_alpha()
+			fenetre.blit(chambre_vide,(322,398))
+			chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
+			fenetre.blit(chambre_vide,(604,398))
+
+		elif site.liste_foyer[index_foyer].nombre_individu==3:
+			chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
+			fenetre.blit(chambre_vide,(604,398))
 

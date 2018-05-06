@@ -39,12 +39,10 @@ def plage_proche(minute,plage):
 			new_plage = p
 	return new_plage - 1
 
-if(len(sys.argv) != 3):
-	print "python deroulement.py nb_foyer affichage_courbe(True ou False)"
+if(len(sys.argv) != 2):
+	print "python deroulement.py nb_foyer"
 	sys.exit()
 
-if(sys.argv[2] != "True" or sys.argv[2] != "False"):
-	print "Deuxieme argument inconnu (True ou False)"
 
 #Affichage
 largeur_fenetre=1200
@@ -149,8 +147,8 @@ while(continu):
 
 
 	# Affichage du graphique mise à jour toutes les 20 min
-	if minute_journee%20 == 0 and sys.argv[2] == "True":
-	 	courbe_maj(site_alpha.consommation_globale_minute/1000, minute_journee)
+	# if minute_journee%20 == 0 and sys.argv[2] == "True":
+	#  	courbe_maj(site_alpha.consommation_globale_minute/1000, minute_journee)
 
 	# elif sys.argv[2] == "False":
 	# 	time.sleep(0.5)
@@ -228,6 +226,23 @@ while(continu):
 				if event.pos[0]>0 and event.pos[0]<90 and event.pos[1]>0 and event.pos[1]<90:					
 					etat_affichage="liste_foyer"
 
+				#Si on clique sur le bouton pause
+				elif event.pos[0]>1017 and event.pos[0]<1038 and event.pos[1]>71 and event.pos[1]<99:
+					if pause==True:
+						pause=False
+					else:
+						pause=True
+
+				#Si on clique sur le bouton déccélérer
+				elif event.pos[0]>1045 and event.pos[0]<1095 and event.pos[1]>71 and event.pos[1]<99:				
+					vitesse_sleep-=0.05
+					if vitesse_sleep<0:
+						vitesse_sleep=0
+
+				#Si on clique sur le bouton accélérer
+				elif event.pos[0]>962 and event.pos[0]<1011 and event.pos[1]>72 and event.pos[1]<98:
+					vitesse_sleep+=0.05
+
 	
 	nom_site=site_alpha.nom
 	date=str(decoupe(minute_journee)[0])+"h"+str(decoupe(minute_journee)[1])+" - "+str(str_jour_semaine[jour_semaine])+" "+str(jour_mois)+"/"+str(mois)+"/"+str(annee)
@@ -237,11 +252,11 @@ while(continu):
 	nb_foyer=str(site_alpha.nb_foyer)
 	nb_personne=str(site_alpha.nb_personne)
 	consommation_totale=str(site_alpha.consommation_globale_minute)
-	production_eo= str(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)
-	production_pv= str(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)
+	production_eo= str(int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)))
+	production_pv= str(int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
 	nb_eo=str(site_alpha.eolienne.nb)
 	surface_pv=str(site_alpha.panneau.surface)
-	production_totale=str(float(production_pv)+float(production_eo))
+	production_totale=str(int(round(float(production_pv)+float(production_eo))))	
 	if pause!=True and stockage_val<stockage_max:
 		stockage_val+=float(production_totale)-float(consommation_totale)
 	stockage_val=int(round(min(stockage_max,max(0,stockage_val))))	
@@ -256,10 +271,10 @@ while(continu):
 		affichage_liste_foyer(fenetre,site_alpha,date,is_nuit)
 
 	elif(etat_affichage=="foyer"):
-		affichage_foyer(fenetre,site_alpha,date,is_nuit,index_foyer)
+		affichage_foyer(fenetre,site_alpha,date,is_nuit,index_foyer,degre)
 
 	pygame.display.flip()
 
-	print "temperature exterieure : ", str(site_alpha.meteo[cle][0])
-	print "temperature interieure : ", str(site_alpha.liste_foyer[0].temperature)
+	#print "temperature exterieure : ", str(site_alpha.meteo[cle][0])
+	#print "temperature interieure : ", str(site_alpha.liste_foyer[0].temperature)
 

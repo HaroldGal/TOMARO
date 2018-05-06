@@ -48,7 +48,7 @@ class Site:
 		for i in range(0,nb_foyer):
 			print "\033c"
 			print str(i*100/nb_foyer)+"%"
-			liste_foyer.append(Foyer(randrange(1,4)))
+			liste_foyer.append(Foyer(randrange(1,5)))
 
 		return liste_foyer
 
@@ -285,9 +285,10 @@ class Site:
 					temps_de_chauffe=((1.5*1.225*foyer.volume*1000*(20-foyer.temperature)/foyer.radiateur.consommation_heure))/60
 					augmentation_temp=(20-foyer.temperature)/temps_de_chauffe
 					foyer.temperature+=augmentation_temp
+					foyer.radiateur.allume=True
 					self.consommation_globale_minute+=foyer.radiateur.consommation_minute
-
-
+				else:
+					foyer.radiateur.allume=False					
 
 				for personne in foyer.liste_personne:
 
