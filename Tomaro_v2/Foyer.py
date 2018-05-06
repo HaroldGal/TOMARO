@@ -11,7 +11,7 @@ class Foyer:
 
 	def __init__(self, nombre_individu):
 
-		self.temperature = 20.0
+		self.temperature = 10.0
 		self.liste_personne = []
 
 		self.climatisation = False
