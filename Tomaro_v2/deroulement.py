@@ -62,7 +62,7 @@ str_jour_semaine = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dima
 #Initialisation de la date du jour
 now = time.localtime() 
 annee = now.tm_year
-mois = now.tm_mon
+mois = 12
 jour_mois = now.tm_mday
 jour_semaine = now.tm_wday #Lundi 0 .... Dimanche 6
 minute_journee = plage_proche(now.tm_hour*60+now.tm_min,plage) #Commence une minute avant un plage existante
@@ -153,7 +153,7 @@ while(continu):
 	 	courbe_maj(site_alpha.consommation_globale_minute/1000, minute_journee)
 
 	# elif sys.argv[2] == "False":
-	# 	time.sleep(0.5)
+	#	time.sleep(0.5)
 
 	#--------------------AFFICHAGE-------------------------#
 
