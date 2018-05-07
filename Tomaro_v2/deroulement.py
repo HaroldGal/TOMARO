@@ -5,6 +5,7 @@ from courbe_de_charge import courbe_maj
 from Site import *
 import calendar
 import time
+import datetime
 import sys
 from Sun import Sun
 import pygame
@@ -39,9 +40,10 @@ def plage_proche(minute,plage):
 			new_plage = p
 	return new_plage - 1
 
-if(len(sys.argv) != 2):
-	print "python deroulement.py nb_foyer"
+if(len(sys.argv) != 2 and len(sys.argv) != 3):
+	print "python deroulement.py nb_foyer jour/mois/annee"
 	sys.exit()
+
 
 
 #Affichage
@@ -57,12 +59,21 @@ consommation_moyenne_jour_site = site_alpha.consommation_moyenne_site()
 plage = [0,360,540,720,900,1080,1260]
 str_jour_semaine = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"]
 
-#Initialisation de la date du jour
+#Initialisation de la date du jour si pas d'argument
 now = time.localtime() 
-annee = now.tm_year
-mois = 12
-jour_mois = now.tm_mday
-jour_semaine = now.tm_wday #Lundi 0 .... Dimanche 6
+if(len(sys.argv) == 2):	
+	
+	annee = now.tm_year
+	mois = now.tm_mon
+	jour_mois = now.tm_mday
+	jour_semaine = now.tm_wday #Lundi 0 .... Dimanche 6
+
+elif(len(sys.argv) == 3):
+	annee=int(sys.argv[2].split('/')[2])
+	mois=int(sys.argv[2].split('/')[1])
+	jour_mois=int(sys.argv[2].split('/')[0])
+	jour_semaine = datetime.datetime(annee,mois,jour_mois,0,0,0).weekday() #Lundi 0 .... Dimanche 6
+
 minute_journee = plage_proche(now.tm_hour*60+now.tm_min,plage) #Commence une minute avant un plage existante
 site_alpha.actualisation_heure_jour_machine_foyer() #Calcul des horaires pour les différentes machines
 
