@@ -58,6 +58,7 @@ consommation_moyenne_jour_site = site_alpha.consommation_moyenne_site()
 #Variable de temps
 plage = [0,360,540,720,900,1080,1260]
 str_jour_semaine = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"]
+str_mois = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]
 
 #Initialisation de la date du jour si pas d'argument
 now = time.localtime() 
@@ -256,7 +257,7 @@ while(continu):
 
 	
 	nom_site=site_alpha.nom
-	date=str(decoupe(minute_journee)[0])+"h"+str(decoupe(minute_journee)[1])+" - "+str(str_jour_semaine[jour_semaine])+" "+str(jour_mois)+"/"+str(mois)+"/"+str(annee)
+	date=str(decoupe(minute_journee)[0])+"h"+str(decoupe(minute_journee)[1])+" - "+str(str_jour_semaine[jour_semaine])+" "+str(jour_mois)+" "+str_mois[mois-1]+" "+str(annee)
 	degre=str(site_alpha.meteo[cle][0])
 	vent=str(site_alpha.meteo[cle][5])
 	localisation="Paris"
