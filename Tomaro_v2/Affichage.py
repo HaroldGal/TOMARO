@@ -118,7 +118,7 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 	if(is_nuit==False):
 		background = pygame.image.load("Image/Background_foyer_jour.png").convert()
 	else:
-		background = pygame.image.load("Image/Background_foyer_jour.png").convert()
+		background = pygame.image.load("Image/Background_foyer_nuit.png").convert()
 	fenetre.blit(background,(0,0))
 
 	#Date
