@@ -204,7 +204,8 @@ class Site:
 							personne.liste_allumage_h = sample(range(0,355),personne.electro_h_jt[minute]) 
 						else:
 							personne.liste_allumage_h = sample(range(0,175),personne.electro_h_jt[minute])
-
+						for i in range(0,len(personne.liste_allumage_h)):
+							personne.liste_allumage_h[i]+=minute
 						personne.liste_eteignage_h = [temps+5 for temps in personne.liste_allumage_h]
 
 		#Si on est samedi ou dimanche et qu'on est sur une plage de mofication on calcul l'heure d'allumage et d'éteignage
@@ -243,7 +244,8 @@ class Site:
 							personne.liste_allumage_h = sample(range(0,355),personne.electro_h_jnt[minute]) 
 						else:
 							personne.liste_allumage_h = sample(range(0,175),personne.electro_h_jnt[minute])
-
+						for i in range(0,len(personne.liste_allumage_h)):
+							personne.liste_allumage_h[i]+=minute
 						personne.liste_eteignage_h = [temps+5 for temps in personne.liste_allumage_h]
 						
 	#Allume ou éteint les appareils en fonction de l'heure de la journée
@@ -314,7 +316,7 @@ class Site:
 						personne.pai.allume = False
 
 					for minute_allumage in personne.liste_allumage_h:
-						if(minute_allumage == minute):
+						if(minute_allumage == minute):	
 							personne.electro.allume = True
 							personne.electro.nb_allumage = personne.electro.nb_allumage + 1
 

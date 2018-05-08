@@ -283,17 +283,17 @@ while(continu):
 		stockage=str(stockage_val)
 		stockage_pourcent=str(stockage_val*100/stockage_max)+"%"
 
-	#Si on est dans l'état menu
-	if(etat_affichage=="menu"):		
-		menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv)
+		#Si on est dans l'état menu
+		if(etat_affichage=="menu"):		
+			menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv)
 
-	elif(etat_affichage=="liste_foyer"):
-		affichage_liste_foyer(fenetre,site_alpha,date,is_nuit)
+		elif(etat_affichage=="liste_foyer"):
+			affichage_liste_foyer(fenetre,site_alpha,date,is_nuit)
 
-	elif(etat_affichage=="foyer"):
-		affichage_foyer(fenetre,site_alpha,date,is_nuit,index_foyer,degre)
+		elif(etat_affichage=="foyer"):
+			affichage_foyer(fenetre,site_alpha,date,is_nuit,index_foyer,degre)
 
-	pygame.display.flip()
+		pygame.display.flip()
 
 	#print "temperature exterieure : ", str(site_alpha.meteo[cle][0])
 	#print "temperature interieure : ", str(site_alpha.liste_foyer[0].temperature)

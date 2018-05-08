@@ -2,9 +2,9 @@
 #-*- coding: utf-8 -*-
 
 import pygame
-import random
 import time
 from pygame.locals import *
+from random import randrange,sample,randint
 
 
 #Fonction permettant de renvoyer les coordonnées pour centrer le texte au milieu d'une image
@@ -136,12 +136,13 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 		radiateur = pygame.image.load("Image/Radiateur.png").convert_alpha()
 		fenetre.blit(radiateur,(703,172))
 
-	if site.liste_foyer[index_foyer].frigo.allume==True:
-		frigo = pygame.image.load("Image/Frigo_on.png").convert_alpha()
-	if site.liste_foyer[index_foyer].frigo.allume==False:		
-		frigo = pygame.image.load("Image/Frigo_off.png").convert_alpha()	
-	fenetre.blit(frigo,(325,510))
+	#Frigo/Electro Menagé
+	nb_electro_allume=0
+	pai_allume=False	
+	nb_personne_cuisine=0
+	cuisine_allume=False	
 
+	#Chambre
 	for index,personne in enumerate(site.liste_foyer[index_foyer].liste_personne):	
 		#Personne 0
 		if index==0:
@@ -179,9 +180,17 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 				fenetre.blit(pc,(524,300))
 
 			#Affichage Personnage
-			perso=pygame.image.load(personne.image).convert_alpha()
-			fenetre.blit(perso,(490,305))
-					
+			if personne.electro.nb_allumage>0 or personne.pai.allume==True:
+				perso=pygame.image.load(personne.image).convert_alpha()
+				fenetre.blit(perso,(680+nb_personne_cuisine*40,525))
+				nb_personne_cuisine+=1
+			else:
+				perso=pygame.image.load(personne.image).convert_alpha()
+				fenetre.blit(perso,(490,305))
+				nb_personne_cuisine-=1
+				if nb_personne_cuisine<0:
+					nb_personne_cuisine=0
+						
 
 		#Personne 1
 		if index==1:
@@ -220,8 +229,16 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 				fenetre.blit(pc,(618,298))
 
 			#Affichage Personnage
-			perso=pygame.image.load(personne.image).convert_alpha()
-			fenetre.blit(perso,(680,305))
+			if personne.electro.nb_allumage>0 or personne.pai.allume==True:
+				perso=pygame.image.load(personne.image).convert_alpha()
+				fenetre.blit(perso,(680+nb_personne_cuisine*40,525))
+				nb_personne_cuisine+=1
+			else:
+				perso=pygame.image.load(personne.image).convert_alpha()
+				fenetre.blit(perso,(680,305))
+				nb_personne_cuisine-=1
+				if nb_personne_cuisine<0:
+					nb_personne_cuisine=0
 
 		#Personne 2
 		if index==2:
@@ -260,8 +277,17 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 				fenetre.blit(pc,(524,410))
 
 			#Affichage Personnage
-			perso=pygame.image.load(personne.image).convert_alpha()
-			fenetre.blit(perso,(490,415))
+			if personne.electro.nb_allumage>0 or personne.pai.allume==True:
+				perso=pygame.image.load(personne.image).convert_alpha()
+				fenetre.blit(perso,(680+nb_personne_cuisine*40,525))
+				nb_personne_cuisine+=1
+
+			else:
+				perso=pygame.image.load(personne.image).convert_alpha()
+				fenetre.blit(perso,(490,415))
+				nb_personne_cuisine-=1
+				if nb_personne_cuisine<0:
+					nb_personne_cuisine=0
 
 		#Personne 3
 		if index==3:
@@ -300,32 +326,103 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 				fenetre.blit(pc,(618,410))
 
 			#Affichage Personnage
-			perso=pygame.image.load(personne.image).convert_alpha()
-			fenetre.blit(perso,(680,415))
+			#Dans cuisine si un appareil est allumé ou pai
+			if personne.electro.nb_allumage>0 or personne.pai.allume==True:
+				perso=pygame.image.load(personne.image).convert_alpha()
+				fenetre.blit(perso,(680+nb_personne_cuisine*40,525))
+				nb_personne_cuisine+=1
+			else:
+				perso=pygame.image.load(personne.image).convert_alpha()
+				fenetre.blit(perso,(680,415))
+				nb_personne_cuisine-=1
+				if nb_personne_cuisine<0:
+					nb_personne_cuisine=0
 
-		if site.liste_foyer[index_foyer].nombre_individu==1:
-			chambre_vide=pygame.image.load("Image/Chambre_2_vide.png").convert_alpha()
-			fenetre.blit(chambre_vide,(604,282))
-			chambre_vide=pygame.image.load("Image/Chambre_3_vide.png").convert_alpha()
-			fenetre.blit(chambre_vide,(322,398))
-			chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
-			fenetre.blit(chambre_vide,(604,398))
+		#On regarde si la pai est allumé
+		if personne.pai.allume==True:
+			pai_allume=True
 
-		elif site.liste_foyer[index_foyer].nombre_individu==2:
-			chambre_vide=pygame.image.load("Image/Chambre_3_vide.png").convert_alpha()
-			fenetre.blit(chambre_vide,(322,398))
-			chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
-			fenetre.blit(chambre_vide,(604,398))
+		#On regarde combien d'électro sont allumé
+		nb_electro_allume+=personne.electro.nb_allumage
 
-		elif site.liste_foyer[index_foyer].nombre_individu==3:
-			chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
-			fenetre.blit(chambre_vide,(604,398))
-
-		micro_onde=pygame.image.load("Image/Micro_onde_on.png").convert_alpha()
-		cafetiere=pygame.image.load("Image/Cafetiere_on.png").convert_alpha()
-		grille_pain=pygame.image.load("Image/Grille_pain_on.png").convert_alpha()
+	if nb_electro_allume>0:
+		cuisine_allume=True
+	if pai_allume==True:
+		cuisine_allume=True
 		pai=pygame.image.load("Image/Pai_on.png").convert_alpha()
-		fenetre.blit(micro_onde,(395,541))
-		fenetre.blit(cafetiere,(471,537))
-		fenetre.blit(grille_pain,(518,544))
-		fenetre.blit(pai,(627,562))
+
+	else:
+		pai=pygame.image.load("Image/Pai_off.png").convert_alpha()
+
+	if cuisine_allume==False and is_nuit==True:
+		cuisine_sombre=pygame.image.load("Image/Cuisine_sombre.png").convert_alpha()
+		lampe=pygame.image.load("Image/Lampe_off.png").convert_alpha()
+		fenetre.blit(cuisine_sombre,(321,505))
+		fenetre.blit(lampe,(393,506))
+		fenetre.blit(lampe,(587,506))
+		fenetre.blit(lampe,(778,506))
+
+	elif cuisine_allume==True and is_nuit==True:
+		lampe=pygame.image.load("Image/Lampe_on.png").convert_alpha()
+		fenetre.blit(lampe,(393,506))
+		fenetre.blit(lampe,(587,506))
+		fenetre.blit(lampe,(778,506))
+	else:
+		lampe=pygame.image.load("Image/Lampe_off.png").convert_alpha()
+		fenetre.blit(lampe,(393,506))
+		fenetre.blit(lampe,(587,506))
+		fenetre.blit(lampe,(778,506))
+
+	if site.liste_foyer[index_foyer].frigo.allume==True:
+		frigo = pygame.image.load("Image/Frigo_on.png").convert_alpha()
+	elif site.liste_foyer[index_foyer].frigo.allume==False:		
+		frigo = pygame.image.load("Image/Frigo_off.png").convert_alpha()	
+	fenetre.blit(frigo,(325,510))
+	fenetre.blit(pai,(627,562))
+
+	#On affiche aléatoirement cafetiere,micro-onde,bouilloire ou grille-pain
+	micro_onde_on=pygame.image.load("Image/Micro_onde_off.png").convert_alpha()
+	fenetre.blit(micro_onde_on,(395,541))
+	bouilloire_on=pygame.image.load("Image/Bouilloire_off.png").convert_alpha()
+	fenetre.blit(bouilloire_on,(600,548))
+	cafetiere_on=pygame.image.load("Image/Cafetiere_off.png").convert_alpha()
+	fenetre.blit(cafetiere_on,(471,537))
+	grille_pain_on=pygame.image.load("Image/Grille_pain_off.png").convert_alpha()
+	fenetre.blit(grille_pain_on,(518,544))
+
+	liste_electro_allume=sample(range(0,4),4)
+
+	for i in range(0,nb_electro_allume):
+		if i==liste_electro_allume[0]:
+			micro_onde_on=pygame.image.load("Image/Micro_onde_on.png").convert_alpha()
+			fenetre.blit(micro_onde_on,(395,541))
+		elif i==liste_electro_allume[1]:
+			bouilloire_on=pygame.image.load("Image/Bouilloire_on.png").convert_alpha()
+			fenetre.blit(bouilloire_on,(600,548))
+		elif i==liste_electro_allume[2]:
+			cafetiere_on=pygame.image.load("Image/Cafetiere_on.png").convert_alpha()
+			fenetre.blit(cafetiere_on,(471,537))
+		elif i==liste_electro_allume[3]:
+			grille_pain_on=pygame.image.load("Image/Grille_pain_on.png").convert_alpha()
+			fenetre.blit(grille_pain_on,(518,544))	
+
+	#On affiche les chambres vides
+	if site.liste_foyer[index_foyer].nombre_individu==1:
+		chambre_vide=pygame.image.load("Image/Chambre_2_vide.png").convert_alpha()
+		fenetre.blit(chambre_vide,(604,282))
+		chambre_vide=pygame.image.load("Image/Chambre_3_vide.png").convert_alpha()
+		fenetre.blit(chambre_vide,(322,398))
+		chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
+		fenetre.blit(chambre_vide,(604,398))
+
+	elif site.liste_foyer[index_foyer].nombre_individu==2:
+		chambre_vide=pygame.image.load("Image/Chambre_3_vide.png").convert_alpha()
+		fenetre.blit(chambre_vide,(322,398))
+		chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
+		fenetre.blit(chambre_vide,(604,398))
+
+	elif site.liste_foyer[index_foyer].nombre_individu==3:
+		chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
+		fenetre.blit(chambre_vide,(604,398))
+
+		
