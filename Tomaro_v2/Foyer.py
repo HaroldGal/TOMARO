@@ -16,6 +16,8 @@ class Foyer:
 
 		self.climatisation = False
 		self.chauffage = True
+		self.frigo = Appareil("Frigo",175+randrange(-25,25))
+		self.frigo.allume=True
 
 		self.nb_machine_a_laver = 0
 		self.machine_a_laver = Appareil("Machine_a_laver",470+randrange(-47,47))

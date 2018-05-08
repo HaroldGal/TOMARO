@@ -145,6 +145,7 @@ while(continu):
 		site_alpha.random_meteo(cle)
 		#time.sleep(2)
 
+
 	site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit, cle)
 
 	# print "\033c"	
@@ -255,25 +256,32 @@ while(continu):
 				elif event.pos[0]>962 and event.pos[0]<1011 and event.pos[1]>72 and event.pos[1]<98:
 					vitesse_sleep+=0.05
 
-	
-	nom_site=site_alpha.nom
-	date=str(decoupe(minute_journee)[0])+"h"+str(decoupe(minute_journee)[1])+" - "+str(str_jour_semaine[jour_semaine])+" "+str(jour_mois)+" "+str_mois[mois-1]+" "+str(annee)
-	degre=str(site_alpha.meteo[cle][0])
-	vent=str(site_alpha.meteo[cle][5])
-	localisation="Paris"
-	nb_foyer=str(site_alpha.nb_foyer)
-	nb_personne=str(site_alpha.nb_personne)
-	consommation_totale=str(site_alpha.consommation_globale_minute)
-	production_eo= str(int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)))
-	production_pv= str(int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
-	nb_eo=str(site_alpha.eolienne.nb)
-	surface_pv=str(site_alpha.panneau.surface)
-	production_totale=str(int(round(float(production_pv)+float(production_eo))))	
-	if pause!=True and stockage_val<stockage_max:
-		stockage_val+=float(production_totale)-float(consommation_totale)
-	stockage_val=int(round(min(stockage_max,max(0,stockage_val))))	
-	stockage=str(stockage_val)
-	stockage_pourcent=str(stockage_val*100/stockage_max)+"%"
+				#Si on clique sur le bouton accélérer
+				elif event.pos[0]>325 and event.pos[0]<381 and event.pos[1]>510 and event.pos[1]<604:
+					if site_alpha.liste_foyer[index_foyer].frigo.allume==True:
+						site_alpha.liste_foyer[index_foyer].frigo.allume=False
+					else:
+						site_alpha.liste_foyer[index_foyer].frigo.allume=True
+
+	if(pause!=True):
+		nom_site=site_alpha.nom
+		date=str(decoupe(minute_journee)[0])+"h"+str(decoupe(minute_journee)[1])+" - "+str(str_jour_semaine[jour_semaine])+" "+str(jour_mois)+" "+str_mois[mois-1]+" "+str(annee)
+		degre=str(site_alpha.meteo[cle][0])
+		vent=str(site_alpha.meteo[cle][5])
+		localisation="Paris"
+		nb_foyer=str(site_alpha.nb_foyer)
+		nb_personne=str(site_alpha.nb_personne)
+		consommation_totale=str(site_alpha.consommation_globale_minute)
+		production_eo= str(int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)))
+		production_pv= str(int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
+		nb_eo=str(site_alpha.eolienne.nb)
+		surface_pv=str(site_alpha.panneau.surface)
+		production_totale=str(int(round(float(production_pv)+float(production_eo))))	
+		if pause!=True and stockage_val<stockage_max:
+			stockage_val+=float(production_totale)-float(consommation_totale)
+		stockage_val=int(round(min(stockage_max,max(0,stockage_val))))	
+		stockage=str(stockage_val)
+		stockage_pourcent=str(stockage_val*100/stockage_max)+"%"
 
 	#Si on est dans l'état menu
 	if(etat_affichage=="menu"):		

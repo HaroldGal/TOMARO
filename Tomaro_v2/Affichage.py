@@ -136,6 +136,12 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 		radiateur = pygame.image.load("Image/Radiateur.png").convert_alpha()
 		fenetre.blit(radiateur,(703,172))
 
+	if site.liste_foyer[index_foyer].frigo.allume==True:
+		frigo = pygame.image.load("Image/Frigo_on.png").convert_alpha()
+	if site.liste_foyer[index_foyer].frigo.allume==False:		
+		frigo = pygame.image.load("Image/Frigo_off.png").convert_alpha()	
+	fenetre.blit(frigo,(325,510))
+
 	for index,personne in enumerate(site.liste_foyer[index_foyer].liste_personne):	
 		#Personne 0
 		if index==0:
@@ -315,3 +321,11 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 			chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
 			fenetre.blit(chambre_vide,(604,398))
 
+		micro_onde=pygame.image.load("Image/Micro_onde_on.png").convert_alpha()
+		cafetiere=pygame.image.load("Image/Cafetiere_on.png").convert_alpha()
+		grille_pain=pygame.image.load("Image/Grille_pain_on.png").convert_alpha()
+		pai=pygame.image.load("Image/Pai_on.png").convert_alpha()
+		fenetre.blit(micro_onde,(395,541))
+		fenetre.blit(cafetiere,(471,537))
+		fenetre.blit(grille_pain,(518,544))
+		fenetre.blit(pai,(627,562))
