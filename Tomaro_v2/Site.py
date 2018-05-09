@@ -294,18 +294,18 @@ class Site:
 				else:
 					foyer.radiateur.allume=False
 
-				if foyer.temperature>25 and foyer.climatisation==True:
-					foyer.clim.allume=True
-					temps_de_chauffe=((1.5*1.225*foyer.volume*1000*(foyer.temperature-19)/foyer.clim.consommation_heure))
+				if foyer.temperature>25 and foyer.climatisation_presente==True:
+					foyer.climatisation.allume=True
+					temps_de_chauffe=((1.5*1.225*foyer.volume*1000*(foyer.temperature-19)/foyer.climatisation.consommation_heure))
 					temps_de_chauffe=temps_de_chauffe/60
 					self.variation_temp=(22-foyer.temperature)/temps_de_chauffe
 					foyer.temperature+=self.variation_temp
-					self.consommation_globale_minute+=foyer.clim.consommation_minute
-				elif foyer.temperature>22.0 and foyer.clim.allume==True:
+					self.consommation_globale_minute+=foyer.climatisation.consommation_minute
+				elif foyer.temperature>22.0 and foyer.climatisation.allume==True:
 					foyer.temperature+=self.variation_temp
-					self.consommation_globale_minute+=foyer.clim.consommation_minute
+					self.consommation_globale_minute+=foyer.climatisation.consommation_minute
 				else:
-					foyer.clim.allume=False				
+					foyer.climatisation.allume=False				
 
 				foyer.temperature = (60*((273+float(self.meteo[cle][0]))-(273+foyer.temperature))*self.lamb*foyer.surface_mur)/(foyer.epaisseur_mur*foyer.volume*self.capa) + foyer.temperature
 
@@ -314,7 +314,7 @@ class Site:
 					temps_de_chauffe=((1.5*1.225*foyer.frigo.volume*1000*(foyer.frigo.temperature-2)/foyer.frigo.consommation_heure))
 					temps_de_chauffe=temps_de_chauffe/60
 					self.variation_temp_frigo=(2.0-foyer.frigo.temperature)/temps_de_chauffe
-					foyer.temperature+=self.variation_temp_frigo
+					foyer.frigo.temperature+=self.variation_temp_frigo
 					self.consommation_globale_minute+=foyer.frigo.consommation_minute
 				elif foyer.frigo.temperature>2.0 and foyer.frigo.allume==True:
 					foyer.frigo.temperature+=self.variation_temp_frigo

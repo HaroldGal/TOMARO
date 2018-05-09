@@ -134,7 +134,10 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 	fenetre.blit(temperature_int,(595-temperature_int.get_size()[0],180))
 	if site.liste_foyer[index_foyer].radiateur.allume==True:
 		radiateur = pygame.image.load("Image/Radiateur.png").convert_alpha()
-		fenetre.blit(radiateur,(703,172))
+		fenetre.blit(radiateur,(1200-378-radiateur.get_size()[0],189))
+	if site.liste_foyer[index_foyer].climatisation.allume==True:
+		climatisation = pygame.image.load("Image/Climatisation.png").convert_alpha()
+		fenetre.blit(climatisation,(378,189))
 
 	#Frigo/Electro Menagé
 	nb_electro_allume=0

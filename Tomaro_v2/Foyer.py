@@ -14,7 +14,7 @@ class Foyer:
 		self.temperature = 10.0
 		self.liste_personne = []
 
-		self.climatisation = True
+		self.climatisation_presente = True
 		self.chauffage = True
 		self.frigo = Frigo("Frigo",175+randrange(-25,25))
 		self.frigo.allume=True
@@ -30,9 +30,9 @@ class Foyer:
 		self.nb_seche_linge = 0
 		self.seche_linge = Appareil("Seche_linge",1700+randrange(-170,170))
 		self.heure_jour_on_off_seche_linge = dict() #Dictionnaire permettant de stocker l'heure d'allumage de la machine
-		self.radiateur=Appareil("Radiateur 1",750)
+		self.radiateur=Appareil("Radiateur 1",750+randrange(-50,50))
 
-		self.clim=Appareil("clim",750)
+		self.climatisation=Appareil("climatisation",750+randrange(-50,50))
 
 		self.nombre_individu = nombre_individu
 		self.ajouter_individu()
