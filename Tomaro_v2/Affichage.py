@@ -118,7 +118,7 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 	if(is_nuit==False):
 		background = pygame.image.load("Image/Background_foyer_jour.png").convert()
 	else:
-		background = pygame.image.load("Image/Background_foyer_nuit.png").convert()
+		background = pygame.image.load("Image/Background_foyer_jour.png").convert()
 	fenetre.blit(background,(0,0))
 
 	#Date
@@ -405,6 +405,28 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 		elif i==liste_electro_allume[3]:
 			grille_pain_on=pygame.image.load("Image/Grille_pain_on.png").convert_alpha()
 			fenetre.blit(grille_pain_on,(518,544))	
+
+	#Garage
+	if site.liste_foyer[index_foyer].machine_a_laver.allume==True:
+		machine_a_laver=pygame.image.load("Image/Machine_a_laver_on.png").convert_alpha()
+	else:
+		machine_a_laver=pygame.image.load("Image/Machine_a_laver_off.png").convert_alpha()
+
+	if site.liste_foyer[index_foyer].seche_linge.allume==True:
+		seche_linge=pygame.image.load("Image/Seche_linge_on.png").convert_alpha()
+	else:
+		seche_linge=pygame.image.load("Image/Seche_linge_off.png").convert_alpha()
+
+	if site.liste_foyer[index_foyer].lave_vaisselle.allume==True:
+		lave_vaisselle=pygame.image.load("Image/Lave_vaisselle_on.png").convert_alpha()
+	else:
+		lave_vaisselle=pygame.image.load("Image/Lave_vaisselle_off.png").convert_alpha()
+
+	fenetre.blit(machine_a_laver,(458-machine_a_laver.get_size()[0]/2,647))
+	fenetre.blit(lave_vaisselle,(600-lave_vaisselle.get_size()[0]/2+12,647))
+	fenetre.blit(seche_linge,(753-seche_linge.get_size()[0]/2,647))
+	
+
 
 	#On affiche les chambres vides
 	if site.liste_foyer[index_foyer].nombre_individu==1:
