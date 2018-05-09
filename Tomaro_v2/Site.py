@@ -15,7 +15,7 @@ class Site:
 		self.nom = nom
 		self.nb_foyer = nb_foyer
 		self.consommation_globale_minute = 0	
-
+		self.variation_temp = 0
 
 		#Initialisation de la liste des foyers
 		self.liste_foyer = self.init_liste_foyer(nb_foyer)
@@ -280,15 +280,31 @@ class Site:
 				if(foyer.seche_linge.allume == True):
 					self.consommation_globale_minute += foyer.seche_linge.consommation_minute
 
-				if foyer.temperature<20.0 and foyer.chauffage==True:
-					temps_de_chauffe=((1.5*1.225*foyer.volume*1000*(20-foyer.temperature)/foyer.radiateur.consommation_heure))
-					temps_de_chauffe=temps_de_chauffe/60
-					augmentation_temp=(20-foyer.temperature)/temps_de_chauffe
-					foyer.temperature+=augmentation_temp
+				if foyer.temperature<19.0 and foyer.chauffage==True:
 					foyer.radiateur.allume=True
+					temps_de_chauffe=((1.5*1.225*foyer.volume*1000*(22-foyer.temperature)/foyer.radiateur.consommation_heure))
+					temps_de_chauffe=temps_de_chauffe/60
+					self.variation_temp=(22-foyer.temperature)/temps_de_chauffe
+					foyer.temperature+=self.variation_temp
+					self.consommation_globale_minute+=foyer.radiateur.consommation_minute
+				elif foyer.temperature<22.0 and foyer.radiateur.allume==True:
+					foyer.temperature+=self.variation_temp
 					self.consommation_globale_minute+=foyer.radiateur.consommation_minute
 				else:
-					foyer.radiateur.allume=False					
+					foyer.radiateur.allume=False
+
+				if foyer.temperature>23 and foyer.climatisation==True:
+					foyer.clim.allume=True
+					temps_de_chauffe=((1.5*1.225*foyer.volume*1000*(foyer.temperature-19)/foyer.clim.consommation_heure))
+					temps_de_chauffe=temps_de_chauffe/60
+					self.variation_temp=(22-foyer.temperature)/temps_de_chauffe
+					foyer.temperature+=self.variation_temp
+					self.consommation_globale_minute+=foyer.clim.consommation_minute
+				elif foyer.temperature>20.0 and foyer.clim.allume==True:
+					foyer.temperature+=self.variation_temp
+					self.consommation_globale_minute+=foyer.clim.consommation_minute
+				else:
+					foyer.clim.allume=False				
 
 				foyer.temperature = (60*((273+float(self.meteo[cle][0]))-(273+foyer.temperature))*self.lamb*foyer.surface_mur)/(foyer.epaisseur_mur*foyer.volume*self.capa) + foyer.temperature
 
