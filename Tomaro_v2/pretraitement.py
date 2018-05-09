@@ -131,11 +131,14 @@ while (jour_annee<=365):
 	if(jour_semaine == 0 and minute_journee == 0):
 		site_alpha.actualisation_heure_jour_machine_foyer()
 
-	site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit)
+	cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
+
+	site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit,cle)
 
 	if minute_journee%60 ==0:		
 		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
-		cle = site_alpha.random_meteo(cle)
+		site_alpha.random_meteo(cle)
+		# print cle
 		PV1.production_energie(float(site_alpha.meteo[cle][1]))
 		EO1.production_energie(float(site_alpha.meteo[cle][5]))
 
