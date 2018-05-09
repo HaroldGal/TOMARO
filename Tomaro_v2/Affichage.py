@@ -118,7 +118,7 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 	if(is_nuit==False):
 		background = pygame.image.load("Image/Background_foyer_jour.png").convert()
 	else:
-		background = pygame.image.load("Image/Background_foyer_jour.png").convert()
+		background = pygame.image.load("Image/Background_foyer_nuit.png").convert()
 	fenetre.blit(background,(0,0))
 
 	#Date
@@ -410,6 +410,9 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 			fenetre.blit(grille_pain_on,(518,544))	
 
 	#Garage
+	if is_nuit==True and site.liste_foyer[index_foyer].machine_a_laver.allume==False and site.liste_foyer[index_foyer].seche_linge.allume==False and site.liste_foyer[index_foyer].lave_vaisselle.allume==False:
+		background_cave_sombre=pygame.image.load("Image/Background_cave_sombre.png").convert_alpha()
+		fenetre.blit(background_cave_sombre,(321,619))
 	if site.liste_foyer[index_foyer].machine_a_laver.allume==True:
 		machine_a_laver=pygame.image.load("Image/Machine_a_laver_on.png").convert_alpha()
 	else:
