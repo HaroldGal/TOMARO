@@ -256,12 +256,11 @@ class Site:
 
 		for foyer in self.liste_foyer:
 
-
 				for minute_on_off,jour_allumage in foyer.heure_jour_on_off_machine_a_laver.items():
 						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.machine_a_laver.allume == False):
 							foyer.machine_a_laver.allume = True
 						if(jour_allumage == jour_semaine and minute_on_off[1] == minute and foyer.machine_a_laver.allume == True):
-							foyer.machine_a_laver.allume = True
+							foyer.machine_a_laver.allume = False
 
 				for minute_on_off,jour_allumage in foyer.heure_jour_on_off_lave_vaisselle.items():
 						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.lave_vaisselle.allume == False):
@@ -325,6 +324,7 @@ class Site:
 
 				foyer.frigo.temperature = (60*((273+foyer.temperature)-(273+foyer.frigo.temperature))*foyer.frigo.lamb*foyer.frigo.surface)/(foyer.frigo.epaisseur*foyer.frigo.volume*self.capa) + foyer.frigo.temperature
 
+
 				for personne in foyer.liste_personne:
 
 					#On considere tous les appareils éteints
@@ -376,6 +376,15 @@ class Site:
 						self.consommation_globale_minute += personne.electro.consommation_minute*personne.electro.nb_allumage
 					if(personne.lampe.allume == True):
 						self.consommation_globale_minute += personne.lampe.consommation_minute
+
+				if(foyer.machine_a_laver.allume == True):
+					self.consommation_globale_minute += foyer.machine_a_laver.consommation_minute
+
+				if(foyer.lave_vaisselle.allume == True):
+					self.consommation_globale_minute += foyer.lave_vaisselle.consommation_minute
+
+				if(foyer.seche_linge.allume == True):
+					self.consommation_globale_minute += foyer.seche_linge.consommation_minute
 
 
 
