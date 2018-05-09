@@ -283,7 +283,7 @@ class Site:
 
 				if foyer.temperature<17.0 and foyer.chauffage==True:
 					foyer.radiateur.allume=True
-					temps_de_chauffe=((1.5*1.225*foyer.volume*1000*(22-foyer.temperature)/foyer.radiateur.consommation_heure))
+					temps_de_chauffe=((1.5*1.225*foyer.volume*self.capa*(22-foyer.temperature)/foyer.radiateur.consommation_heure))
 					temps_de_chauffe=temps_de_chauffe/60
 					self.variation_temp=(20-foyer.temperature)/temps_de_chauffe
 					foyer.temperature+=self.variation_temp
@@ -296,7 +296,7 @@ class Site:
 
 				if foyer.temperature>25 and foyer.climatisation_presente==True:
 					foyer.climatisation.allume=True
-					temps_de_chauffe=((1.5*1.225*foyer.volume*1000*(foyer.temperature-19)/foyer.climatisation.consommation_heure))
+					temps_de_chauffe=((1.5*1.225*foyer.volume*self.capa*(foyer.temperature-19)/foyer.climatisation.consommation_heure))
 					temps_de_chauffe=temps_de_chauffe/60
 					self.variation_temp=(22-foyer.temperature)/temps_de_chauffe
 					foyer.temperature+=self.variation_temp
@@ -311,9 +311,9 @@ class Site:
 
 				if foyer.frigo.temperature>5:
 					foyer.frigo.allume=True
-					temps_de_chauffe=((1.5*1.225*foyer.frigo.volume*1000*(foyer.frigo.temperature-2)/foyer.frigo.consommation_heure))
+					temps_de_chauffe=((1.5*1.225*foyer.frigo.volume*10*self.capa*(2.0-foyer.frigo.temperature)/foyer.frigo.consommation_heure))
 					temps_de_chauffe=temps_de_chauffe/60
-					self.variation_temp_frigo=(2.0-foyer.frigo.temperature)/temps_de_chauffe
+					self.variation_temp_frigo=(foyer.frigo.temperature - 2.0)/temps_de_chauffe
 					foyer.frigo.temperature+=self.variation_temp_frigo
 					self.consommation_globale_minute+=foyer.frigo.consommation_minute
 				elif foyer.frigo.temperature>2.0 and foyer.frigo.allume==True:

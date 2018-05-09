@@ -36,5 +36,5 @@ class Frigo(Appareil):
 		self.temperature = 3.0
 		self.volume = 1.0
 		self.surface = 3.0
-		self.lamb = 0.02
-		self.epaisseur = 0.02
+		self.lamb = 0.005
+		self.epaisseur = 0.04
