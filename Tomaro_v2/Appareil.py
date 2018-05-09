@@ -33,4 +33,8 @@ class Frigo(Appareil):
 		Appareil.__init__(self, nom, consommation_watt_heure)
 
 		#Temperature interne du frigo en °C
-		self.temperature = 0
+		self.temperature = 3.0
+		self.volume = 1.0
+		self.surface = 3.0
+		self.lamb = 0.02
+		self.epaisseur = 0.02
