@@ -268,7 +268,7 @@ while(continu):
 		date=str(decoupe(minute_journee)[0])+"h"+str(decoupe(minute_journee)[1])+" - "+str(str_jour_semaine[jour_semaine])+" "+str(jour_mois)+" "+str_mois[mois-1]+" "+str(annee)
 		degre=str(site_alpha.meteo[cle][0])
 		vent=str(site_alpha.meteo[cle][5])
-		localisation="Paris"
+		localisation= "temperature frigo : " +str(round(site_alpha.liste_foyer[0].frigo.temperature))#"Paris"
 		nb_foyer=str(site_alpha.nb_foyer)
 		nb_personne=str(site_alpha.nb_personne)
 		consommation_totale=str(site_alpha.consommation_globale_minute)
