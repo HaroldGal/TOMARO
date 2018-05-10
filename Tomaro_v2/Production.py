@@ -25,13 +25,20 @@ class PV(Production):
 
 class EO(Production):
 
-	def __init__(self, surface_pale, nb):
+	def __init__(self, surface_pale, nb, performance):
 
 		Production.__init__(self)
 		self.surface_pale = surface_pale
 		self.nb = nb
+		self.performance = performance
 
 	def production_energie(self,vitesse_vent):
 
-		self.production_energie_jour += self.nb*self.surface_pale*0.5*1.2*vitesse_vent
-		return self.nb*self.surface_pale*0.5*1.2*vitesse_vent+randrange(0,3)*0.05*self.nb*self.surface_pale*0.5*1.2*vitesse_vent
+		#https://heliciel.com/helice/eolienne%20hydrolienne/energie-eolienne.htm
+		#https://eolienne.ooreka.fr/astuce/voir/352953/puissance-eolienne
+		#Pour produire de l'énergie le vent doit avoir une vitesse minimum de 3m/s
+		if vitesse_vent>3:
+				self.production_energie_jour += self.nb*self.surface_pale*0.5*1.2*(vitesse_vent)**3*self.performance
+				return self.nb*self.surface_pale*0.5*1.2*(vitesse_vent)**3*self.performance
+		return 0
+		

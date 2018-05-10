@@ -1,6 +1,9 @@
 #!/usr/bin/python2.7
 #-*- coding: utf-8 -*-
 
+import multiprocessing as mp
+import datetime
+from contextlib import closing
 from Site import *
 import calendar
 import time
@@ -12,6 +15,8 @@ from Sun import Sun
 def decoupe(minute):
     heure = minute /60
     minute %= 60
+    if heure == 24:
+    	return(0,minute)
     return (heure,minute)
 
 #Fonction permettant de dire s'il fait nuit ou pas
@@ -58,7 +63,7 @@ annee = 1
 mois = 1
 jour_mois = 1
 jour_semaine = 0 #Lundi 0 .... Dimanche 6
-minute_journee = 590
+minute_journee = 0
 site_alpha.actualisation_heure_jour_machine_foyer() #Calcul des horaires pour les différentes machines
 
 # ---------- AJOUTER LATITUDE ET LONGITUDE DE LA VILLE OU VOUS ETES ---------- #
@@ -72,78 +77,65 @@ consommation_total = 0
 
 #Producion
 PV1 = PV(0.18,1,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
-EO1 = EO(13,1) #https://www.alma-solarshop.fr/panneau-bisol/733-panneau-bisol-bmo-280-noir.html
-
+EO1 = EO(13,1,0.15) #https://www.alma-solarshop.fr/panneau-bisol/733-panneau-bisol-bmo-280-noir.html
 #Ouverture du fichier
 file = open("Data/data_pretraitement.txt",'w')
 file.write("365 2\n\n")
+file.close()
 
 #Boucle infinie pour modéliser le temps
 #continu = True
-jour_annee=1
-conso_jour=0
-tab_consomation_jour=[]
 
 cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
 cle = site_alpha.random_meteo(cle)
 
+def prod_conso(jour_annee):
 #---- ON SIMULE LES DONNES SUR UN AN POUR AVOIR LA CONSOMMATION MOYENNE "U" LA PRODUCTION SOLAIRE "X" ET EOLIENNE "Y" CHAQUE JOUR
-while (jour_annee<=365):
+
 	#time.sleep(0.5)
 
-	#---------- Gestion du temps ----------#	
-	
-	#Savoir s'il fait nuit ou pas
-	is_nuit = nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)
-	minute_journee = minute_journee + 1
+	#---------- Gestion du temps ----------#
+	date = datetime.datetime.strptime(str(jour_annee), '%j').strftime('%d/%m')
+	jour_mois=int(date[0:2])
+	mois = int(date[3:5])
+	minute_journee = 0
+	annee = 1
+	jour_semaine = jour_annee%7 #Lundi 0 .... Dimanche 6
+	file = open("Data/data_pretraitement.txt",'a')
+	conso_jour=0
+	PV1.production_energie_jour = 0
+	EO1.production_energie_jour = 0 
 
-	if(minute_journee == 1440):
-		jour_semaine += 1
-		jour_mois += 1
-		minute_journee = 0
-		tab_consomation_jour.append(conso_jour)
-		conso_jour=0
-		jour_annee+=1
+	# print "jour_semaine=",jour_semaine,"jour_mois=",jour_mois,"mois=",mois
 
-		file.write(str(int(round(PV1.production_energie_jour)))+" "+str(int(round(EO1.production_energie_jour)))+"\n")
+	while(minute_journee<=1440):
+		#Savoir s'il fait nuit ou pas
+		is_nuit = nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)
+		
+		##Modification des temps de consommations et déroulement de la journée
+		if(minute_journee in plage):
+			site_alpha.actualisation_des_plages_h(minute_journee,jour_semaine)
 
-		PV1.production_energie_jour = 0
-		EO1.production_energie_jour = 0 
-		print "\033c"
-		print str(jour_annee*100/365)+"%"
+		#Si on est le lundi à minuit on calcul aléatoirement les jours d'allumage des machines des foyers
+		if(jour_semaine == 0 and minute_journee == 0):
+			site_alpha.actualisation_heure_jour_machine_foyer()
 
-	if(jour_semaine == 7):
-		jour_semaine = 0
-
-	if(jour_mois > calendar.monthrange(annee,mois)[1]):
-		jour_mois = 1
-		mois += 1
-
-	if(mois > 12):
-		mois = 1
-		annee += 1
-
-	##Modification des temps de consommations et déroulement de la journée
-	if(minute_journee in plage):
-		site_alpha.actualisation_des_plages_h(minute_journee,jour_semaine)
-
-	#Si on est le lundi à minuit on calcul aléatoirement les jours d'allumage des machines des foyers
-	if(jour_semaine == 0 and minute_journee == 0):
-		site_alpha.actualisation_heure_jour_machine_foyer()
-
-	cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
-
-	site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit,cle)
-
-	if minute_journee%60 ==0:		
 		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
-		site_alpha.random_meteo(cle)
-		# print cle
-		PV1.production_energie(float(site_alpha.meteo[cle][1]))
-		EO1.production_energie(float(site_alpha.meteo[cle][5]))
+		site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit,cle)
 
-	conso_jour+=site_alpha.consommation_globale_minute
+		if minute_journee%60 ==0:		
+			# cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
+			site_alpha.random_meteo(cle)
+			# print cle
+			PV1.production_energie(float(site_alpha.meteo[cle][1]))
+			EO1.production_energie(float(site_alpha.meteo[cle][5]))
 
+		conso_jour+=site_alpha.consommation_globale_minute
+		minute_journee = minute_journee + 1
+
+	file.write(str(int(round(PV1.production_energie_jour)))+" "+str(int(round(EO1.production_energie_jour)))+"\n")
+	file.close()
+	return conso_jour
 
 	# print "Nombre de foyer sur le site:",site_alpha.nb_foyer
 	# print "\nNombre d'habitant sur le site:",site_alpha.nb_personne
@@ -155,6 +147,21 @@ while (jour_annee<=365):
 	#print "Radiation:\nGlobale:",str(site_alpha.meteo[cle][1]),"Directe:",str(site_alpha.meteo[cle][2]),"Diffuse:",str(site_alpha.meteo[cle][3]),"Infrarouge",str(site_alpha.meteo[cle][4])
 	#print "Production du jour: PV =",PV1.production_energie_jour,"EO =",EO1.production_energie_jour
 
+# for i in range(1,366):
+# 	p = mp.Process(target=prod_conso,args=(i))
+# 	p.start()
+
+
+# for i in range(1,366):
+# 	prod_conso(i)
+
+# tab_consomation_jour=[]
+
+with closing(mp.Pool(5)) as p:
+	tab_consomation_jour= p.map(prod_conso,range(1,366))
+	p.terminate()
+
+file = open("Data/data_pretraitement.txt",'a')
 file.write("\n")
 for conso in tab_consomation_jour:
 	file.write(str(int(round(conso)))+"\n")
@@ -162,3 +169,5 @@ for conso in tab_consomation_jour:
 print time.time()-now,"secondes"
 print "Nombre de foyer sur le site:",site_alpha.nb_foyer
 print "\nNombre d'habitant sur le site:",site_alpha.nb_personne
+
+

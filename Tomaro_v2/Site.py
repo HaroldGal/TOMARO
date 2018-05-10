@@ -107,7 +107,7 @@ class Site:
 		#lecture du fichier
 		#print "Liste production pas encore codé"
 		PV1 = PV(0.18,1000,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
-		EO1 = EO(13,1000)
+		EO1 = EO(13,1000,0.15) #https://heliciel.com/helice/eolienne%20hydrolienne/energie-eolienne.htm
 		return EO1,PV1
 
 	#Fonction permettant de renvoyer la liste avec tous les stockages du site
