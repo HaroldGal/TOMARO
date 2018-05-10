@@ -11,7 +11,7 @@ from random import randrange,sample,randint
 def centrer_texte(image,pos_x_image,pos_y_image,texte):
 	return (pos_x_image+image.get_size()[0]/2-texte.get_size()[0]/2,pos_y_image+image.get_size()[1]/2-texte.get_size()[1]/2)
 
-def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv):	
+def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche):	
 	#S'il fait jour
 	if(is_nuit==False):
 		background = pygame.image.load("Image/Background_menu_jour.png").convert()
@@ -19,6 +19,33 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 		background = pygame.image.load("Image/Background_menu_nuit.png").convert()
 	fenetre.blit(background,(0,0))
 
+	#Soleil et lune	
+	pas_temps=1000
+	soleil = pygame.image.load("Image/Soleil.png").convert_alpha()
+	lune = pygame.image.load("Image/Lune.png").convert_alpha()
+	if is_nuit==False:
+		for i in range(0,pas_temps):
+			if minute_journee>=minute_leve+i*temps_jour/pas_temps and minute_journee<=minute_leve+(i+1)*temps_jour/pas_temps:
+				if i<pas_temps/2:
+					fenetre.blit(soleil,(1.2*i-100,350-0.5*i))
+				else:
+					fenetre.blit(soleil,(1.2*i-100,350-0.5*(pas_temps-1-i)))
+				break
+
+	elif is_nuit==True:
+		for i in range(0,pas_temps):
+			if minute_journee<minute_leve:
+				minute_journee=minute_journee+1440
+			if minute_journee>=minute_couche+i*temps_nuit/pas_temps and minute_journee<=minute_couche+(i+1)*temps_nuit/pas_temps:
+				if i<pas_temps/2:
+					fenetre.blit(lune,(1.2*i-50,400-0.6*i))
+				else:
+					fenetre.blit(lune,(1.2*i-50,400-0.6*(pas_temps-1-i)))
+				break
+
+	calque_batterie=pygame.image.load("Image/Bout_batterie.png").convert_alpha()
+	fenetre.blit(calque_batterie,(1046,465))
+	
 	#Nom du site
 	font=pygame.font.Font(None, 60)	
 	nom_site=font.render(nom_site,1,(0,0,0)) #Mettre nom_site

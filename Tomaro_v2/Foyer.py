@@ -184,7 +184,7 @@ class Foyer:
 				nouvel_individu.chauffage = True
 
 			self.liste_personne.append(nouvel_individu)
-			liste_image_personne_deja_presente.append(nouvel_individu.image)
+			liste_image_personne_deja_presente.append(nouvel_individu.num_image)
 
 
 if __name__=='__main__':
