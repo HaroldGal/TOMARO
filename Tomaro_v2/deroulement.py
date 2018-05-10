@@ -26,9 +26,9 @@ def nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords):
 	couche_soleil = int((sun.getSunsetTime( coords, jour_mois, mois, annee )['decimal'] + decalage_horaire)*60)
 
 	if(minute_journee > couche_soleil or minute_journee < leve_soleil):
-		return True
+		return (True,leve_soleil,couche_soleil)
 	else :
-		return False
+		return (False,leve_soleil,couche_soleil)
 
 #Renvoie la plage la plus proche en fonction des minutes
 def plage_proche(minute,plage):
@@ -111,7 +111,7 @@ while(continu):
 	#---------- Gestion du temps ----------#	
 	
 	#Savoir s'il fait nuit ou pas
-	is_nuit = nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)
+	is_nuit = nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[0]
 	if(pause!=True):
 		minute_journee = minute_journee + 1
 
@@ -282,10 +282,14 @@ while(continu):
 		stockage_val=int(round(min(stockage_max,max(0,stockage_val))))	
 		stockage=str(stockage_val)
 		stockage_pourcent=str(stockage_val*100/stockage_max)+"%"
+		temps_jour=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[2]-nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[1]
+		temps_nuit=1440-temps_jour
+		minute_leve=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[1]
+		minute_couche=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[2]
 
 		#Si on est dans l'état menu
 		if(etat_affichage=="menu"):		
-			menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv)
+			menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)
 
 		elif(etat_affichage=="liste_foyer"):
 			affichage_liste_foyer(fenetre,site_alpha,date,is_nuit)

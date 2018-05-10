@@ -8,10 +8,13 @@ class Personne:
 
 	def __init__(self,liste_image_personne_deja_presente):
 		#Attribut un nom d'image aléatoire
-		nom_image="Image/Personnage/Perso_"+str(randrange(1,16))+".png"
-		while(nom_image in liste_image_personne_deja_presente): 
-			nom_image="Image/Personnage/Perso_"+str(randrange(1,16))+".png"
-		self.image=nom_image
+		num_image=randrange(1,16)
+		while(num_image in liste_image_personne_deja_presente): 
+			num_image=randrange(1,16)
+		self.num_image=num_image
+
+		#Pour affichage
+		dans_cuisine=False
 		
 		# Initialisation de la télé 
 		self.tv = Appareil("TV",100+randrange(-10,10)) #+ ou - 10%
