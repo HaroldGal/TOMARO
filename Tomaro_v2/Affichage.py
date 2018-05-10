@@ -113,6 +113,22 @@ def affichage_liste_foyer(fenetre,site,date,is_nuit):
 		elif(i==9):
 			fenetre.blit(nb_personne,(965,550))
 
+def consommation_personne(personne):
+	consommation=0
+	if personne.tv.allume==True:
+		consommation+=personne.tv.consommation_minute
+	if personne.pc.allume==True:
+		consommation+=personne.pc.consommation_minute
+	if personne.pai.allume==True:
+		consommation+=personne.pai.consommation_minute
+	if personne.electro.allume==True:
+		consommation+=personne.electro.consommation_minute*personne.electro.nb_allumage
+	if personne.lampe.allume==True:
+		consommation+=personne.lampe.consommation_minute
+
+	return consommation
+
+
 def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 	#S'il fait jour
 	if(is_nuit==False):
@@ -183,16 +199,18 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 				fenetre.blit(pc,(524,300))
 
 			#Affichage Personnage
-			if personne.electro.nb_allumage>0 or personne.pai.allume==True:
-				perso=pygame.image.load(personne.image).convert_alpha()
+			if consommation_personne(personne)==0 and is_nuit==False:
+				pass
+			elif consommation_personne(personne)==0 and is_nuit==True:
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+"_couche_gauche.png").convert_alpha()
+				fenetre.blit(perso,(349,323))
+			elif personne.electro.nb_allumage>0 or personne.pai.allume==True:
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+".png").convert_alpha()
 				fenetre.blit(perso,(680+nb_personne_cuisine*40,525))
 				nb_personne_cuisine+=1
 			else:
-				perso=pygame.image.load(personne.image).convert_alpha()
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+".png").convert_alpha()
 				fenetre.blit(perso,(490,305))
-				nb_personne_cuisine-=1
-				if nb_personne_cuisine<0:
-					nb_personne_cuisine=0
 						
 
 		#Personne 1
@@ -232,16 +250,18 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 				fenetre.blit(pc,(618,298))
 
 			#Affichage Personnage
-			if personne.electro.nb_allumage>0 or personne.pai.allume==True:
-				perso=pygame.image.load(personne.image).convert_alpha()
+			if consommation_personne(personne)==0 and is_nuit==False:
+				pass
+			elif consommation_personne(personne)==0 and is_nuit==True:
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+"_couche_droite.png").convert_alpha()
+				fenetre.blit(perso,(779,320))
+			elif personne.electro.nb_allumage>0 or personne.pai.allume==True:
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+".png").convert_alpha()
 				fenetre.blit(perso,(680+nb_personne_cuisine*40,525))
 				nb_personne_cuisine+=1
 			else:
-				perso=pygame.image.load(personne.image).convert_alpha()
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+".png").convert_alpha()
 				fenetre.blit(perso,(680,305))
-				nb_personne_cuisine-=1
-				if nb_personne_cuisine<0:
-					nb_personne_cuisine=0
 
 		#Personne 2
 		if index==2:
@@ -280,17 +300,19 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 				fenetre.blit(pc,(524,410))
 
 			#Affichage Personnage
-			if personne.electro.nb_allumage>0 or personne.pai.allume==True:
-				perso=pygame.image.load(personne.image).convert_alpha()
+			if consommation_personne(personne)==0 and is_nuit==False:
+				pass
+			elif consommation_personne(personne)==0 and is_nuit==True:
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+"_couche_gauche.png").convert_alpha()
+				fenetre.blit(perso,(349,431))
+			elif personne.electro.nb_allumage>0 or personne.pai.allume==True:
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+".png").convert_alpha()
 				fenetre.blit(perso,(680+nb_personne_cuisine*40,525))
 				nb_personne_cuisine+=1
 
 			else:
-				perso=pygame.image.load(personne.image).convert_alpha()
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+".png").convert_alpha()
 				fenetre.blit(perso,(490,415))
-				nb_personne_cuisine-=1
-				if nb_personne_cuisine<0:
-					nb_personne_cuisine=0
 
 		#Personne 3
 		if index==3:
@@ -330,16 +352,17 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
 
 			#Affichage Personnage
 			#Dans cuisine si un appareil est allumé ou pai
-			if personne.electro.nb_allumage>0 or personne.pai.allume==True:
-				perso=pygame.image.load(personne.image).convert_alpha()
+			if consommation_personne(personne)==0 and is_nuit==False:
+				pass
+			elif consommation_personne(personne)==0 and is_nuit==True:
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+"_couche_droite.png").convert_alpha()
+				fenetre.blit(perso,(779,426))
+			elif personne.electro.nb_allumage>0 or personne.pai.allume==True:
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+".png").convert_alpha()
 				fenetre.blit(perso,(680+nb_personne_cuisine*40,525))
-				nb_personne_cuisine+=1
 			else:
-				perso=pygame.image.load(personne.image).convert_alpha()
+				perso=pygame.image.load("Image/Personnage/Perso_"+str(personne.num_image)+".png").convert_alpha()
 				fenetre.blit(perso,(680,415))
-				nb_personne_cuisine-=1
-				if nb_personne_cuisine<0:
-					nb_personne_cuisine=0
 
 		#On regarde si la pai est allumé
 		if personne.pai.allume==True:
