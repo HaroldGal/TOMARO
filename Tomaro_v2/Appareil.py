@@ -13,7 +13,7 @@ class Appareil:
 
 		# Consommation
 		self.consommation_heure = consommation_watt_heure
-		self.consommation_minute = consommation_watt_heure/60
+		self.consommation_minute = round(consommation_watt_heure/60.0)
 
 
 

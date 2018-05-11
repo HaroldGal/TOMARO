@@ -97,8 +97,10 @@ etat_affichage="menu"
 stockage_val=0
 stockage_max=10000
 
+#AFFICHAGE
 #Index du foyer selectionne
 index_foyer=-1
+liste_objet=[]
 
 #Boucle infinie pour modéliser le temps
 continu = True
@@ -140,31 +142,11 @@ while(continu):
 		site_alpha.actualisation_heure_jour_machine_foyer()
 
 	if minute_journee%60 ==0:
-		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00" 
-		#print cle
+		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
 		site_alpha.random_meteo(cle)
-		#time.sleep(2)
 
 
 	site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit, cle)
-
-	# print "\033c"	
-	# print "Nombre de foyer sur le site:",site_alpha.nb_foyer
-	# print "\nNombre d'habitant sur le site:",site_alpha.nb_personne
-	# print "\n",decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min -",str_jour_semaine[jour_semaine],"",jour_mois,"/",mois,"/",annee
-	# print "\nConsommation globale:",site_alpha.consommation_globale_minute,"W.h"
-	# print "\nConsommation moyenne par jour du site:",round(site_alpha.consommation_moyenne_jour/1000),"kW.h"
-	# #meteo[temps] = (temperature, rad_globale, rad_directe, rad_diffuse, rad_infrarouge, vitesse_vent)
-	# print "\nMeteo à cette heure ci\nTemperature:",str(site_alpha.meteo[cle][0]),"°C - Vent:",str(site_alpha.meteo[cle][5]),"m/s"
-	# print "Radiation:\nGlobale:",str(site_alpha.meteo[cle][1]),"Directe:",str(site_alpha.meteo[cle][2]),"Diffuse:",str(site_alpha.meteo[cle][3]),"Infrarouge",str(site_alpha.meteo[cle][4])
-
-
-	# Affichage du graphique mise à jour toutes les 20 min
-	# if minute_journee%20 == 0 and sys.argv[2] == "True":
-	#  	courbe_maj(site_alpha.consommation_globale_minute/1000, minute_journee)
-
-	# elif sys.argv[2] == "False":
-	#	time.sleep(0.5)
 
 	#--------------------AFFICHAGE-------------------------#
 
@@ -254,14 +236,37 @@ while(continu):
 
 				#Si on clique sur le bouton accélérer
 				elif event.pos[0]>962 and event.pos[0]<1011 and event.pos[1]>72 and event.pos[1]<98:
-					vitesse_sleep+=0.05
+					vitesse_sleep+=0.05				
 
-				#Si on clique sur le bouton accélérer
-				elif event.pos[0]>325 and event.pos[0]<381 and event.pos[1]>510 and event.pos[1]<604:
-					if site_alpha.liste_foyer[index_foyer].frigo.allume==True:
-						site_alpha.liste_foyer[index_foyer].frigo.allume=False
-					else:
-						site_alpha.liste_foyer[index_foyer].frigo.allume=True
+				#Si on clique quelque part dans la maison on voit ou précisement pour avoir la part de conso de l'objet dans la maison
+				elif event.pos[0]>214 and event.pos[0]<964 and event.pos[1]>48 and event.pos[1]<724:
+					#Lampe
+					if event.pos[0]>374 and event.pos[0]<374+35 and event.pos[1]>283 and event.pos[1]<283+40:
+						if ("lampe",0) not in liste_objet:
+							liste_objet=[]
+							liste_objet.append(("lampe",0))
+						elif ("lampe",0) in liste_objet:
+							liste_objet.remove(("lampe",0))
+					elif event.pos[0]>780 and event.pos[0]<780+35 and event.pos[1]>283  and event.pos[1]<283+40:
+						if ("lampe",1) not in liste_objet:
+							liste_objet=[]
+							liste_objet.append(("lampe",1))
+						elif ("lampe",1) in liste_objet:
+							liste_objet.remove(("lampe",1))
+					elif event.pos[0]>374 and event.pos[0]<374+35 and event.pos[1]>399 and event.pos[1]<399+40:
+						if ("lampe",2) not in liste_objet:
+							liste_objet=[]
+							liste_objet.append(("lampe",2))
+						elif ("lampe",2) in liste_objet:
+							liste_objet.remove(("lampe",2))
+					elif event.pos[0]>780 and event.pos[0]<780+35 and event.pos[1]>399 and event.pos[1]<399+40:
+						if ("lampe",3) not in liste_objet:
+							liste_objet=[]
+							liste_objet.append(("lampe",3))
+						elif ("lampe",3) in liste_objet:
+							liste_objet.remove(("lampe",3))
+
+
 
 	if(pause!=True):
 		nom_site=site_alpha.nom
@@ -286,7 +291,6 @@ while(continu):
 		temps_nuit=1440-temps_jour
 		minute_leve=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[1]
 		minute_couche=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[2]
-
 		#Si on est dans l'état menu
 		if(etat_affichage=="menu"):		
 			menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)
@@ -295,7 +299,7 @@ while(continu):
 			affichage_liste_foyer(fenetre,site_alpha,date,is_nuit,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)
 
 		elif(etat_affichage=="foyer"):
-			affichage_foyer(fenetre,site_alpha,date,is_nuit,index_foyer,degre,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)
+			affichage_foyer(fenetre,site_alpha,date,is_nuit,index_foyer,degre,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche,liste_objet)
 
 		pygame.display.flip()
 

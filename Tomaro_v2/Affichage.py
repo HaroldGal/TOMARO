@@ -179,8 +179,28 @@ def consommation_personne(personne):
 
 	return consommation
 
+def consommation_foyer(foyer):
+	consommation=0
+	for personne in foyer.liste_personne:
+		consommation+=consommation_personne(personne)
+	if foyer.machine_a_laver.allume==True:
+		consommation+=foyer.machine_a_laver.consommation_minute
+	if foyer.seche_linge.allume==True:
+		consommation+=foyer.seche_linge.consommation_minute
+	if foyer.lave_vaisselle.allume==True:
+		consommation+=foyer.lave_vaisselle.consommation_minute
+	if foyer.frigo.allume==True:
+		consommation+=foyer.frigo.consommation_minute
+	if foyer.radiateur.allume==True:
+		consommation+=foyer.radiateur.consommation_minute
+	if foyer.climatisation.allume==True:
+		consommation+=foyer.climatisation.consommation_minute
 
-def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche):
+	return consommation
+
+
+
+def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche,liste_objet):
 	#S'il fait jour
 	if(is_nuit==False):
 		background = pygame.image.load("Image/Background_jour.png").convert()
@@ -552,4 +572,16 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 		chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
 		fenetre.blit(chambre_vide,(604,398))
 
-		
+	font=pygame.font.Font(None,30)	
+	for index1,personne in enumerate(site.liste_foyer[index_foyer].liste_personne):
+		for nom_objet,index2 in liste_objet:
+			if index1==index2:
+				if nom_objet=="lampe":
+					if personne.lampe.allume==True:
+						conso_str=font.render(personne.lampe.nom+" chambre "+str(index2+1)+"  "+str(round(personne.lampe.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400))
+						#print round(personne.lampe.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer]),"%")
+					elif personne.lampe.allume==False:
+						conso_str=font.render(personne.lampe.nom+" chambre "+str(index2+1)+"  0.0 %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400))
+						#print "0.0 %"
