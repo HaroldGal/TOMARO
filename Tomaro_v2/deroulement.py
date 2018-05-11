@@ -292,10 +292,10 @@ while(continu):
 			menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)
 
 		elif(etat_affichage=="liste_foyer"):
-			affichage_liste_foyer(fenetre,site_alpha,date,is_nuit)
+			affichage_liste_foyer(fenetre,site_alpha,date,is_nuit,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)
 
 		elif(etat_affichage=="foyer"):
-			affichage_foyer(fenetre,site_alpha,date,is_nuit,index_foyer,degre)
+			affichage_foyer(fenetre,site_alpha,date,is_nuit,index_foyer,degre,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)
 
 		pygame.display.flip()
 

@@ -18,6 +18,10 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 	else:
 		background = pygame.image.load("Image/Background_menu_nuit.png").convert()
 	fenetre.blit(background,(0,0))
+	#Localisation
+	font=pygame.font.Font(None, 30)
+	localisation_str=font.render(localisation,1,(0,0,0))
+	fenetre.blit(localisation_str,(630,40))
 
 	#Soleil et lune	
 	pas_temps=1000
@@ -27,9 +31,9 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 		for i in range(0,pas_temps):
 			if minute_journee>=minute_leve+i*temps_jour/pas_temps and minute_journee<=minute_leve+(i+1)*temps_jour/pas_temps:
 				if i<pas_temps/2:
-					fenetre.blit(soleil,(1.2*i-100,350-0.5*i))
+					fenetre.blit(soleil,(1.2*i-100,250-0.5*i))
 				else:
-					fenetre.blit(soleil,(1.2*i-100,350-0.5*(pas_temps-1-i)))
+					fenetre.blit(soleil,(1.2*i-100,250-0.5*(pas_temps-1-i)))
 				break
 
 	elif is_nuit==True:
@@ -38,13 +42,13 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 				minute_journee=minute_journee+1440
 			if minute_journee>=minute_couche+i*temps_nuit/pas_temps and minute_journee<=minute_couche+(i+1)*temps_nuit/pas_temps:
 				if i<pas_temps/2:
-					fenetre.blit(lune,(1.2*i-50,400-0.6*i))
+					fenetre.blit(lune,(1.2*i-50,300-0.6*i))
 				else:
-					fenetre.blit(lune,(1.2*i-50,400-0.6*(pas_temps-1-i)))
+					fenetre.blit(lune,(1.2*i-50,300-0.6*(pas_temps-1-i)))
 				break
 
 	calque_batterie=pygame.image.load("Image/Bout_batterie.png").convert_alpha()
-	fenetre.blit(calque_batterie,(1046,465))
+	fenetre.blit(calque_batterie,(942,463))
 	
 	#Nom du site
 	font=pygame.font.Font(None, 60)	
@@ -62,11 +66,6 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 	vent_str=font.render(vent,1,(0,0,0))
 	fenetre.blit(degre_str,(1115-degre_str.get_size()[0],40))
 	fenetre.blit(vent_str,(960-vent_str.get_size()[0],40))
-
-	#Localisation
-	font=pygame.font.Font(None, 30)
-	localisation_str=font.render(localisation,1,(0,0,0))
-	fenetre.blit(localisation_str,(630,40))
 
 	#Foyer
 	font=pygame.font.Font(None, 30)
@@ -102,13 +101,38 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 	fenetre.blit(stockage_pourcent_str,(1141-stockage_pourcent_str.get_size()[0]/2,750))
 
 
-def affichage_liste_foyer(fenetre,site,date,is_nuit):
+def affichage_liste_foyer(fenetre,site,date,is_nuit,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche):
 	#S'il fait jour
 	if(is_nuit==False):
-		background = pygame.image.load("Image/Background_liste_foyer_jour.png").convert()
+		background = pygame.image.load("Image/Background_jour.png").convert()
 	else:
-		background = pygame.image.load("Image/Background_liste_foyer_nuit.png").convert()
+		background = pygame.image.load("Image/Background_nuit.png").convert()
+	liste_foyer_img=pygame.image.load("Image/Liste_foyer.png").convert_alpha()
 	fenetre.blit(background,(0,0))
+	#Soleil et lune	
+	# pas_temps=1000
+	# soleil = pygame.image.load("Image/Soleil.png").convert_alpha()
+	# lune = pygame.image.load("Image/Lune.png").convert_alpha()
+	# if is_nuit==False:
+	# 	for i in range(0,pas_temps):
+	# 		if minute_journee>=minute_leve+i*temps_jour/pas_temps and minute_journee<=minute_leve+(i+1)*temps_jour/pas_temps:
+	# 			if i<pas_temps/2:
+	# 				fenetre.blit(soleil,(1.2*i-100,350-0.5*i))
+	# 			else:
+	# 				fenetre.blit(soleil,(1.2*i-100,350-0.5*(pas_temps-1-i)))
+	# 			break
+
+	# elif is_nuit==True:
+	# 	for i in range(0,pas_temps):
+	# 		if minute_journee<minute_leve:
+	# 			minute_journee=minute_journee+1440
+	# 		if minute_journee>=minute_couche+i*temps_nuit/pas_temps and minute_journee<=minute_couche+(i+1)*temps_nuit/pas_temps:
+	# 			if i<pas_temps/2:
+	# 				fenetre.blit(lune,(1.2*i-50,400-0.6*i))
+	# 			else:
+	# 				fenetre.blit(lune,(1.2*i-50,400-0.6*(pas_temps-1-i)))
+	# 			break
+	fenetre.blit(liste_foyer_img,(10,10))
 
 	#Date
 	font=pygame.font.Font(None, 40)
@@ -156,13 +180,38 @@ def consommation_personne(personne):
 	return consommation
 
 
-def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre):
+def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche):
 	#S'il fait jour
 	if(is_nuit==False):
-		background = pygame.image.load("Image/Background_foyer_jour.png").convert()
+		background = pygame.image.load("Image/Background_jour.png").convert()
 	else:
-		background = pygame.image.load("Image/Background_foyer_nuit.png").convert()
+		background = pygame.image.load("Image/Background_nuit.png").convert()
+	foyer_img=pygame.image.load("Image/Foyer.png").convert_alpha()
 	fenetre.blit(background,(0,0))
+	#Soleil et lune	
+	pas_temps=1000
+	soleil = pygame.image.load("Image/Soleil.png").convert_alpha()
+	lune = pygame.image.load("Image/Lune.png").convert_alpha()
+	if is_nuit==False:
+		for i in range(0,pas_temps):
+			if minute_journee>=minute_leve+i*temps_jour/pas_temps and minute_journee<=minute_leve+(i+1)*temps_jour/pas_temps:
+				if i<pas_temps/2:
+					fenetre.blit(soleil,(1.2*i-100,250-0.5*i))
+				else:
+					fenetre.blit(soleil,(1.2*i-100,250-0.5*(pas_temps-1-i)))
+				break
+
+	elif is_nuit==True:
+		for i in range(0,pas_temps):
+			if minute_journee<minute_leve:
+				minute_journee=minute_journee+1440
+			if minute_journee>=minute_couche+i*temps_nuit/pas_temps and minute_journee<=minute_couche+(i+1)*temps_nuit/pas_temps:
+				if i<pas_temps/2:
+					fenetre.blit(lune,(1.2*i-50,300-0.6*i))
+				else:
+					fenetre.blit(lune,(1.2*i-50,300-0.6*(pas_temps-1-i)))
+				break
+	fenetre.blit(foyer_img,(0,11))
 
 	#Date
 	font=pygame.font.Font(None, 40)
