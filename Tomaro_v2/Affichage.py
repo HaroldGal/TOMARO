@@ -245,10 +245,17 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 	fenetre.blit(temperature_ext,(1085-temperature_ext.get_size()[0],179))
 	fenetre.blit(temperature_int,(595-temperature_int.get_size()[0],180))
 	if site.liste_foyer[index_foyer].radiateur.allume==True:
-		radiateur = pygame.image.load("Image/Radiateur.png").convert_alpha()
-		fenetre.blit(radiateur,(1200-378-radiateur.get_size()[0],189))
+		radiateur = pygame.image.load("Image/Radiateur_on.png").convert_alpha()
+		fenetre.blit(radiateur,(772,189))
+	elif site.liste_foyer[index_foyer].radiateur.allume==False:
+		radiateur = pygame.image.load("Image/Radiateur_off.png").convert_alpha()
+		fenetre.blit(radiateur,(772,189))
+
 	if site.liste_foyer[index_foyer].climatisation.allume==True:
-		climatisation = pygame.image.load("Image/Climatisation.png").convert_alpha()
+		climatisation = pygame.image.load("Image/Climatisation_on.png").convert_alpha()
+		fenetre.blit(climatisation,(378,189))
+	elif site.liste_foyer[index_foyer].climatisation.allume==False:
+		climatisation = pygame.image.load("Image/Climatisation_off.png").convert_alpha()
 		fenetre.blit(climatisation,(378,189))
 
 	#Frigo/Electro Menagé
@@ -534,8 +541,10 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 		fenetre.blit(background_cave_sombre,(321,619))
 	if site.liste_foyer[index_foyer].machine_a_laver.allume==True:
 		machine_a_laver=pygame.image.load("Image/Machine_a_laver_on.png").convert_alpha()
+		fenetre.blit(machine_a_laver,(436,647))
 	else:
 		machine_a_laver=pygame.image.load("Image/Machine_a_laver_off.png").convert_alpha()
+		fenetre.blit(machine_a_laver,(416,647))
 
 	if site.liste_foyer[index_foyer].seche_linge.allume==True:
 		seche_linge=pygame.image.load("Image/Seche_linge_on.png").convert_alpha()
@@ -547,9 +556,9 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 	else:
 		lave_vaisselle=pygame.image.load("Image/Lave_vaisselle_off.png").convert_alpha()
 
-	fenetre.blit(machine_a_laver,(458-machine_a_laver.get_size()[0]/2,647))
-	fenetre.blit(lave_vaisselle,(600-lave_vaisselle.get_size()[0]/2+12,647))
-	fenetre.blit(seche_linge,(753-seche_linge.get_size()[0]/2,647))
+	
+	fenetre.blit(lave_vaisselle,(584,647))
+	fenetre.blit(seche_linge,(732,647))
 	
 
 
@@ -572,16 +581,100 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 		chambre_vide=pygame.image.load("Image/Chambre_4_vide.png").convert_alpha()
 		fenetre.blit(chambre_vide,(604,398))
 
+	#Affichage des part de consommation dans la maison
+	if len(liste_objet)!=0:
+		font=pygame.font.Font(None,35)
+		titre=font.render("Part de consommation:",1,(0,0,0))
+		fenetre.blit(titre,(20,350))
+
 	font=pygame.font.Font(None,30)	
 	for index1,personne in enumerate(site.liste_foyer[index_foyer].liste_personne):
-		for nom_objet,index2 in liste_objet:
-			if index1==index2:
-				if nom_objet=="lampe":
+		for index_objet,objet in enumerate(liste_objet):
+			if index1==objet[1] and consommation_foyer(site.liste_foyer[index_foyer])!=0:
+				if objet[0]=="lampe":
 					if personne.lampe.allume==True:
-						conso_str=font.render(personne.lampe.nom+" chambre "+str(index2+1)+"  "+str(round(personne.lampe.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
-						fenetre.blit(conso_str,(20,400))
-						#print round(personne.lampe.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer]),"%")
+						conso_str=font.render(personne.lampe.nom+" chambre "+str(objet[1]+1)+" - "+str(round(personne.lampe.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
 					elif personne.lampe.allume==False:
-						conso_str=font.render(personne.lampe.nom+" chambre "+str(index2+1)+"  0.0 %",1,(0,0,0))
-						fenetre.blit(conso_str,(20,400))
-						#print "0.0 %"
+						conso_str=font.render(personne.lampe.nom+" chambre "+str(objet[1]+1)+" - 0.0 %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+
+				if objet[0]=="tv":
+					if personne.tv.allume==True:
+						conso_str=font.render(personne.tv.nom+" chambre "+str(objet[1]+1)+" - "+str(round(personne.tv.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+					elif personne.tv.allume==False:
+						conso_str=font.render(personne.tv.nom+" chambre "+str(objet[1]+1)+" - 0.0 %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+
+				if objet[0]=="pc":
+					if personne.pc.allume==True:
+						conso_str=font.render(personne.pc.nom+" chambre "+str(objet[1]+1)+" - "+str(round(personne.pc.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+					elif personne.pc.allume==False:
+						conso_str=font.render(personne.pc.nom+" chambre "+str(objet[1]+1)+" - 0.0 %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+
+				if objet[0]=="pai":
+					consommation_pai=0
+					for personne in site.liste_foyer[index_foyer].liste_personne:
+						if personne.pai.allume==True:
+							consommation_pai+=personne.pai.consommation_minute
+					conso_str=font.render("Plaques induction - "+str(round(consommation_pai*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+					fenetre.blit(conso_str,(20,400+index_objet*30))
+
+				if objet[0]=="frigo":
+					if site.liste_foyer[index_foyer].frigo.allume==True:
+						conso_str=font.render("Frigo - "+str(round(site.liste_foyer[index_foyer].frigo.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+					elif site.liste_foyer[index_foyer].frigo.allume==False:
+						conso_str=font.render("Frigo - 0.0 %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+
+				if objet[0]=="electro":
+					consommation_electro=0
+					for personne in site.liste_foyer[index_foyer].liste_personne:
+						if personne.electro.allume==True:
+							consommation_electro+=personne.electro.consommation_minute*personne.electro.nb_allumage
+					conso_str=font.render("Electromenages - "+str(round(consommation_electro*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+					fenetre.blit(conso_str,(20,400+index_objet*30))
+					
+				if objet[0]=="radiateur":
+					if site.liste_foyer[index_foyer].radiateur.allume==True:
+						conso_str=font.render("Chauffage - "+str(round(site.liste_foyer[index_foyer].radiateur.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+					elif site.liste_foyer[index_foyer].radiateur.allume==False:
+						conso_str=font.render("Chauffage - 0.0 %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+
+				if objet[0]=="climatisation":
+					if site.liste_foyer[index_foyer].climatisation.allume==True:
+						conso_str=font.render("Climatisation - "+str(round(site.liste_foyer[index_foyer].climatisation.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+					elif site.liste_foyer[index_foyer].climatisation.allume==False:
+						conso_str=font.render("Climatisation - 0.0 %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+
+				if objet[0]=="machine_a_laver":
+					if site.liste_foyer[index_foyer].machine_a_laver.allume==True:
+						conso_str=font.render("Machine a laver - "+str(round(site.liste_foyer[index_foyer].machine_a_laver.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+					elif site.liste_foyer[index_foyer].machine_a_laver.allume==False:
+						conso_str=font.render("Machine a laver - 0.0 %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+
+				if objet[0]=="seche_linge":
+					if site.liste_foyer[index_foyer].seche_linge.allume==True:
+						conso_str=font.render("Seche linge - "+str(round(site.liste_foyer[index_foyer].seche_linge.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+					elif site.liste_foyer[index_foyer].seche_linge.allume==False:
+						conso_str=font.render("Seche linge - 0.0 %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+
+				if objet[0]=="lave_vaisselle":
+					if site.liste_foyer[index_foyer].lave_vaisselle.allume==True:
+						conso_str=font.render("Lave vaisselle - "+str(round(site.liste_foyer[index_foyer].lave_vaisselle.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))
+					elif site.liste_foyer[index_foyer].lave_vaisselle.allume==False:
+						conso_str=font.render("Lave vaisselle - 0.0 %",1,(0,0,0))
+						fenetre.blit(conso_str,(20,400+index_objet*30))

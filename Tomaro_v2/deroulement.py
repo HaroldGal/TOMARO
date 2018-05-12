@@ -242,31 +242,126 @@ while(continu):
 				elif event.pos[0]>214 and event.pos[0]<964 and event.pos[1]>48 and event.pos[1]<724:
 					#Lampe
 					if event.pos[0]>374 and event.pos[0]<374+35 and event.pos[1]>283 and event.pos[1]<283+40:
-						if ("lampe",0) not in liste_objet:
-							liste_objet=[]
+						if ("lampe",0) not in liste_objet  and len(liste_objet)<=10:
 							liste_objet.append(("lampe",0))
 						elif ("lampe",0) in liste_objet:
 							liste_objet.remove(("lampe",0))
-					elif event.pos[0]>780 and event.pos[0]<780+35 and event.pos[1]>283  and event.pos[1]<283+40:
-						if ("lampe",1) not in liste_objet:
-							liste_objet=[]
+					elif event.pos[0]>780 and event.pos[0]<780+35 and event.pos[1]>283  and event.pos[1]<283+40 and site_alpha.liste_foyer[index_foyer].nombre_individu>=2:
+						if ("lampe",1) not in liste_objet  and len(liste_objet)<=10:
 							liste_objet.append(("lampe",1))
 						elif ("lampe",1) in liste_objet:
 							liste_objet.remove(("lampe",1))
-					elif event.pos[0]>374 and event.pos[0]<374+35 and event.pos[1]>399 and event.pos[1]<399+40:
-						if ("lampe",2) not in liste_objet:
-							liste_objet=[]
+					elif event.pos[0]>374 and event.pos[0]<374+35 and event.pos[1]>399 and event.pos[1]<399+40 and site_alpha.liste_foyer[index_foyer].nombre_individu>=3:
+						if ("lampe",2) not in liste_objet  and len(liste_objet)<=10:
 							liste_objet.append(("lampe",2))
 						elif ("lampe",2) in liste_objet:
 							liste_objet.remove(("lampe",2))
-					elif event.pos[0]>780 and event.pos[0]<780+35 and event.pos[1]>399 and event.pos[1]<399+40:
-						if ("lampe",3) not in liste_objet:
-							liste_objet=[]
+					elif event.pos[0]>780 and event.pos[0]<780+35 and event.pos[1]>399 and event.pos[1]<399+40 and site_alpha.liste_foyer[index_foyer].nombre_individu==4:
+						if ("lampe",3) not in liste_objet  and len(liste_objet)<=10:
 							liste_objet.append(("lampe",3))
 						elif ("lampe",3) in liste_objet:
 							liste_objet.remove(("lampe",3))
 
+					#Tv
+					if event.pos[0]>432 and event.pos[0]<432+50 and event.pos[1]>297 and event.pos[1]<297+31:
+						if ("tv",0) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("tv",0))
+						elif ("tv",0) in liste_objet:
+							liste_objet.remove(("tv",0))
+					elif event.pos[0]>710 and event.pos[0]<710+50 and event.pos[1]>297  and event.pos[1]<297+31 and site_alpha.liste_foyer[index_foyer].nombre_individu>=2:
+						if ("tv",1) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("tv",1))
+						elif ("tv",1) in liste_objet:
+							liste_objet.remove(("tv",1))
+					elif event.pos[0]>432 and event.pos[0]<432+50 and event.pos[1]>412 and event.pos[1]<412+31 and site_alpha.liste_foyer[index_foyer].nombre_individu>=3:
+						if ("tv",2) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("tv",2))
+						elif ("tv",2) in liste_objet:
+							liste_objet.remove(("tv",2))
+					elif event.pos[0]>710 and event.pos[0]<710+50 and event.pos[1]>412 and event.pos[1]<412+31 and site_alpha.liste_foyer[index_foyer].nombre_individu==4:
+						if ("tv",3) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("tv",3))
+						elif ("tv",3) in liste_objet:
+							liste_objet.remove(("tv",3))
 
+					#Pc
+					if event.pos[0]>524 and event.pos[0]<524+60 and event.pos[1]>300 and event.pos[1]<300+85:
+						if ("pc",0) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("pc",0))
+						elif ("pc",0) in liste_objet:
+							liste_objet.remove(("pc",0))
+					elif event.pos[0]>618 and event.pos[0]<618+60 and event.pos[1]>300  and event.pos[1]<300+85 and site_alpha.liste_foyer[index_foyer].nombre_individu>=2:
+						if ("pc",1) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("pc",1))
+						elif ("pc",1) in liste_objet:
+							liste_objet.remove(("pc",1))
+					elif event.pos[0]>524 and event.pos[0]<524+60 and event.pos[1]>410 and event.pos[1]<410+85 and site_alpha.liste_foyer[index_foyer].nombre_individu>=3:
+						if ("pc",2) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("pc",2))
+						elif ("pc",2) in liste_objet:
+							liste_objet.remove(("pc",2))
+					elif event.pos[0]>618 and event.pos[0]<618+60 and event.pos[1]>410 and event.pos[1]<410+85 and site_alpha.liste_foyer[index_foyer].nombre_individu==4:
+						if ("pc",3) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("pc",3))
+						elif ("pc",3) in liste_objet:
+							liste_objet.remove(("pc",3))
+
+					#Pai
+					if event.pos[0]>627 and event.pos[0]<627+40 and event.pos[1]>562 and event.pos[1]<562+40:
+						if ("pai",0) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("pai",0))
+						elif ("pai",0) in liste_objet:
+							liste_objet.remove(("pai",0))
+
+					#Frigo
+					if event.pos[0]>325 and event.pos[0]<325+55 and event.pos[1]>510 and event.pos[1]<510+97:
+						if ("frigo",0) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("frigo",0))
+						elif ("frigo",0) in liste_objet:
+							liste_objet.remove(("frigo",0))
+
+					#Electro
+					if (event.pos[0]>395 and event.pos[0]<395+30 and event.pos[1]>541 and event.pos[1]<541+30) or (event.pos[0]>600 and event.pos[0]<600+17 and event.pos[1]>548 and event.pos[1]<548+20) or (event.pos[0]>471 and event.pos[0]<471+30 and event.pos[1]>537 and event.pos[1]<537+31) or (event.pos[0]>518 and event.pos[0]<518+25 and event.pos[1]>544 and event.pos[1]<544+25):
+						if ("electro",0) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("electro",0))
+						elif ("electro",0) in liste_objet:
+							liste_objet.remove(("electro",0))
+
+					#Radiateur
+					if (event.pos[0]>772 and event.pos[0]<772+100 and event.pos[1]>189 and event.pos[1]<189+70):
+						if ("radiateur",0) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("radiateur",0))
+						elif ("radiateur",0) in liste_objet:
+							liste_objet.remove(("radiateur",0))
+
+
+					#Climatisation
+					if (event.pos[0]>378 and event.pos[0]<378+100 and event.pos[1]>189 and event.pos[1]<189+70):
+						if ("climatisation",0) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("climatisation",0))
+						elif ("climatisation",0) in liste_objet:
+							liste_objet.remove(("climatisation",0))
+
+					#Machine_a_laver
+					if (event.pos[0]>436 and event.pos[0]<436+43 and event.pos[1]>647 and event.pos[1]<647+60):
+						if ("machine_a_laver",0) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("machine_a_laver",0))
+						elif ("machine_a_laver",0) in liste_objet:
+							liste_objet.remove(("machine_a_laver",0))
+
+					#Lave_vaisselle
+					if (event.pos[0]>584 and event.pos[0]<584+56 and event.pos[1]>647 and event.pos[1]<647+60):
+						if ("lave_vaisselle",0) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("lave_vaisselle",0))
+						elif ("lave_vaisselle",0) in liste_objet:
+							liste_objet.remove(("lave_vaisselle",0))
+
+					#Seche_linge
+					if (event.pos[0]>732 and event.pos[0]<732+43 and event.pos[1]>647 and event.pos[1]<647+60):
+						if ("seche_linge",0) not in liste_objet  and len(liste_objet)<=10:
+							liste_objet.append(("seche_linge",0))
+						elif ("seche_linge",0) in liste_objet:
+							liste_objet.remove(("seche_linge",0))
 
 	if(pause!=True):
 		nom_site=site_alpha.nom
