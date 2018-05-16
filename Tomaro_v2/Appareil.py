@@ -1,6 +1,6 @@
 #!/usr/bin/python2.7
 #-*- coding: utf-8 -*-
-
+# critique 1 decalage : 2 Arret : 3 Reduction : 4
 class Appareil:
 
 	def __init__(self, nom , consommation_watt_heure):
@@ -14,7 +14,6 @@ class Appareil:
 		# Consommation
 		self.consommation_heure = consommation_watt_heure
 		self.consommation_minute = round(consommation_watt_heure/60.0)
-
 
 
 class Electro(Appareil):

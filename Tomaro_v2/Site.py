@@ -17,7 +17,7 @@ class Site:
 		self.consommation_globale_minute = 0	
 		self.variation_temp = 0
 		self.variation_temp_frigo = 0
-
+		self.manque_energie=False
 		#Initialisation de la liste des foyers
 		self.liste_foyer = self.init_liste_foyer(nb_foyer)
 
@@ -254,24 +254,60 @@ class Site:
 
 		self.consommation_globale_minute = 0
 
+		if minute==0:
+			for foyer in self.liste_foyer:
+				foyer.nb_decalage=0
+
+
 		for foyer in self.liste_foyer:
 
 				for minute_on_off,jour_allumage in foyer.heure_jour_on_off_machine_a_laver.items():
-						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.machine_a_laver.allume == False):
+						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.machine_a_laver.allume == False ):
+
+							if foyer.decalage_necessaire==False or foyer.nb_decalage>4:
+								foyer.machine_a_laver.allume = True
+							else:
+								foyer.nb_decalage+=1
+								print foyer.nb_decalage
+							
+						if(jour_allumage == jour_semaine and minute_on_off[0]+30 == minute and foyer.machine_a_laver.allume == False and foyer.decalage_necessaire==True):
 							foyer.machine_a_laver.allume = True
-						if(jour_allumage == jour_semaine and minute_on_off[1] == minute and foyer.machine_a_laver.allume == True):
+
+								 
+					
+						if(jour_allumage == jour_semaine and (minute_on_off[1] == minute or minute_on_off[1]+30==minute) and foyer.machine_a_laver.allume == True):
 							foyer.machine_a_laver.allume = False
 
 				for minute_on_off,jour_allumage in foyer.heure_jour_on_off_lave_vaisselle.items():
-						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.lave_vaisselle.allume == False):
-							foyer.lave_vaisselle.allume = True
-						if(jour_allumage == jour_semaine and minute_on_off[1] == minute and foyer.lave_vaisselle.allume == True):
-							foyer.lave_vaisselle.allume = False
+						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.lave_vaisselle.allume == False ):
 
+							if foyer.decalage_necessaire==False or foyer.nb_decalage>4:
+								foyer.lave_vaisselle.allume = True
+							else:
+								foyer.nb_decalage+=1
+							
+						if(jour_allumage == jour_semaine and minute_on_off[0]+30 == minute and foyer.lave_vaisselle.allume == False and foyer.decalage_necessaire==True):
+							foyer.lave_vaisselle.allume = True
+
+								 
+					
+						if(jour_allumage == jour_semaine and (minute_on_off[1] == minute or minute_on_off[1]+30==minute) and foyer.lave_vaisselle.allume == True):
+							foyer.lave_vaisselle.allume = False
+				
 				for minute_on_off,jour_allumage in foyer.heure_jour_on_off_seche_linge.items():
-						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.seche_linge.allume == False):
+						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.seche_linge.allume == False ):
+
+							if foyer.decalage_necessaire==False or foyer.nb_decalage>4:
+								foyer.seche_linge.allume = True
+							else:
+								foyer.nb_decalage+=1
+							
+						if(jour_allumage == jour_semaine and minute_on_off[0]+30 == minute and foyer.seche_linge.allume == False and foyer.decalage_necessaire==True):
 							foyer.seche_linge.allume = True
-						if(jour_allumage == jour_semaine and minute_on_off[1] == minute and foyer.seche_linge.allume == True):
+
+								 
+					
+						if(jour_allumage == jour_semaine and (minute_on_off[1] == minute or minute_on_off[1]+30==minute) and foyer.seche_linge.allume == True):
 							foyer.seche_linge.allume = False
 
 				if(foyer.machine_a_laver.allume == True):
@@ -460,3 +496,15 @@ class Site:
 					if(ok_allumage == True):
 						foyer.heure_jour_on_off_seche_linge[(minute_allumage_tmp,minute_eteignage_tmp)] = jour_tmp
 						i+=1
+	def reequilibrage_sousproduction(self):
+		print "c'est la hess mais on s'en charge"
+		for foyer in self.liste_foyer:
+			foyer.decalage_necessaire=True
+
+	def reequilibrage_surproduction(self):
+		for foyer in self.liste_foyer:
+			foyer.decalage_necessaire=False
+
+
+		
+

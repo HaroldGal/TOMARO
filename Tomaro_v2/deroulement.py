@@ -106,6 +106,7 @@ liste_objet=[]
 continu = True
 pause = False
 vitesse_sleep=0
+enter=False
 
 while(continu):
 	time.sleep(vitesse_sleep)
@@ -144,10 +145,21 @@ while(continu):
 	if minute_journee%60 ==0:
 		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
 		site_alpha.random_meteo(cle)
-
-
 	site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit, cle)
+	production_eo_val= (int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)))
+	production_pv_val= (int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
+	production_totale_val=int(round(float(production_pv_val)+float(production_eo_val)))
+	if production_totale_val < site_alpha.consommation_globale_minute:
+		enter=True
+		site_alpha.reequilibrage_sousproduction()
+	elif enter==True:
+		site_alpha.reequilibrage_surproduction()
+		enter=False
 
+
+
+	
+	
 	#--------------------AFFICHAGE-------------------------#
 
 	#On parcours la liste de tous les événements reçus
@@ -376,7 +388,8 @@ while(continu):
 		production_pv= str(int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
 		nb_eo=str(site_alpha.eolienne.nb)
 		surface_pv=str(site_alpha.panneau.surface)
-		production_totale=str(int(round(float(production_pv)+float(production_eo))))	
+		production_totale=str(int(round(float(production_pv)+float(production_eo))))
+		
 		if pause!=True and stockage_val<stockage_max:
 			stockage_val+=float(production_totale)-float(consommation_totale)
 		stockage_val=int(round(min(stockage_max,max(0,stockage_val))))	

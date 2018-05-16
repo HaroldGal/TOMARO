@@ -18,11 +18,12 @@ class Foyer:
 		self.chauffage = True
 		self.frigo = Frigo("Frigo",175+randrange(-25,25))
 		self.frigo.allume=True
-
 		self.nb_machine_a_laver = 0
 		self.machine_a_laver = Appareil("Machine_a_laver",470+randrange(-47,47))
 		self.heure_jour_on_off_machine_a_laver = dict() #Dictionnaire permettant de stocker l'heure d'allumage de la machine
-
+		self.decalage_necessaire=False
+		self.nb_decalage=0
+		self.minute_decalage=0
 		self.nb_lave_vaisselle = 0
 		self.lave_vaisselle = Appareil("Lave_vaisselle",500+randrange(-50,50))
 		self.heure_jour_on_off_lave_vaisselle = dict() #Dictionnaire permettant de stocker l'heure d'allumage de la machine
