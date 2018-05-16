@@ -32,7 +32,7 @@ class Foyer:
 		self.heure_jour_on_off_seche_linge = dict() #Dictionnaire permettant de stocker l'heure d'allumage de la machine
 		self.radiateur=Appareil("Radiateur 1",750+randrange(-50,50))
 
-		self.climatisation=Appareil("climatisation",750+randrange(-50,50))
+		self.climatisation=Appareil("climatisation",2500+randrange(-250,250))
 
 		self.nombre_individu = nombre_individu
 		self.ajouter_individu()

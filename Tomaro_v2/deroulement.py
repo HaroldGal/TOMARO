@@ -50,8 +50,12 @@ if(len(sys.argv) != 2 and len(sys.argv) != 3):
 largeur_fenetre=1200
 longueur_fenetre=800
 
+#Production
+nb_eo=188
+nb_pv=2600
+
 #Création du site
-site_alpha = Site("Campus",int(sys.argv[1]))
+site_alpha = Site("Campus",int(sys.argv[1]),nb_eo,nb_pv)
 #Calcule de la consommation moyenne par jour du site
 consommation_moyenne_jour_site = site_alpha.consommation_moyenne_site()
 
@@ -95,7 +99,7 @@ etat_affichage="menu"
 
 #Stockage
 stockage_val=0
-stockage_max=10000
+stockage_max=100000000
 
 #AFFICHAGE
 #Index du foyer selectionne

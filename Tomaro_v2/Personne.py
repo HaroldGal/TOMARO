@@ -31,7 +31,7 @@ class Personne:
 		self.eteignage_pc_h = -1 # heure d'eteignage recalculer à chaque nouvelle plage
 
 		# Initialisation des plaques à inductions (pai) 
-		self.pai = Appareil("Pai",2500+randrange(-250,250)) #+ ou - 10%
+		self.pai = Appareil("Pai",750+randrange(-50,50)) #+ ou - 10%
 		self.pai_h_jt = dict() # dictionnaire de l'utilisation des plaques à inductions par une personne lors des jours travaillés [plage:temps]
 		self.pai_h_jnt = dict() # dictionnaire de l'utilisation des plaques à inductions par une personne lors des jours non travaillés [plage:temps]
 		self.allumage_pai_h = -1 # heure d'allumage recalculer à chaque nouvelle plage
