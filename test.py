@@ -41,7 +41,7 @@ def Affichage_appareil(liste_appareil,fenetre):
 
 	#Taille du texte
 	font=pygame.font.Font(None, 30)
-	appareil = pygame.image.load("carre_appareil.png").convert()
+	appareil = pygame.image.load("Img/carre_appareil.png").convert()
 	nb_appareil=len(liste_appareil)
 
 	for i in range(0,nb_appareil):
@@ -63,7 +63,7 @@ def Affichage_appareil(liste_appareil,fenetre):
 def Affichage_production(liste_production,fenetre,liste_appareil,liste_stockage):
 	#Taille du texte
 	font=pygame.font.Font(None, 30)
-	production = pygame.image.load("carre_production.png").convert()
+	production = pygame.image.load("Img/carre_production.png").convert()
 	nb_production=len(liste_production)
 	for i in range(0,nb_production):
 		nb_alea=random.randint(-5,5)
@@ -110,7 +110,7 @@ def Affichage_production(liste_production,fenetre,liste_appareil,liste_stockage)
 def Affichage_stockage(liste_stockage,fenetre):
 	#Taille du texte
 	font=pygame.font.Font(None, 30)
-	stockage = pygame.image.load("carre_stockage.png").convert()
+	stockage = pygame.image.load("Img/carre_stockage.png").convert()
 	nb_stockage=len(liste_stockage)
 
 	for i in range(0,nb_stockage):
