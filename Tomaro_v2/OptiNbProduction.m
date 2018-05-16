@@ -23,4 +23,13 @@ end
 nbProd = intlinprog(f,[1 2],A,b,[],[],[0,0],[]);
 nbPanneaux = ceil(nbProd(1));
 nbEolienne = ceil(nbProd(2));
+fclose(file);
+
+file = fopen('nb_devices.txt','w');
+fprintf(file,'%d \n%d',nbPanneaux,nbEolienne);
+fclose(file);
+
+quit
+
+
 
