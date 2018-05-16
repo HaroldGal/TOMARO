@@ -47,7 +47,6 @@ class Site:
 		liste_foyer = []
 		#Chaque foyer à 4 personnes max
 		for i in range(0,nb_foyer):
-			print "\033c"
 			print str(i*100/nb_foyer)+"%"
 			liste_foyer.append(Foyer(randrange(1,5)))
 
@@ -105,10 +104,10 @@ class Site:
 	#Fonction permettant de renvoyer la liste avec tous les productions du site
 	def init_production(self,nb_eolienne,nb_pv):
 		#lecture du fichier
-		#print "Liste production pas encore codé"
+
 		PV1 = PV(0.18,nb_pv,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
 		EO1 = EO(13,nb_eolienne,0.15) #https://heliciel.com/helice/eolienne%20hydrolienne/energie-eolienne.htm
-		return EO1,PV1
+
 
 	#Fonction permettant de renvoyer la liste avec tous les stockages du site
 	def init_liste_stockage(self):

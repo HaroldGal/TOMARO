@@ -267,8 +267,7 @@ class Site:
 							if foyer.decalage_necessaire==False or foyer.nb_decalage>4:
 								foyer.machine_a_laver.allume = True
 							else:
-								foyer.nb_decalage+=1
-								print foyer.nb_decalage
+								foyer.nb_decalage+=1	
 							
 						if(jour_allumage == jour_semaine and minute_on_off[0]+30 == minute and foyer.machine_a_laver.allume == False and foyer.decalage_necessaire==True):
 							foyer.machine_a_laver.allume = True
@@ -317,27 +316,35 @@ class Site:
 				if(foyer.seche_linge.allume == True):
 					self.consommation_globale_minute += foyer.seche_linge.consommation_minute
 
+				temperature_parfaite = 20
+				if foyer.decalage_necessaire==True:
+					temperature_parfaite = 18
+
 				if foyer.temperature<17.0 and foyer.chauffage==True:
 					foyer.radiateur.allume=True
-					temps_de_chauffe=((1.5*1.225*foyer.volume*self.capa*(22-foyer.temperature)/foyer.radiateur.consommation_heure))
+					temps_de_chauffe=((1.5*1.225*foyer.volume*self.capa*(temperature_parfaite-foyer.temperature)/foyer.radiateur.consommation_heure))
 					temps_de_chauffe=temps_de_chauffe/60
-					self.variation_temp=(20-foyer.temperature)/temps_de_chauffe
+					self.variation_temp=(temperature_parfaite-foyer.temperature)/temps_de_chauffe
 					foyer.temperature+=self.variation_temp
 					self.consommation_globale_minute+=foyer.radiateur.consommation_minute
-				elif foyer.temperature<20.0 and foyer.radiateur.allume==True:
+				elif foyer.temperature<temperature_parfaite and foyer.radiateur.allume==True:
 					foyer.temperature+=self.variation_temp
 					self.consommation_globale_minute+=foyer.radiateur.consommation_minute
 				else:
 					foyer.radiateur.allume=False
 
+				temperature_parfaite = 22
+				if foyer.decalage_necessaire==True:
+					temperature_parfaite = 24
+
 				if foyer.temperature>25 and foyer.climatisation_presente==True:
 					foyer.climatisation.allume=True
-					temps_de_chauffe=((1.5*1.225*foyer.volume*self.capa*(foyer.temperature-19)/foyer.climatisation.consommation_heure))
+					temps_de_chauffe=((1.5*1.225*foyer.volume*self.capa*(foyer.temperature-temperature_parfaite)/foyer.climatisation.consommation_heure))
 					temps_de_chauffe=temps_de_chauffe/60
-					self.variation_temp=(22-foyer.temperature)/temps_de_chauffe
+					self.variation_temp=(temperature_parfaite-foyer.temperature)/temps_de_chauffe
 					foyer.temperature+=self.variation_temp
 					self.consommation_globale_minute+=foyer.climatisation.consommation_minute
-				elif foyer.temperature>22.0 and foyer.climatisation.allume==True:
+				elif foyer.temperature>temperature_parfaite and foyer.climatisation.allume==True:
 					foyer.temperature+=self.variation_temp
 					self.consommation_globale_minute+=foyer.climatisation.consommation_minute
 				else:
@@ -345,14 +352,18 @@ class Site:
 
 				foyer.temperature = (60*((273+float(self.meteo[cle][0]))-(273+foyer.temperature))*self.lamb*foyer.surface_mur)/(foyer.epaisseur_mur*foyer.volume*self.capa) + foyer.temperature
 
-				if foyer.frigo.temperature>5:
+				temperature_parfaite = 2
+				if foyer.decalage_necessaire==True:
+					temperature_parfaite = 5
+
+				if foyer.frigo.temperature>6:
 					foyer.frigo.allume=True
-					temps_de_chauffe=((1.5*1.225*foyer.frigo.volume*10*self.capa*(2.0-foyer.frigo.temperature)/foyer.frigo.consommation_heure))
+					temps_de_chauffe=((1.5*1.225*foyer.frigo.volume*10*self.capa*(temperature_parfaite-foyer.frigo.temperature)/foyer.frigo.consommation_heure))
 					temps_de_chauffe=temps_de_chauffe/60
-					self.variation_temp_frigo=(foyer.frigo.temperature - 2.0)/temps_de_chauffe
+					self.variation_temp_frigo=(foyer.frigo.temperature - temperature_parfaite)/temps_de_chauffe
 					foyer.frigo.temperature+=self.variation_temp_frigo
 					self.consommation_globale_minute+=foyer.frigo.consommation_minute
-				elif foyer.frigo.temperature>2.0 and foyer.frigo.allume==True:
+				elif foyer.frigo.temperature>temperature_parfaite and foyer.frigo.allume==True:
 					foyer.frigo.temperature+=self.variation_temp_frigo
 					self.consommation_globale_minute+=foyer.frigo.consommation_minute
 				else:
@@ -497,7 +508,6 @@ class Site:
 						foyer.heure_jour_on_off_seche_linge[(minute_allumage_tmp,minute_eteignage_tmp)] = jour_tmp
 						i+=1
 	def reequilibrage_sousproduction(self):
-		print "c'est la hess mais on s'en charge"
 		for foyer in self.liste_foyer:
 			foyer.decalage_necessaire=True
 

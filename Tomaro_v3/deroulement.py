@@ -151,6 +151,7 @@ while(continu):
 	production_totale_val=int(round(float(production_pv_val)+float(production_eo_val)))
 	if production_totale_val < site_alpha.consommation_globale_minute:
 		site_alpha.manque_energie=True
+
 		enter=True
 		site_alpha.reequilibrage_sousproduction()
 	elif enter==True:
