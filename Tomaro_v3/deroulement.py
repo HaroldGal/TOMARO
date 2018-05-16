@@ -149,7 +149,7 @@ while(continu):
 	production_eo_val= (int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)))
 	production_pv_val= (int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
 	production_totale_val=int(round(float(production_pv_val)+float(production_eo_val)))
-	if production_totale_val < site_alpha.consommation_globale_minute:
+	if production_totale_val + stockage_val < 10*site_alpha.consommation_globale_minute:
 		enter=True
 		site_alpha.reequilibrage_sousproduction()
 	elif enter==True:
