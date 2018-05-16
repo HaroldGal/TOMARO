@@ -1,0 +1,21 @@
+mamatrice=generateur_conso([1,1,0,0,2,2]);
+f= fopen('conso.txt','w');
+fprintf(f,'Ordinateur:0.055:');
+dlmwrite('conso.txt',mamatrice(1,:),'delimiter', '','-append');
+fseek(f,0,'eof');
+fprintf(f,'Television:0.04:');
+dlmwrite('conso.txt',mamatrice(2,:),'delimiter', '','-append');
+fseek(f,0,'eof');
+fprintf(f,'Frigidaire:0.006:');
+dlmwrite('conso.txt',mamatrice(3,:),'delimiter', '','-append');
+fseek(f,0,'eof');
+fprintf(f,'Chauffage:0.009:');
+dlmwrite('conso.txt',mamatrice(4,:),'delimiter', '','-append');
+fseek(f,0,'eof');
+fprintf(f,'GrillePain:0.15:');
+dlmwrite('conso.txt',mamatrice(5,:),'delimiter', '','-append');
+fseek(f,0,'eof');
+fprintf(f,'MicroOndes:0.27:');
+dlmwrite('conso.txt',mamatrice(6,:),'delimiter', '','-append');
+fseek(f,0,'eof');
+fclose('all')
