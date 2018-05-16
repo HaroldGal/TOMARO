@@ -49,9 +49,12 @@ if(len(sys.argv) != 2 and len(sys.argv) != 3):
 #Affichage
 largeur_fenetre=1200
 longueur_fenetre=800
+nb_eo=300
+nb_pv=1600
+nb_foyer=int(sys.argv[1])
 
 #Création du site
-site_alpha = Site("Campus",int(sys.argv[1]))
+site_alpha = Site("Campus",nb_foyer,nb_eo,nb_pv)
 #Calcule de la consommation moyenne par jour du site
 consommation_moyenne_jour_site = site_alpha.consommation_moyenne_site()
 
@@ -94,8 +97,9 @@ fenetre = pygame.display.set_mode((largeur_fenetre,longueur_fenetre))
 etat_affichage="menu"
 
 #Stockage
+tesla_powerwall=13500 #13,5kW.h on en met une par foyer
 stockage_val=0
-stockage_max=100000000
+stockage_max=tesla_powerwall*nb_foyer
 
 #AFFICHAGE
 #Index du foyer selectionne
@@ -395,18 +399,18 @@ while(continu):
 		localisation= "Paris"
 		nb_foyer=str(site_alpha.nb_foyer)
 		nb_personne=str(site_alpha.nb_personne)
-		consommation_totale=str(site_alpha.consommation_globale_minute)
-		production_eo= str(int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)))
-		production_pv= str(int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
+		consommation_totale=int(site_alpha.consommation_globale_minute)
+		production_eo= int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0))
+		production_pv= int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0))
 		nb_eo=str(site_alpha.eolienne.nb)
 		surface_pv=str(site_alpha.panneau.surface)
-		production_totale=str(int(round(float(production_pv)+float(production_eo))))
+		production_totale=int(round(float(production_pv)+float(production_eo)))
 		
 		if pause!=True and stockage_val<stockage_max:
 			stockage_val+=float(production_totale)-float(consommation_totale)
 		stockage_val=int(round(min(stockage_max,max(0,stockage_val))))	
-		stockage=str(stockage_val)
-		stockage_pourcent=str(stockage_val*100/stockage_max)+"%"
+		stockage=stockage_val
+		stockage_pourcent=stockage_val*100/stockage_max
 		temps_jour=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[2]-nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[1]
 		temps_nuit=1440-temps_jour
 		minute_leve=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[1]

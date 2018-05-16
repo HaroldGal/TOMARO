@@ -72,36 +72,56 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 	nb_foyer_str=font.render(nb_foyer,1,(0,0,0))
 	nb_personne_str=font.render(nb_personne,1,(0,0,0))
 	font=pygame.font.Font(None, 40)
-	consommation_totale_str=font.render(consommation_totale,1,(0,0,0))
+	if consommation_totale>10000:
+		consommation_totale_str=font.render(str(consommation_totale/1000)+" k",1,(0,0,0))
+	else:
+		consommation_totale_str=font.render(str(consommation_totale),1,(0,0,0))
 	fenetre.blit(nb_foyer_str,(120-nb_foyer_str.get_size()[0],670))
 	fenetre.blit(nb_personne_str,(265-nb_personne_str.get_size()[0],670))
-	fenetre.blit(consommation_totale_str,(190-consommation_totale_str.get_size()[0],728))
+	fenetre.blit(consommation_totale_str,(190-consommation_totale_str.get_size()[0],727))
 
 	#Production
 	font=pygame.font.Font(None, 30)
-	production_eo_str=font.render(production_eo,1,(0,0,0))
-	production_pv_str=font.render(production_pv,1,(0,0,0))
+	production_eo_str=font.render(str(production_eo),1,(0,0,0))
+	production_pv_str=font.render(str(production_pv),1,(0,0,0))
 	font=pygame.font.Font(None, 15)
 	nb_eo_str=font.render(nb_eo,1,(0,0,0))
 	surface_pv_str=font.render(surface_pv,1,(0,0,0))
 	font=pygame.font.Font(None, 40)
-	production_totale_str=font.render(production_totale,1,(0,0,0))
-	fenetre.blit(production_eo_str,(695-production_eo_str.get_size()[0],674))
-	fenetre.blit(production_pv_str,(515-production_pv_str.get_size()[0],674))
-	fenetre.blit(production_totale_str,(610-production_totale_str.get_size()[0],728))
+	if production_totale>10000:
+		production_totale_str=font.render(str(production_totale/1000)+" k",1,(0,0,0))
+	else:
+		production_totale_str=font.render(str(production_totale),1,(0,0,0))	
+	fenetre.blit(production_eo_str,(695-production_eo_str.get_size()[0],673))
+	fenetre.blit(production_pv_str,(515-production_pv_str.get_size()[0],673))
+	fenetre.blit(production_totale_str,(610-production_totale_str.get_size()[0],726))
 	fenetre.blit(nb_eo_str,(764-nb_eo_str.get_size()[0]/2,695))
 	fenetre.blit(surface_pv_str,(580-surface_pv_str.get_size()[0],694))
 
 	#Stockage
 	font=pygame.font.Font(None, 40)
-	stockage_str=font.render(stockage,1,(0,0,0))
+	if stockage>10000:
+		stockage_str=font.render(str(stockage/1000)+" k",1,(0,0,0))
+	else:
+		stockage_str=font.render(str(stockage),1,(0,0,0))		
 	font=pygame.font.Font(None, 30)
-	stockage_pourcent_str=font.render(stockage_pourcent,1,(0,0,0))
-	fenetre.blit(stockage_str,(1028-stockage_str.get_size()[0],707))
+	stockage_pourcent_str=font.render(str(stockage_pourcent)+"%",1,(0,0,0))
+	fenetre.blit(stockage_str,(1028-stockage_str.get_size()[0],706))
 	fenetre.blit(stockage_pourcent_str,(1141-stockage_pourcent_str.get_size()[0]/2,750))
+	if stockage_pourcent/10==0:
+		pile=pygame.image.load("Image/Pile_vide.png").convert_alpha()
+		fenetre.blit(pile,(1092,693))
+	elif manque_energie==True:
+		pile=pygame.image.load("Image/Pile_destockage_"+str(stockage_pourcent/10)+".png").convert_alpha()
+		fenetre.blit(pile,(1092,693))
+	elif trop_energie==True:
+		pile=pygame.image.load("Image/Pile_stockage_"+str(stockage_pourcent/10)+".png").convert_alpha()
+		fenetre.blit(pile,(1092,693))
+	
+
 
 	#Si on est en sur-production ou sous-production
-	if manque_energie==True and stockage=="0":
+	if manque_energie==True and stockage==0:
 		panneau_attention=pygame.image.load("Image/Panneau_attention.png").convert_alpha()
 		fenetre.blit(panneau_attention,(790,516))
 		font=pygame.font.Font(None, 20)
@@ -115,13 +135,13 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 		panneau_attention_str=font.render("Revente Energie",1,(0,0,0))
 		fenetre.blit(panneau_attention_str,(840-panneau_attention_str.get_size()[0]/2,600))
 
-	elif trop_energie==True:	
-		lien_vert=pygame.image.load("Image/Lien_vert.png").convert_alpha()
-		fenetre.blit(lien_vert,(611,375))
+	# elif trop_energie==True:	
+	# 	lien_vert=pygame.image.load("Image/Lien_vert.png").convert_alpha()
+	# 	fenetre.blit(lien_vert,(611,375))
 
-	elif manque_energie==True:	
-		lien_rouge=pygame.image.load("Image/Lien_rouge.png").convert_alpha()
-		fenetre.blit(lien_rouge,(611,375))
+	# elif manque_energie==True:	
+	# 	lien_rouge=pygame.image.load("Image/Lien_rouge.png").convert_alpha()
+	# 	fenetre.blit(lien_rouge,(611,375))
 
 
 def affichage_liste_foyer(fenetre,site,date,is_nuit,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche):
