@@ -95,7 +95,7 @@ etat_affichage="menu"
 
 #Stockage
 stockage_val=0
-stockage_max=10000
+stockage_max=100000000
 
 #AFFICHAGE
 #Index du foyer selectionne
@@ -150,13 +150,24 @@ while(continu):
 	production_pv_val= (int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
 	production_totale_val=int(round(float(production_pv_val)+float(production_eo_val)))
 	if production_totale_val < site_alpha.consommation_globale_minute:
+		site_alpha.manque_energie=True
 		enter=True
 		site_alpha.reequilibrage_sousproduction()
 	elif enter==True:
 		site_alpha.reequilibrage_surproduction()
 		enter=False
 
-
+	#Si on est en sous-production
+	if production_totale_val < site_alpha.consommation_globale_minute:
+		site_alpha.manque_energie=True
+		site_alpha.trop_energie=False
+	#Si on est en sur-production
+	elif production_totale_val > site_alpha.consommation_globale_minute:
+		site_alpha.manque_energie=False
+		site_alpha.trop_energie=True
+	else:
+		site_alpha.manque_energie=False
+		site_alpha.trop_energie=False
 
 	
 	
@@ -399,9 +410,11 @@ while(continu):
 		temps_nuit=1440-temps_jour
 		minute_leve=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[1]
 		minute_couche=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[2]
+		manque_energie=site_alpha.manque_energie
+		trop_energie=site_alpha.trop_energie
 		#Si on est dans l'état menu
 		if(etat_affichage=="menu"):		
-			menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)
+			menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche,manque_energie,trop_energie)
 
 		elif(etat_affichage=="liste_foyer"):
 			affichage_liste_foyer(fenetre,site_alpha,date,is_nuit,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)

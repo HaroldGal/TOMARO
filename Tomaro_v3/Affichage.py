@@ -11,7 +11,7 @@ from random import randrange,sample,randint
 def centrer_texte(image,pos_x_image,pos_y_image,texte):
 	return (pos_x_image+image.get_size()[0]/2-texte.get_size()[0]/2,pos_y_image+image.get_size()[1]/2-texte.get_size()[1]/2)
 
-def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche):	
+def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche,manque_energie,trop_energie):	
 	#S'il fait jour
 	if(is_nuit==False):
 		background = pygame.image.load("Image/Background_menu_jour.png").convert()
@@ -99,6 +99,29 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 	stockage_pourcent_str=font.render(stockage_pourcent,1,(0,0,0))
 	fenetre.blit(stockage_str,(1028-stockage_str.get_size()[0],707))
 	fenetre.blit(stockage_pourcent_str,(1141-stockage_pourcent_str.get_size()[0]/2,750))
+
+	#Si on est en sur-production ou sous-production
+	if manque_energie==True and stockage=="0":
+		panneau_attention=pygame.image.load("Image/Panneau_attention.png").convert_alpha()
+		fenetre.blit(panneau_attention,(790,516))
+		font=pygame.font.Font(None, 20)
+		panneau_attention_str=font.render("Achat Energie",1,(0,0,0))
+		fenetre.blit(panneau_attention_str,(840-panneau_attention_str.get_size()[0]/2,600))
+
+	elif trop_energie==True and stockage_pourcent=="100%":
+		panneau_attention=pygame.image.load("Image/Panneau_attention.png").convert_alpha()
+		fenetre.blit(panneau_attention,(790,516))
+		font=pygame.font.Font(None, 20)
+		panneau_attention_str=font.render("Revente Energie",1,(0,0,0))
+		fenetre.blit(panneau_attention_str,(840-panneau_attention_str.get_size()[0]/2,600))
+
+	elif trop_energie==True:	
+		lien_vert=pygame.image.load("Image/Lien_vert.png").convert_alpha()
+		fenetre.blit(lien_vert,(611,375))
+
+	elif manque_energie==True:	
+		lien_rouge=pygame.image.load("Image/Lien_rouge.png").convert_alpha()
+		fenetre.blit(lien_rouge,(611,375))
 
 
 def affichage_liste_foyer(fenetre,site,date,is_nuit,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche):
