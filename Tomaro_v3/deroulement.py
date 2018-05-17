@@ -78,7 +78,7 @@ elif(len(sys.argv) == 3):
 	jour_mois=int(sys.argv[2].split('/')[0])
 	jour_semaine = datetime.datetime(annee,mois,jour_mois,0,0,0).weekday() #Lundi 0 .... Dimanche 6
 
-minute_journee = plage_proche(now.tm_hour*60+now.tm_min,plage) #Commence une minute avant un plage existante
+minute_journee = 539#plage_proche(now.tm_hour*60+now.tm_min,plage) #Commence une minute avant un plage existante
 site_alpha.actualisation_heure_jour_machine_foyer() #Calcul des horaires pour les différentes machines
 
 # ---------- AJOUTER LATITUDE ET LONGITUDE DE LA VILLE OU VOUS ETES ---------- #

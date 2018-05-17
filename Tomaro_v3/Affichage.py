@@ -128,7 +128,7 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 		panneau_attention_str=font.render("Achat Energie",1,(0,0,0))
 		fenetre.blit(panneau_attention_str,(840-panneau_attention_str.get_size()[0]/2,600))
 
-	elif trop_energie==True and stockage_pourcent=="100%":
+	elif trop_energie==True and stockage_pourcent==100:
 		panneau_attention=pygame.image.load("Image/Panneau_attention.png").convert_alpha()
 		fenetre.blit(panneau_attention,(790,516))
 		font=pygame.font.Font(None, 20)
