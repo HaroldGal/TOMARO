@@ -181,7 +181,9 @@ while(continu):
 	else:
 		site_alpha.manque_energie=False
 		site_alpha.trop_energie=False
-
+	if minute_journee%30==0: #on actualise la lumiere toutes les demi heures
+		print minute_journee
+		site_alpha.calibrage_luminosite()
 	
 	
 	#--------------------AFFICHAGE-------------------------#

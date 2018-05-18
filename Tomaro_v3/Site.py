@@ -533,6 +533,12 @@ class Site:
 		for foyer in self.liste_foyer:
 			foyer.decalage_surprod=False
 
-
+	def calibrage_luminosite(self):
+		for foyer in self.liste_foyer:
+			for individu in foyer.liste_personne:
+				if individu.lampe.allume==True and self.manque_energie==True:
+					individu.lampe.consommation_minute=individu.lampe.consommation_minute/2 #on divise par 2 la luminosité
+				elif individu.lampe.allume==True and self.manque_energie==False:
+					individu.lampe.consommation_minute=round(individu.lampe.consommation_heure/60.0) # on remet la valeur de base
 		
 
