@@ -264,12 +264,12 @@ class Site:
 				for minute_on_off,jour_allumage in foyer.heure_jour_on_off_machine_a_laver.items():
 						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.machine_a_laver.allume == False ):
 
-							if foyer.decalage_necessaire==False or foyer.nb_decalage>4:
+							if foyer.decalage_sousprod==False or foyer.nb_decalage>4:
 								foyer.machine_a_laver.allume = True
 							else:
 								foyer.nb_decalage+=1	
 							
-						if(jour_allumage == jour_semaine and minute_on_off[0]+30 == minute and foyer.machine_a_laver.allume == False and foyer.decalage_necessaire==True):
+						if(jour_allumage == jour_semaine and minute_on_off[0]+30 == minute and foyer.machine_a_laver.allume == False and foyer.decalage_sousprod==True):
 							foyer.machine_a_laver.allume = True
 
 								 
@@ -280,12 +280,12 @@ class Site:
 				for minute_on_off,jour_allumage in foyer.heure_jour_on_off_lave_vaisselle.items():
 						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.lave_vaisselle.allume == False ):
 
-							if foyer.decalage_necessaire==False or foyer.nb_decalage>4:
+							if foyer.decalage_sousprod==False or foyer.nb_decalage>4:
 								foyer.lave_vaisselle.allume = True
 							else:
 								foyer.nb_decalage+=1
 							
-						if(jour_allumage == jour_semaine and minute_on_off[0]+30 == minute and foyer.lave_vaisselle.allume == False and foyer.decalage_necessaire==True):
+						if(jour_allumage == jour_semaine and minute_on_off[0]+30 == minute and foyer.lave_vaisselle.allume == False and foyer.decalage_sousprod==True):
 							foyer.lave_vaisselle.allume = True
 
 								 
@@ -296,12 +296,12 @@ class Site:
 				for minute_on_off,jour_allumage in foyer.heure_jour_on_off_seche_linge.items():
 						if(jour_allumage == jour_semaine and minute_on_off[0] == minute and foyer.seche_linge.allume == False ):
 
-							if foyer.decalage_necessaire==False or foyer.nb_decalage>4:
+							if foyer.decalage_sousprod==False or foyer.nb_decalage>4:
 								foyer.seche_linge.allume = True
 							else:
 								foyer.nb_decalage+=1
 							
-						if(jour_allumage == jour_semaine and minute_on_off[0]+30 == minute and foyer.seche_linge.allume == False and foyer.decalage_necessaire==True):
+						if(jour_allumage == jour_semaine and minute_on_off[0]+30 == minute and foyer.seche_linge.allume == False and foyer.decalage_sousprod==True):
 							foyer.seche_linge.allume = True
 
 								 
@@ -317,10 +317,12 @@ class Site:
 					self.consommation_globale_minute += foyer.seche_linge.consommation_minute
 
 				temperature_parfaite = 20
-				if foyer.decalage_necessaire==True:
-					temperature_parfaite = 18
+				if foyer.decalage_sousprod==True:
+					temperature_parfaite = 17
+				if foyer.decalage_surprod==True:
+					temperature_parfaite = 19
 
-				if foyer.temperature<17.0 and foyer.chauffage==True:
+				if foyer.temperature<16.0 and foyer.chauffage==True:
 					foyer.radiateur.allume=True
 					temps_de_chauffe=((1.5*1.225*foyer.volume*self.capa*(temperature_parfaite-foyer.temperature)/foyer.radiateur.consommation_heure))
 					temps_de_chauffe=temps_de_chauffe/60
@@ -334,7 +336,7 @@ class Site:
 					foyer.radiateur.allume=False
 
 				temperature_parfaite = 22
-				if foyer.decalage_necessaire==True:
+				if foyer.decalage_sousprod==True:
 					temperature_parfaite = 24
 
 				if foyer.temperature>25 and foyer.climatisation_presente==True:
@@ -353,7 +355,7 @@ class Site:
 				foyer.temperature = (60*((273+float(self.meteo[cle][0]))-(273+foyer.temperature))*self.lamb*foyer.surface_mur)/(foyer.epaisseur_mur*foyer.volume*self.capa) + foyer.temperature
 
 				temperature_parfaite = 2
-				if foyer.decalage_necessaire==True:
+				if foyer.decalage_sousprod==True:
 					temperature_parfaite = 5
 
 				if foyer.frigo.temperature>6:
@@ -509,11 +511,11 @@ class Site:
 						i+=1
 	def reequilibrage_sousproduction(self):
 		for foyer in self.liste_foyer:
-			foyer.decalage_necessaire=True
+			foyer.decalage_sousprod=True
 
 	def reequilibrage_surproduction(self):
 		for foyer in self.liste_foyer:
-			foyer.decalage_necessaire=False
+			foyer.decalage_sousprod=False
 
 
 		

@@ -21,7 +21,8 @@ class Foyer:
 		self.nb_machine_a_laver = 0
 		self.machine_a_laver = Appareil("Machine_a_laver",470+randrange(-47,47))
 		self.heure_jour_on_off_machine_a_laver = dict() #Dictionnaire permettant de stocker l'heure d'allumage de la machine
-		self.decalage_necessaire=False
+		self.decalage_sousprod=False
+		self.decalage_surprod=False
 		self.nb_decalage=0
 		self.minute_decalage=0
 		self.nb_lave_vaisselle = 0
