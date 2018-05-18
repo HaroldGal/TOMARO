@@ -1,6 +1,6 @@
 %% Lecture du fichier
 
-f = [1 10]; %nbPanneaux + nb Eolienne
+f = [1 20]; %nbPanneaux + nb Eolienne
 
 %Ouverture du fichier
 file = fopen('Data/data_pretraitement.txt','r');
