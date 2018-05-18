@@ -107,6 +107,7 @@ class Site:
 
 		PV1 = PV(0.18,nb_pv,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
 		EO1 = EO(13,nb_eolienne,0.15) #https://heliciel.com/helice/eolienne%20hydrolienne/energie-eolienne.htm
+		return EO1,PV1
 
 
 	#Fonction permettant de renvoyer la liste avec tous les stockages du site
