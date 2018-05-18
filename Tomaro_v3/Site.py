@@ -10,7 +10,7 @@ lien_data_meteo = "Data/meteo.csv"
 
 class Site:
 
-	def __init__(self, nom, nb_foyer):
+	def __init__(self, nom, nb_foyer,nb_eo,nb_pv):
 
 		self.nom = nom
 		self.nb_foyer = nb_foyer
@@ -22,7 +22,7 @@ class Site:
 		self.liste_foyer = self.init_liste_foyer(nb_foyer)
 
 		#Initialisaiton de la liste des productions
-		self.eolienne, self.panneau = self.init_production()
+		self.eolienne, self.panneau = self.init_production(nb_eo,nb_pv)
 
 		#Initialisation de la liste des stockages
 		self.liste_stockage = self.init_liste_stockage()
@@ -103,11 +103,11 @@ class Site:
 			self.meteo[cle] = tuple((nouveau_var))
 
 	#Fonction permettant de renvoyer la liste avec tous les productions du site
-	def init_production(self):
+	def init_production(self,nb_eo,nb_pv):
 		#lecture du fichier
 		#print "Liste production pas encore codé"
-		PV1 = PV(0.18,1000,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
-		EO1 = EO(13,1000,0.15) #https://heliciel.com/helice/eolienne%20hydrolienne/energie-eolienne.htm
+		PV1 = PV(0.18,nb_pv,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
+		EO1 = EO(13,nb_eo,0.15) #https://heliciel.com/helice/eolienne%20hydrolienne/energie-eolienne.htm
 		return EO1,PV1
 
 	#Fonction permettant de renvoyer la liste avec tous les stockages du site

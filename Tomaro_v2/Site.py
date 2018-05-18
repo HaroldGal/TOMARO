@@ -10,7 +10,7 @@ lien_data_meteo = "Data/meteo.csv"
 
 class Site:
 
-	def __init__(self, nom, nb_foyer):
+	def __init__(self, nom, nb_foyer,nb_eolienne,nb_pv):
 
 		self.nom = nom
 		self.nb_foyer = nb_foyer
@@ -22,7 +22,7 @@ class Site:
 		self.liste_foyer = self.init_liste_foyer(nb_foyer)
 
 		#Initialisaiton de la liste des productions
-		self.eolienne, self.panneau = self.init_production()
+		self.eolienne, self.panneau = self.init_production(nb_eolienne,nb_pv)
 
 		#Initialisation de la liste des stockages
 		self.liste_stockage = self.init_liste_stockage()
@@ -47,7 +47,6 @@ class Site:
 		liste_foyer = []
 		#Chaque foyer à 4 personnes max
 		for i in range(0,nb_foyer):
-			print "\033c"
 			print str(i*100/nb_foyer)+"%"
 			liste_foyer.append(Foyer(randrange(1,5)))
 
@@ -103,12 +102,12 @@ class Site:
 			self.meteo[cle] = tuple((nouveau_var))
 
 	#Fonction permettant de renvoyer la liste avec tous les productions du site
-	def init_production(self):
+	def init_production(self,nb_eolienne,nb_pv):
 		#lecture du fichier
-		#print "Liste production pas encore codé"
-		PV1 = PV(0.18,1000,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
-		EO1 = EO(13,1000,0.15) #https://heliciel.com/helice/eolienne%20hydrolienne/energie-eolienne.htm
-		return EO1,PV1
+
+		PV1 = PV(0.18,nb_pv,0.8) #http://www.capenergie.fr/catalogue/eolienne/eolienne-evance-r9000.html
+		EO1 = EO(13,nb_eolienne,0.15) #https://heliciel.com/helice/eolienne%20hydrolienne/energie-eolienne.htm
+
 
 	#Fonction permettant de renvoyer la liste avec tous les stockages du site
 	def init_liste_stockage(self):
@@ -207,7 +206,7 @@ class Site:
 							personne.liste_allumage_h = sample(range(0,175),personne.electro_h_jt[minute])
 						for i in range(0,len(personne.liste_allumage_h)):
 							personne.liste_allumage_h[i]+=minute
-						personne.liste_eteignage_h = [temps+5 for temps in personne.liste_allumage_h]
+						personne.liste_eteignage_h = [temps+randrange(1,6) for temps in personne.liste_allumage_h]
 
 		#Si on est samedi ou dimanche et qu'on est sur une plage de mofication on calcul l'heure d'allumage et d'éteignage
 		elif(jour>=5):
@@ -247,7 +246,7 @@ class Site:
 							personne.liste_allumage_h = sample(range(0,175),personne.electro_h_jnt[minute])
 						for i in range(0,len(personne.liste_allumage_h)):
 							personne.liste_allumage_h[i]+=minute
-						personne.liste_eteignage_h = [temps+5 for temps in personne.liste_allumage_h]
+						personne.liste_eteignage_h = [temps+randrange(1,6) for temps in personne.liste_allumage_h]
 						
 	#Allume ou éteint les appareils en fonction de l'heure de la journée
 	def actualisation_des_foyers(self,minute,jour_semaine,nuit, cle):

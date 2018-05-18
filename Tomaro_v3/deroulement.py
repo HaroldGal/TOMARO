@@ -49,9 +49,12 @@ if(len(sys.argv) != 2 and len(sys.argv) != 3):
 #Affichage
 largeur_fenetre=1200
 longueur_fenetre=800
+nb_eo=300
+nb_pv=1600
+nb_foyer=int(sys.argv[1])
 
 #Création du site
-site_alpha = Site("Campus",int(sys.argv[1]))
+site_alpha = Site("Campus",nb_foyer,nb_eo,nb_pv)
 #Calcule de la consommation moyenne par jour du site
 consommation_moyenne_jour_site = site_alpha.consommation_moyenne_site()
 
@@ -75,7 +78,7 @@ elif(len(sys.argv) == 3):
 	jour_mois=int(sys.argv[2].split('/')[0])
 	jour_semaine = datetime.datetime(annee,mois,jour_mois,0,0,0).weekday() #Lundi 0 .... Dimanche 6
 
-minute_journee = plage_proche(now.tm_hour*60+now.tm_min,plage) #Commence une minute avant un plage existante
+minute_journee = 539#plage_proche(now.tm_hour*60+now.tm_min,plage) #Commence une minute avant un plage existante
 site_alpha.actualisation_heure_jour_machine_foyer() #Calcul des horaires pour les différentes machines
 
 # ---------- AJOUTER LATITUDE ET LONGITUDE DE LA VILLE OU VOUS ETES ---------- #
@@ -94,8 +97,9 @@ fenetre = pygame.display.set_mode((largeur_fenetre,longueur_fenetre))
 etat_affichage="menu"
 
 #Stockage
+tesla_powerwall=13500 #13,5kW.h on en met une par foyer
 stockage_val=0
-stockage_max=10000
+stockage_max=tesla_powerwall*nb_foyer
 
 #AFFICHAGE
 #Index du foyer selectionne
@@ -149,14 +153,26 @@ while(continu):
 	production_eo_val= (int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)))
 	production_pv_val= (int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
 	production_totale_val=int(round(float(production_pv_val)+float(production_eo_val)))
-	if production_totale_val + stockage_val < 10*site_alpha.consommation_globale_minute:
+	if production_totale_val < site_alpha.consommation_globale_minute:
+		site_alpha.manque_energie=True
+
 		enter=True
 		site_alpha.reequilibrage_sousproduction()
 	elif enter==True:
 		site_alpha.reequilibrage_surproduction()
 		enter=False
 
-
+	#Si on est en sous-production
+	if production_totale_val < site_alpha.consommation_globale_minute:
+		site_alpha.manque_energie=True
+		site_alpha.trop_energie=False
+	#Si on est en sur-production
+	elif production_totale_val > site_alpha.consommation_globale_minute:
+		site_alpha.manque_energie=False
+		site_alpha.trop_energie=True
+	else:
+		site_alpha.manque_energie=False
+		site_alpha.trop_energie=False
 
 	
 	
@@ -383,25 +399,27 @@ while(continu):
 		localisation= "Paris"
 		nb_foyer=str(site_alpha.nb_foyer)
 		nb_personne=str(site_alpha.nb_personne)
-		consommation_totale=str(site_alpha.consommation_globale_minute)
-		production_eo= str(int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)))
-		production_pv= str(int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
+		consommation_totale=int(site_alpha.consommation_globale_minute)
+		production_eo= int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0))
+		production_pv= int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0))
 		nb_eo=str(site_alpha.eolienne.nb)
 		surface_pv=str(site_alpha.panneau.surface)
-		production_totale=str(int(round(float(production_pv)+float(production_eo))))
+		production_totale=int(round(float(production_pv)+float(production_eo)))
 		
 		if pause!=True and stockage_val<stockage_max:
 			stockage_val+=float(production_totale)-float(consommation_totale)
 		stockage_val=int(round(min(stockage_max,max(0,stockage_val))))	
-		stockage=str(stockage_val)
-		stockage_pourcent=str(stockage_val*100/stockage_max)+"%"
+		stockage=stockage_val
+		stockage_pourcent=stockage_val*100/stockage_max
 		temps_jour=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[2]-nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[1]
 		temps_nuit=1440-temps_jour
 		minute_leve=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[1]
 		minute_couche=nuit(minute_journee, jour_mois, mois, annee, decalage_horaire, coords)[2]
+		manque_energie=site_alpha.manque_energie
+		trop_energie=site_alpha.trop_energie
 		#Si on est dans l'état menu
 		if(etat_affichage=="menu"):		
-			menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)
+			menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,consommation_totale,production_eo,production_pv,production_totale,stockage,stockage_pourcent,is_nuit,nb_eo,surface_pv,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche,manque_energie,trop_energie)
 
 		elif(etat_affichage=="liste_foyer"):
 			affichage_liste_foyer(fenetre,site_alpha,date,is_nuit,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)

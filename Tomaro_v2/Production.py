@@ -21,7 +21,7 @@ class PV(Production):
 	def production_energie(self,radiation_global):
 
 		self.production_energie_jour += self.rendement*self.surface*self.Cp*radiation_global
-		return self.rendement*self.surface*self.Cp*radiation_global+randrange(0,3)*0.05*self.rendement*self.surface*self.Cp*radiation_global
+		return self.rendement*self.surface*self.Cp*radiation_global+randrange(-3,3)*0.05*self.rendement*self.surface*self.Cp*radiation_global
 
 class EO(Production):
 
@@ -39,6 +39,6 @@ class EO(Production):
 		#Pour produire de l'énergie le vent doit avoir une vitesse minimum de 3m/s
 		if vitesse_vent>3:
 				self.production_energie_jour += self.nb*self.surface_pale*0.5*1.2*(vitesse_vent)**3*self.performance
-				return self.nb*self.surface_pale*0.5*1.2*(vitesse_vent)**3*self.performance
+				return self.nb*self.surface_pale*0.5*1.2*(vitesse_vent)**3*self.performance+randrange(-3,3)*0.05*self.nb*self.surface_pale*0.5*1.2*(vitesse_vent)**3*self.performance
 		return 0
 		
