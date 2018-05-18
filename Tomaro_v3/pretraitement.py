@@ -47,7 +47,7 @@ if(len(sys.argv) != 2):
 
 
 #Création du site
-site_alpha = Site("Campus",int(sys.argv[1]))
+site_alpha = Site("Campus",int(sys.argv[1]),1,1)
 #Calcule de la consommation moyenne par jour du site
 consommation_moyenne_jour_site = site_alpha.consommation_moyenne_site()
 
