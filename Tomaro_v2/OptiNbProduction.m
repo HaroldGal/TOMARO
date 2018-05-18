@@ -1,3 +1,5 @@
+%% Lecture du fichier
+
 f = [1 10]; %nbPanneaux + nb Eolienne
 
 %Ouverture du fichier
@@ -20,6 +22,26 @@ for i=1:1:size(A,1)
     b(i) = -line(1);
 end
 
+%% On enlève 5% des consommations max et 5% des productions min
+nb_point = ceil(0.05*length(A));
+
+% On enlève les consommations max
+for i=1:nb_point
+    [~,index] = max(abs(b));
+    b(index) = [];
+    A(index,:)=[];
+end
+
+A_prod = abs(sum(A,2));
+
+for i=1:nb_point
+   [~,index] = max(A_prod);
+   b(index) = [];
+   A(index,:)=[];
+end
+
+
+%% Optimisation 
 nbProd = intlinprog(f,[1 2],A,b,[],[],[0,0],[]);
 nbPanneaux = ceil(nbProd(1));
 nbEolienne = ceil(nbProd(2));
