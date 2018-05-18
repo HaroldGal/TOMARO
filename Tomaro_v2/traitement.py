@@ -92,7 +92,7 @@ if __name__ == '__main__':
 	nb_Eo = int(sys.argv[2])
 
 	#Création du site
-	site_alpha = Site("Campus",int(sys.argv[1]))
+	site_alpha = Site("Campus",int(sys.argv[1]),nb_Eo,nb_Pv)
 	#Calcule de la consommation moyenne par jour du site
 	consommation_moyenne_jour_site = site_alpha.consommation_moyenne_site()
 
