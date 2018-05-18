@@ -118,7 +118,7 @@ if __name__ == '__main__':
 		sys.exit()
 
 	#Création du site
-	site_alpha = Site("Campus",int(sys.argv[1]))
+	site_alpha = Site("Campus",int(sys.argv[1]),1,1)
 	#Calcule de la consommation moyenne par jour du site
 	consommation_moyenne_jour_site = site_alpha.consommation_moyenne_site()
 
@@ -159,8 +159,6 @@ if __name__ == '__main__':
 
 	cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
 	cle = site_alpha.random_meteo(cle)
-
-
 
 	with closing(mp.Pool(10)) as p:
 		tab_consomation_jour= p.map(prod_conso,range(1,366))

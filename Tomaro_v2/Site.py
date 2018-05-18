@@ -47,7 +47,7 @@ class Site:
 		liste_foyer = []
 		#Chaque foyer à 4 personnes max
 		for i in range(0,nb_foyer):
-			print str(i*100/nb_foyer)+"%"
+			# print str(i*100/nb_foyer)+"%"
 			liste_foyer.append(Foyer(randrange(1,5)))
 
 		return liste_foyer
