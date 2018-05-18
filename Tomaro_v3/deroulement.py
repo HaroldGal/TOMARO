@@ -110,7 +110,8 @@ liste_objet=[]
 continu = True
 pause = False
 vitesse_sleep=0
-enter=False
+enter1=False
+enter2=False
 
 while(continu):
 	time.sleep(vitesse_sleep)
@@ -153,14 +154,21 @@ while(continu):
 	production_eo_val= (int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)))
 	production_pv_val= (int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
 	production_totale_val=int(round(float(production_pv_val)+float(production_eo_val)))
-	if production_totale_val < site_alpha.consommation_globale_minute:
-		site_alpha.manque_energie=True
 
-		enter=True
+	if production_totale_val + stockage_val < site_alpha.consommation_globale_minute*10:
+		site_alpha.manque_energie=True
+		enter1=True
 		site_alpha.reequilibrage_sousproduction()
-	elif enter==True:
+	elif enter1==True:
 		site_alpha.reequilibrage_surproduction()
-		enter=False
+		enter1=False
+
+	if production_totale_val + stockage_val > stockage_max*0.9:
+		site_alpha.reequilibrage_batterie_pleine()
+		enter2=True
+	elif enter2==True:
+		site_alpha.reequilibrage_batterie_dispo()
+		enter2=False
 
 	#Si on est en sous-production
 	if production_totale_val < site_alpha.consommation_globale_minute:
