@@ -3,6 +3,7 @@
 
 from pretraitement import *
 import sys
+from random import seed
 
 #Transforme les secondes en heures
 def decoupe(minute):
@@ -34,9 +35,9 @@ def plage_proche(minute,plage):
 			new_plage = p
 	return new_plage - 1
 
+stock = 0
 
-
-def prod_conso2(jour_annee):
+def prod_conso2(jour_annee, stock):
 #---- ON SIMULE LES DONNES SUR UN AN POUR AVOIR LA CONSOMMATION MOYENNE "U" LA PRODUCTION SOLAIRE "X" ET EOLIENNE "Y" CHAQUE JOUR
 
 	#time.sleep(0.5)
@@ -50,7 +51,11 @@ def prod_conso2(jour_annee):
 	jour_semaine = jour_annee%7 #Lundi 0 .... Dimanche 6
 	conso_jour=0
 	PV1.production_energie_jour = 0
-	EO1.production_energie_jour = 0 
+	EO1.production_energie_jour = 0
+	achat = 0
+	vente = 0
+	stock_max = 13000*1
+	prod_h = 0
 
 	# print "jour_semaine=",jour_semaine,"jour_mois=",jour_mois,"mois=",mois
 
@@ -73,17 +78,34 @@ def prod_conso2(jour_annee):
 			# cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
 			site_alpha.random_meteo(cle)
 			# print cle
+			PV1.production_energie_jour = 0
+			EO1.production_energie_jour = 0
 			PV1.production_energie(float(site_alpha.meteo[cle][1]))
 			EO1.production_energie(float(site_alpha.meteo[cle][5]))
+			prod_h = PV1.production_energie_jour+EO1.production_energie_jour
+
+
 
 		conso_jour+=site_alpha.consommation_globale_minute
+		if site_alpha.consommation_globale_minute < prod_h/60 :
+			stock += prod_h/60 - site_alpha.consommation_globale_minute
+		else:
+			achat += site_alpha.consommation_globale_minute - prod_h/60
+
+		if stock > stock_max:
+			vente += stock - stock_max
+			stock = stock_max
+
+
 		minute_journee = minute_journee + 1
 
-	return PV1.production_energie_jour+EO1.production_energie_jour-conso_jour
+	return (achat, vente, stock)
 
 
 
 if __name__ == '__main__':
+	seed(4)
+
 	if(len(sys.argv) < 2):
 		print "python deroulement.py nb_foyer affichage_courbe(True ou False)"
 		sys.exit()
@@ -127,9 +149,19 @@ if __name__ == '__main__':
 
 	cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
 	cle = site_alpha.random_meteo(cle)
+	
+	tab_consomation_jour = []
 
-	with closing(mp.Pool(10)) as p:
-		tab_consomation_jour= p.map(prod_conso2,range(1,366))
-		p.terminate()
+	tab_consomation_jour.append(prod_conso2(1,0))
+	for i in range(2,360):
+		tab_consomation_jour.append(prod_conso2(i,tab_consomation_jour[i-2][2]))
 
-	print "Bilan énergétique: ",sum(tab_consomation_jour)
+	achat_glob = 0
+	vente_glob = 0
+
+	for jour in tab_consomation_jour:
+		achat_glob += jour[0]
+		vente_glob += jour[1]
+	print "Bilan énergétique: "
+	print "Achat : ", achat_glob/100.0, "kW"
+	print "Vente : ", vente_glob/100.0, "kW"

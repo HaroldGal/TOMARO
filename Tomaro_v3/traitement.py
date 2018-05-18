@@ -1,15 +1,9 @@
 #!/usr/bin/python2.7
 #-*- coding: utf-8 -*-
 
-import multiprocessing as mp
-import datetime
-from contextlib import closing
-from Site import *
-import calendar
-import time
-import math
+from pretraitement import *
 import sys
-from Sun import Sun
+from random import seed
 
 #Transforme les secondes en heures
 def decoupe(minute):
@@ -41,8 +35,9 @@ def plage_proche(minute,plage):
 			new_plage = p
 	return new_plage - 1
 
+stock = 0
 
-def prod_conso(jour_annee):
+def prod_conso2(jour_annee, stock):
 #---- ON SIMULE LES DONNES SUR UN AN POUR AVOIR LA CONSOMMATION MOYENNE "U" LA PRODUCTION SOLAIRE "X" ET EOLIENNE "Y" CHAQUE JOUR
 
 	#time.sleep(0.5)
@@ -54,10 +49,13 @@ def prod_conso(jour_annee):
 	minute_journee = 0
 	annee = 1
 	jour_semaine = jour_annee%7 #Lundi 0 .... Dimanche 6
-	file = open("Data/data_pretraitement.txt",'a')
 	conso_jour=0
 	PV1.production_energie_jour = 0
-	EO1.production_energie_jour = 0 
+	EO1.production_energie_jour = 0
+	achat = 0
+	vente = 0
+	stock_max = 13000*1
+	prod_h = 0
 
 	# print "jour_semaine=",jour_semaine,"jour_mois=",jour_mois,"mois=",mois
 
@@ -80,45 +78,45 @@ def prod_conso(jour_annee):
 			# cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
 			site_alpha.random_meteo(cle)
 			# print cle
+			PV1.production_energie_jour = 0
+			EO1.production_energie_jour = 0
 			PV1.production_energie(float(site_alpha.meteo[cle][1]))
 			EO1.production_energie(float(site_alpha.meteo[cle][5]))
+			prod_h = PV1.production_energie_jour+EO1.production_energie_jour
+
+
 
 		conso_jour+=site_alpha.consommation_globale_minute
+		if site_alpha.consommation_globale_minute < prod_h/60 :
+			stock += prod_h/60 - site_alpha.consommation_globale_minute
+		else:
+			achat += site_alpha.consommation_globale_minute - prod_h/60
+
+		if stock > stock_max:
+			vente += stock - stock_max
+			stock = stock_max
+
+
 		minute_journee = minute_journee + 1
 
-	file.write(str(int(round(PV1.production_energie_jour)))+" "+str(int(round(EO1.production_energie_jour)))+"\n")
-	file.close()
-	return conso_jour
-
-	# print "Nombre de foyer sur le site:",site_alpha.nb_foyer
-	# print "\nNombre d'habitant sur le site:",site_alpha.nb_personne
-	#print "\n",decoupe(minute_journee)[0],"h",decoupe(minute_journee)[1],"min -",str_jour_semaine[jour_semaine],"",jour_mois,"/",mois,"/",annee
-	# print "\nConsommation globale:",site_alpha.consommation_globale_minute,"W.h"
-	# print "\nConsommation moyenne par jour du site:",round(site_alpha.consommation_moyenne_jour/1000),"kW.h"
-	# #meteo[temps] = (temperature, rad_globale, rad_directe, rad_diffuse, rad_infrarouge, vitesse_vent)
-	# print "\nMeteo à cette heure ci\nTemperature:",str(site_alpha.meteo[cle][0]),"°C - Vent:",str(site_alpha.meteo[cle][5]),"m/s"
-	#print "Radiation:\nGlobale:",str(site_alpha.meteo[cle][1]),"Directe:",str(site_alpha.meteo[cle][2]),"Diffuse:",str(site_alpha.meteo[cle][3]),"Infrarouge",str(site_alpha.meteo[cle][4])
-	#print "Production du jour: PV =",PV1.production_energie_jour,"EO =",EO1.production_energie_jour
-
-# for i in range(1,366):
-# 	p = mp.Process(target=prod_conso,args=(i))
-# 	p.start()
-
-
-# for i in range(1,366):
-# 	prod_conso(i)
-
-# tab_consomation_jour=[]
+	return (achat, vente, stock)
 
 
 
 if __name__ == '__main__':
-	if(len(sys.argv) != 2):
-		print "python deroulement.py nb_foyer affichage_courbe(True ou False)"
-		sys.exit()
+	seed(4)
+
+	print "longueur=", len(sys.argv)
+
+	# if(len(sys.argv) < 2):
+	# 	print "python deroulement.py nb_foyer affichage_courbe(True ou False)"
+	# 	sys.exit()
+
+	nb_Pv = int(sys.argv[1])
+	nb_Eo = int(sys.argv[2])
 
 	#Création du site
-	site_alpha = Site("Campus",int(sys.argv[1]),1,1)
+	site_alpha = Site("Campus",int(sys.argv[1]),nb_Eo,nb_Pv)
 	#Calcule de la consommation moyenne par jour du site
 	consommation_moyenne_jour_site = site_alpha.consommation_moyenne_site()
 
@@ -140,6 +138,7 @@ if __name__ == '__main__':
 	# ---------- AJOUTER LATITUDE ET LONGITUDE DE LA VILLE OU VOUS ETES ---------- #
 	coords = {'longitude' : 2.3522, 'latitude' : 48.8566 }
 	sun = Sun()
+
 	# ---------- AJOUTER LE DECALAGE HORAIRE PAR RAPPORT AU MERIDIEN DE GREENWICH ----------#
 	decalage_horaire = 1.0
 
@@ -147,31 +146,24 @@ if __name__ == '__main__':
 	consommation_total = 0
 
 	#Producion
-	PV1 = PV(0.18,1,0.8) #http://www.photovoltaique-energie.fr/estimer-la-production-photovoltaique.html
-	EO1 = EO(13,1,0.15) #https://www.alma-solarshop.fr/panneau-bisol/733-panneau-bisol-bmo-280-noir.html
-	#Ouverture du fichier
-	file = open("Data/data_pretraitement.txt",'w')
-	file.write("365 2\n\n")
-	file.close()
-
-	#Boucle infinie pour modéliser le temps
-	#continu = True
+	PV1 = PV(0.18,nb_Pv,0.8) #http://www.photovoltaique-energie.fr/estimer-la-production-photovoltaique.html
+	EO1 = EO(13,nb_Eo,0.15) #https://www.alma-solarshop.fr/panneau-bisol/733-panneau-bisol-bmo-280-noir.html
 
 	cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
 	cle = site_alpha.random_meteo(cle)
+	
+	tab_consomation_jour = []
 
-	with closing(mp.Pool(10)) as p:
-		tab_consomation_jour= p.map(prod_conso,range(1,366))
-		p.terminate()
+	tab_consomation_jour.append(prod_conso2(1,0))
+	for i in range(2,360):
+		tab_consomation_jour.append(prod_conso2(i,tab_consomation_jour[i-2][2]))
 
-	file = open("Data/data_pretraitement.txt",'a')
-	file.write("\n")
-	for conso in tab_consomation_jour:
-		file.write(str(int(round(conso)))+"\n")
+	achat_glob = 0
+	vente_glob = 0
 
-	file.close()
-	print time.time()-now,"secondes"
-	print "Nombre de foyer sur le site:",site_alpha.nb_foyer
-	print "\nNombre d'habitant sur le site:",site_alpha.nb_personne
-
-
+	for jour in tab_consomation_jour:
+		achat_glob += jour[0]
+		vente_glob += jour[1]
+	print "Bilan énergétique: "
+	print "Achat : ", achat_glob/100.0, "kW"
+	print "Vente : ", vente_glob/100.0, "kW"
