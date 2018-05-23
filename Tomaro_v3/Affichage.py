@@ -111,13 +111,12 @@ def menu(fenetre,nom_site,date,degre,vent,localisation,nb_foyer,nb_personne,cons
 	if stockage_pourcent/10==0:
 		pile=pygame.image.load("Image/Pile_vide.png").convert_alpha()
 		fenetre.blit(pile,(1092,693))
-	elif manque_energie==True:
+	elif manque_energie==True and stockage_pourcent!=100:
 		pile=pygame.image.load("Image/Pile_destockage_"+str(stockage_pourcent/10)+".png").convert_alpha()
 		fenetre.blit(pile,(1092,693))
-	elif trop_energie==True:
+	elif trop_energie==True or stockage_pourcent==100:
 		pile=pygame.image.load("Image/Pile_stockage_"+str(stockage_pourcent/10)+".png").convert_alpha()
 		fenetre.blit(pile,(1092,693))
-	
 
 
 	#Si on est en sur-production ou sous-production
@@ -243,7 +242,7 @@ def consommation_foyer(foyer):
 
 
 
-def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche,liste_objet):
+def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche,liste_objet,stockage,stockage_pourcent,manque_energie,trop_energie):
 	#S'il fait jour
 	if(is_nuit==False):
 		background = pygame.image.load("Image/Background_jour.png").convert()
@@ -633,12 +632,12 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 	font=pygame.font.Font(None,30)	
 	for index1,personne in enumerate(site.liste_foyer[index_foyer].liste_personne):
 		for index_objet,objet in enumerate(liste_objet):
-			if index1==objet[1] and consommation_foyer(site.liste_foyer[index_foyer])!=0:
+			if index1==objet[1]:
 				if objet[0]=="lampe":
 					if personne.lampe.allume==True:
 						conso_str=font.render(personne.lampe.nom+" chambre "+str(objet[1]+1)+" - "+str(round(personne.lampe.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
-					elif personne.lampe.allume==False:
+					elif personne.lampe.allume==False or consommation_foyer(site.liste_foyer[index_foyer])==0:
 						conso_str=font.render(personne.lampe.nom+" chambre "+str(objet[1]+1)+" - 0.0 %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
 
@@ -646,7 +645,7 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 					if personne.tv.allume==True:
 						conso_str=font.render(personne.tv.nom+" chambre "+str(objet[1]+1)+" - "+str(round(personne.tv.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
-					elif personne.tv.allume==False:
+					elif personne.tv.allume==False or consommation_foyer(site.liste_foyer[index_foyer])==0:
 						conso_str=font.render(personne.tv.nom+" chambre "+str(objet[1]+1)+" - 0.0 %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
 
@@ -654,7 +653,7 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 					if personne.pc.allume==True:
 						conso_str=font.render(personne.pc.nom+" chambre "+str(objet[1]+1)+" - "+str(round(personne.pc.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
-					elif personne.pc.allume==False:
+					elif personne.pc.allume==False or consommation_foyer(site.liste_foyer[index_foyer])==0:
 						conso_str=font.render(personne.pc.nom+" chambre "+str(objet[1]+1)+" - 0.0 %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
 
@@ -663,14 +662,17 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 					for personne in site.liste_foyer[index_foyer].liste_personne:
 						if personne.pai.allume==True:
 							consommation_pai+=personne.pai.consommation_minute
-					conso_str=font.render("Plaques induction - "+str(round(consommation_pai*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+					if consommation_foyer(site.liste_foyer[index_foyer])!=0:
+						conso_str=font.render("Plaques induction - "+str(round(consommation_pai*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+					elif consommation_foyer(site.liste_foyer[index_foyer])==0:
+						conso_str=font.render("Plaques induction - 0.0 %",1,(0,0,0))
 					fenetre.blit(conso_str,(20,400+index_objet*30))
 
 				if objet[0]=="frigo":
 					if site.liste_foyer[index_foyer].frigo.allume==True:
 						conso_str=font.render("Frigo - "+str(round(site.liste_foyer[index_foyer].frigo.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
-					elif site.liste_foyer[index_foyer].frigo.allume==False:
+					elif site.liste_foyer[index_foyer].frigo.allume==False or consommation_foyer(site.liste_foyer[index_foyer])==0:
 						conso_str=font.render("Frigo - 0.0 %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
 
@@ -679,14 +681,17 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 					for personne in site.liste_foyer[index_foyer].liste_personne:
 						if personne.electro.allume==True:
 							consommation_electro+=personne.electro.consommation_minute*personne.electro.nb_allumage
-					conso_str=font.render("Electromenages - "+str(round(consommation_electro*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+					if consommation_foyer(site.liste_foyer[index_foyer])!=0:
+						conso_str=font.render("Electromenages - "+str(round(consommation_electro*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
+					elif consommation_foyer(site.liste_foyer[index_foyer])==0:
+						conso_str=font.render("Electromenages - 0.0 %",1,(0,0,0))
 					fenetre.blit(conso_str,(20,400+index_objet*30))
 					
 				if objet[0]=="radiateur":
 					if site.liste_foyer[index_foyer].radiateur.allume==True:
 						conso_str=font.render("Chauffage - "+str(round(site.liste_foyer[index_foyer].radiateur.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
-					elif site.liste_foyer[index_foyer].radiateur.allume==False:
+					elif site.liste_foyer[index_foyer].radiateur.allume==False or consommation_foyer(site.liste_foyer[index_foyer])==0:
 						conso_str=font.render("Chauffage - 0.0 %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
 
@@ -694,7 +699,7 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 					if site.liste_foyer[index_foyer].climatisation.allume==True:
 						conso_str=font.render("Climatisation - "+str(round(site.liste_foyer[index_foyer].climatisation.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
-					elif site.liste_foyer[index_foyer].climatisation.allume==False:
+					elif site.liste_foyer[index_foyer].climatisation.allume==False or consommation_foyer(site.liste_foyer[index_foyer])==0:
 						conso_str=font.render("Climatisation - 0.0 %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
 
@@ -702,7 +707,7 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 					if site.liste_foyer[index_foyer].machine_a_laver.allume==True:
 						conso_str=font.render("Machine a laver - "+str(round(site.liste_foyer[index_foyer].machine_a_laver.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
-					elif site.liste_foyer[index_foyer].machine_a_laver.allume==False:
+					elif site.liste_foyer[index_foyer].machine_a_laver.allume==False or consommation_foyer(site.liste_foyer[index_foyer])==0:
 						conso_str=font.render("Machine a laver - 0.0 %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
 
@@ -710,7 +715,7 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 					if site.liste_foyer[index_foyer].seche_linge.allume==True:
 						conso_str=font.render("Seche linge - "+str(round(site.liste_foyer[index_foyer].seche_linge.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
-					elif site.liste_foyer[index_foyer].seche_linge.allume==False:
+					elif site.liste_foyer[index_foyer].seche_linge.allume==False or consommation_foyer(site.liste_foyer[index_foyer])==0 :
 						conso_str=font.render("Seche linge - 0.0 %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
 
@@ -718,6 +723,39 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 					if site.liste_foyer[index_foyer].lave_vaisselle.allume==True:
 						conso_str=font.render("Lave vaisselle - "+str(round(site.liste_foyer[index_foyer].lave_vaisselle.consommation_minute*100/consommation_foyer(site.liste_foyer[index_foyer])))+" %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
-					elif site.liste_foyer[index_foyer].lave_vaisselle.allume==False:
+					elif site.liste_foyer[index_foyer].lave_vaisselle.allume==False or consommation_foyer(site.liste_foyer[index_foyer])==0:
 						conso_str=font.render("Lave vaisselle - 0.0 %",1,(0,0,0))
 						fenetre.blit(conso_str,(20,400+index_objet*30))
+
+	#Stockage
+	font=pygame.font.Font(None, 20)	
+	stockage_str=font.render("Etat de stockage du site",1,(0,0,0))	
+	font=pygame.font.Font(None, 30)
+	stockage_pourcent_str=font.render(str(stockage_pourcent)+"%",1,(0,0,0))
+	fenetre.blit(stockage_str,(1070-stockage_str.get_size()[0],706))
+	fenetre.blit(stockage_pourcent_str,(1141-stockage_pourcent_str.get_size()[0]/2,750))
+	if stockage_pourcent/10==0:
+		pile=pygame.image.load("Image/Pile_vide.png").convert_alpha()
+		fenetre.blit(pile,(1092,693))
+	elif manque_energie==True and stockage_pourcent!=100:
+		pile=pygame.image.load("Image/Pile_destockage_"+str(stockage_pourcent/10)+".png").convert_alpha()
+		fenetre.blit(pile,(1092,693))
+	elif trop_energie==True or stockage_pourcent==100:
+		pile=pygame.image.load("Image/Pile_stockage_"+str(stockage_pourcent/10)+".png").convert_alpha()
+		fenetre.blit(pile,(1092,693))
+
+
+	#Si on est en sur-production ou sous-production
+	if manque_energie==True and stockage==0:
+		panneau_attention=pygame.image.load("Image/Panneau_attention.png").convert_alpha()
+		fenetre.blit(panneau_attention,(790,516))
+		font=pygame.font.Font(None, 20)
+		panneau_attention_str=font.render("Achat Energie",1,(0,0,0))
+		fenetre.blit(panneau_attention_str,(840-panneau_attention_str.get_size()[0]/2,600))
+
+	elif trop_energie==True and stockage_pourcent==100:
+		panneau_attention=pygame.image.load("Image/Panneau_attention.png").convert_alpha()
+		fenetre.blit(panneau_attention,(790,516))
+		font=pygame.font.Font(None, 20)
+		panneau_attention_str=font.render("Revente Energie",1,(0,0,0))
+		fenetre.blit(panneau_attention_str,(840-panneau_attention_str.get_size()[0]/2,600))

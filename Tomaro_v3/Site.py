@@ -18,6 +18,7 @@ class Site:
 		self.variation_temp = 0
 		self.variation_temp_frigo = 0
 		self.manque_energie=False
+		self.trop_energie=False
 		#Initialisation de la liste des foyers
 		self.liste_foyer = self.init_liste_foyer(nb_foyer)
 

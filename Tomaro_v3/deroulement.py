@@ -11,6 +11,7 @@ from Sun import Sun
 import pygame
 from pygame.locals import *
 from Affichage import *
+from random import seed
 
 #Transforme les secondes en heures
 def decoupe(minute):
@@ -44,12 +45,13 @@ if(len(sys.argv) != 2 and len(sys.argv) != 3):
 	print "python deroulement.py nb_foyer jour/mois/annee"
 	sys.exit()
 
-
+if __name__ == '__main__':
+	seed(4)
 
 #Affichage
 largeur_fenetre=1200
 longueur_fenetre=800
-nb_eo=300
+nb_eo=500
 nb_pv=1600
 nb_foyer=int(sys.argv[1])
 
@@ -150,41 +152,42 @@ while(continu):
 	if minute_journee%60 ==0:
 		cle = str("%02d" %jour_mois)+"/"+str("%02d" % mois) + " " + str("%02d" % decoupe(minute_journee)[0]) +":00:00"
 		site_alpha.random_meteo(cle)
-	site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit, cle)
-	production_eo_val= (int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)))
-	production_pv_val= (int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
-	production_totale_val=int(round(float(production_pv_val)+float(production_eo_val)))
+	if(pause!=True):
+		site_alpha.actualisation_des_foyers(minute_journee,jour_semaine,is_nuit, cle)
+		production_eo_val= (int(round(site_alpha.eolienne.production_energie(float(site_alpha.meteo[cle][5]))/60.0)))
+		production_pv_val= (int(round(site_alpha.panneau.production_energie(float(site_alpha.meteo[cle][1]))/60.0)))
+		production_totale_val=int(round(float(production_pv_val)+float(production_eo_val)))
 
-	if production_totale_val + stockage_val < site_alpha.consommation_globale_minute*10:
-		site_alpha.manque_energie=True
-		enter1=True
-		site_alpha.reequilibrage_sousproduction()
-	elif enter1==True:
-		site_alpha.reequilibrage_surproduction()
-		enter1=False
+		if production_totale_val + stockage_val < site_alpha.consommation_globale_minute*10:
+			site_alpha.manque_energie=True
+			enter1=True
+			site_alpha.reequilibrage_sousproduction()
+		elif enter1==True:
+			site_alpha.reequilibrage_surproduction()
+			enter1=False
 
-	if production_totale_val + stockage_val > stockage_max*0.9:
-		site_alpha.reequilibrage_batterie_pleine()
-		enter2=True
-	elif enter2==True:
-		site_alpha.reequilibrage_batterie_dispo()
-		enter2=False
+		if production_totale_val + stockage_val > stockage_max*0.9:
+			site_alpha.reequilibrage_batterie_pleine()
+			enter2=True
+		elif enter2==True:
+			site_alpha.reequilibrage_batterie_dispo()
+			enter2=False
 
-	#Si on est en sous-production
-	if production_totale_val < site_alpha.consommation_globale_minute:
-		site_alpha.manque_energie=True
-		site_alpha.trop_energie=False
-	#Si on est en sur-production
-	elif production_totale_val > site_alpha.consommation_globale_minute:
-		site_alpha.manque_energie=False
-		site_alpha.trop_energie=True
-	else:
-		site_alpha.manque_energie=False
-		site_alpha.trop_energie=False
-	if minute_journee%30==0: #on actualise la lumiere toutes les demi heures
-		print minute_journee
-		site_alpha.calibrage_luminosite()
-	
+		#Si on est en sous-production
+		if production_totale_val < site_alpha.consommation_globale_minute:
+			site_alpha.manque_energie=True
+			site_alpha.trop_energie=False
+		#Si on est en sur-production
+		elif production_totale_val > site_alpha.consommation_globale_minute:
+			site_alpha.manque_energie=False
+			site_alpha.trop_energie=True
+		else:
+			site_alpha.manque_energie=False
+			site_alpha.trop_energie=False
+		if minute_journee%30==0: #on actualise la lumiere toutes les demi heures
+			#print minute_journee
+			site_alpha.calibrage_luminosite()
+		
 	
 	#--------------------AFFICHAGE-------------------------#
 
@@ -416,8 +419,10 @@ while(continu):
 		surface_pv=str(site_alpha.panneau.surface)
 		production_totale=int(round(float(production_pv)+float(production_eo)))
 		
-		if pause!=True and stockage_val<stockage_max:
+		if pause!=True and stockage_val<stockage_max and site_alpha.trop_energie==True:
 			stockage_val+=float(production_totale)-float(consommation_totale)
+		elif pause!=True and site_alpha.manque_energie==True:
+			stockage_val-=abs(float(production_totale)-float(consommation_totale))
 		stockage_val=int(round(min(stockage_max,max(0,stockage_val))))	
 		stockage=stockage_val
 		stockage_pourcent=stockage_val*100/stockage_max
@@ -435,7 +440,7 @@ while(continu):
 			affichage_liste_foyer(fenetre,site_alpha,date,is_nuit,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche)
 
 		elif(etat_affichage=="foyer"):
-			affichage_foyer(fenetre,site_alpha,date,is_nuit,index_foyer,degre,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche,liste_objet)
+			affichage_foyer(fenetre,site_alpha,date,is_nuit,index_foyer,degre,temps_jour,temps_nuit,minute_journee,minute_leve,minute_couche,liste_objet,stockage,stockage_pourcent,manque_energie,trop_energie)
 
 		pygame.display.flip()
 
