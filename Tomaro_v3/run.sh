@@ -16,7 +16,6 @@ matlab -nodisplay -nodesktop -r "run OptiNbProduction"
 nbPanneaux=$(head -1 nb_devices.txt)
 nbEolienne=$(tail -1 nb_devices.txt)
 
-rm -f nb_devices.txt
 
 echo $nbPanneaux
 echo $nbEolienne
