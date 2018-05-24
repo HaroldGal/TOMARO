@@ -743,19 +743,3 @@ def affichage_foyer(fenetre,site,date,is_nuit,index_foyer,degre,temps_jour,temps
 	elif trop_energie==True or stockage_pourcent==100:
 		pile=pygame.image.load("Image/Pile_stockage_"+str(stockage_pourcent/10)+".png").convert_alpha()
 		fenetre.blit(pile,(1092,693))
-
-
-	#Si on est en sur-production ou sous-production
-	if manque_energie==True and stockage==0:
-		panneau_attention=pygame.image.load("Image/Panneau_attention.png").convert_alpha()
-		fenetre.blit(panneau_attention,(790,516))
-		font=pygame.font.Font(None, 20)
-		panneau_attention_str=font.render("Achat Energie",1,(0,0,0))
-		fenetre.blit(panneau_attention_str,(840-panneau_attention_str.get_size()[0]/2,600))
-
-	elif trop_energie==True and stockage_pourcent==100:
-		panneau_attention=pygame.image.load("Image/Panneau_attention.png").convert_alpha()
-		fenetre.blit(panneau_attention,(790,516))
-		font=pygame.font.Font(None, 20)
-		panneau_attention_str=font.render("Revente Energie",1,(0,0,0))
-		fenetre.blit(panneau_attention_str,(840-panneau_attention_str.get_size()[0]/2,600))
